@@ -1,0 +1,18 @@
+﻿@using Personalblog.Model.Entitys
+@model Photo
+
+@if (TempData["msg"] != null)
+{
+    <div class="container mt-3">
+        <div class="alert alert-info d-flex align-items-center alert-dismissible fade show" role="alert">
+            <i class="fa fa-info-circle me-2"></i>
+            <div>
+                <div>@Html.Raw(TempData["msg"])</div>
+                <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    </div>
+}
+<div class="container px-4 py-3">
+    <img src="/media/@Model.FilePath" alt="" style="width:100%">
+</div>
