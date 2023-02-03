@@ -37,7 +37,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<MyDbContext>(opt =>
 {
     //string connStr = builder.Configuration.GetSection("ConnStr").Value;
-    string connStr = "Data Source=101.43.25.210;port=3306;Initial Catalog=Personalblog;user id=root;password=123456;";
+    string connStr = "";
     opt.UseMySql(connStr,new MySqlServerVersion(new Version(5,7,40)));
 });
 //øÁ”Ú
