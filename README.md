@@ -28,11 +28,11 @@ Update-Database //输入这个成功后就可以看到mysql数据库已经成功
 #### Docker部署
  **前提需要将项目打包，一图流：** 
 
-![输入图片说明](%E9%A1%B9%E7%9B%AE%E6%88%AA%E5%9B%BE/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20230204174726.png)
+![输入图片说明](https://gitee.com/zyplj/personalblog/raw/master/项目截图/%E9%A1%B9%E7%9B%AE%E6%88%AA%E5%9B%BE/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20230204174726.png)
 
-![输入图片说明](%E9%A1%B9%E7%9B%AE%E6%88%AA%E5%9B%BE/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20230204174746.png)
+![输入图片说明](https://gitee.com/zyplj/personalblog/raw/master/项目截图/%E9%A1%B9%E7%9B%AE%E6%88%AA%E5%9B%BE/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20230204174746.png)
 
-![输入图片说明](%E9%A1%B9%E7%9B%AE%E6%88%AA%E5%9B%BE/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20230204174804.png)
+![输入图片说明](https://gitee.com/zyplj/personalblog/raw/master/项目截图/%E9%A1%B9%E7%9B%AE%E6%88%AA%E5%9B%BE/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20230204174804.png)
 ```
 //进入打包好的项目目录中
 docker build -t 镜像别名 .
