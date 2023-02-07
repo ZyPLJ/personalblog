@@ -50,5 +50,5 @@ docker run -d -p 8080:8080 --name blog blog
 本博主只是修改了部分代码。
 
 #### 遇到问题
-![输入图片说明](personalblog/wwwroot/images/5192045913af4a31a7988ed7077a1e0.jpg)
+![输入图片说明](https://gitee.com/zyplj/personalblog/raw/master/Personalblog/wwwroot/images/5192045913af4a31a7988ed7077a1e0.jpg)
 
