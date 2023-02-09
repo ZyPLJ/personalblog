@@ -15,7 +15,7 @@
 #### 安装项目
 你需要修改数据库连接字符串，在本项目的Personalblog.Model中，找到MyDbContextDesignFac类。
 MyDbContextDesignFac是用来创建数据库，修改该类其中的connStr即可， **然后在主项目的Program.cs中配置连接字符串** 。
-修改完连接字符串后就可以着手生成数据库了，本项目采用core first模式.
+修改完连接字符串后就可以着手生成数据库了，本项目采用code first模式.
 在![创建数据库](https://gitee.com/zyplj/personalblog/raw/master/项目截图/image.png)这个地方输入
 
 ```
