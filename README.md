@@ -7,9 +7,11 @@
 
 # 项目浏览地址
 
-[ZY个人博客](http://101.43.25.210:7031/)
+[ZY个人博客](https://pljzy.top/)
 
 # 配套后台管理系统
+
+没怎么更新后台管理系统了，如果需要最新的源码吗，请关注公众号联系我，公众号在最下面。
 
 [PersonalblogVue: 基于Vue3框架搭建的个人博客后台管理系统。 (gitee.com)](https://gitee.com/zyplj/personalblog-vue)
 
@@ -82,6 +84,15 @@ Dockefile文件`EXPOSE`对应
 
 ## 设置数据库连接字符串和版本号
 
+sqlite3如下：
+
+```c#
+string connStr = "Data Source=app.db";
+opt.UseSqlite(connStr);
+```
+
+mysql如下：
+
 `Server=ip;Port=3306;Database=Personalblog; User=用户;Password=密码;`
 
 ![配置文件2](https://gitee.com/zyplj/personalblog/raw/master/截图/配置文件2.png)
@@ -103,4 +114,4 @@ Dockefile文件`EXPOSE`对应
 
 # 遇到问题
 
-![](https://gitee.com/zyplj/personalblog/raw/master/Personalblog/wwwroot/images/5192045913af4a31a7988ed7077a1e0.jpg)
+![](https://pljzy.top/images/5192045913af4a31a7988ed7077a1e0.jpg)
