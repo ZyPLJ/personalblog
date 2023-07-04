@@ -1,0 +1,119 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>e4e271d4-bd51-48f7-b2b2-e9bbee236a53</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot\assets\**" />
+    <Compile Remove="wwwroot\editor.md-ext\**" />
+    <Compile Remove="wwwroot\Lins\**" />
+    <Content Remove="wwwroot\assets\**" />
+    <Content Remove="wwwroot\editor.md-ext\**" />
+    <Content Remove="wwwroot\Lins\**" />
+    <EmbeddedResource Remove="wwwroot\assets\**" />
+    <EmbeddedResource Remove="wwwroot\editor.md-ext\**" />
+    <EmbeddedResource Remove="wwwroot\Lins\**" />
+    <None Remove="wwwroot\assets\**" />
+    <None Remove="wwwroot\editor.md-ext\**" />
+    <None Remove="wwwroot\Lins\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\css\musicstyles" />
+    <Content Remove="wwwroot\js\index.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap-icons.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCoreRateLimit" Version="5.0.0" />
+    <PackageReference Include="AspNetCoreRateLimit.Redis" Version="2.0.0" />
+    <PackageReference Include="AutoMapper" Version="12.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+    <PackageReference Include="HtmlSanitizer" Version="8.0.645" />
+    <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="12.2.2" />
+    <PackageReference Include="MailKit" Version="4.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.HttpOverrides" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.16" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+    <PackageReference Include="MimeKit" Version="4.0.0" />
+    <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.2.22" />
+    <PackageReference Include="MiniProfiler.EntityFrameworkCore" Version="4.2.22" />
+    <PackageReference Include="Qiniu" Version="8.3.1" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
+    <PackageReference Include="SixLabors.ImageSharp.Web" Version="2.0.2" />
+    <PackageReference Include="SkiaSharp" Version="2.88.3" />
+    <PackageReference Include="StackExchange.Redis" Version="2.6.96" />
+    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+    <PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
+    <PackageReference Include="X.PagedList" Version="8.4.3" />
+    <PackageReference Include="X.PagedList.Mvc.Core" Version="8.4.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Personalblog.Contrib\Personalblog.Contrib.csproj" />
+    <ProjectReference Include="..\Personalblog.Migrate\Personalblog.Migrate.csproj" />
+    <ProjectReference Include="..\Personalblog.Model\Personalblog.Model.csproj" />
+    <ProjectReference Include="..\PersonalblogServices\PersonalblogServices.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\media\blog\" />
+    <Folder Include="wwwroot\media\photofraphy\" />
+    <Folder Include="wwwroot\media\yasuo\" />
+    <Folder Include="wwwroot\media\yasuo2\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\baidu_verify_codeva-fsDbwcMAGi.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\mp3\1.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\mp3\2.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\mp3\index.4a0e1cf1.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\mp3\index.aed4c9e8.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\verification.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\WW_verify_DS3vSsNZ1JU9aiU9.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="app.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="app.db-shm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="app.db-wal">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Dockerfile">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

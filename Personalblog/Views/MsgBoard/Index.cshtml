@@ -1,0 +1,441 @@
+﻿@using Personalblog.Model.Entitys
+@using Personalblog.Utils
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Personalblog.Model.ViewModels.MessageBoard.MsgBoardList
+@{
+    ViewData["Title"] = "留言板";
+}
+@section head
+{
+    <link href="https://cdn.bootcdn.net/ajax/libs/quill/1.3.7/quill.snow.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/quill/1.3.7/quill.bubble.min.css" rel="stylesheet">
+}
+<style>
+    .containertwo {
+        height: 400px;
+        position: relative;
+    }
+
+    .box {
+        width: 160px;
+        height: 160px;
+        position: absolute;
+        cursor: move;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 5px;
+        color: white;
+        font-size: 14px;
+        font-weight: bold;
+        box-sizing: border-box; /* 让 padding 和 border 不影响盒子的实际大小 */
+        border-radius: 400px 20px 20px 40px / 40px 500px 500px 300px;
+    }
+
+    .box .bottom {
+        height: 80%;
+        overflow: hidden; /* 添加滚动条以处理内容过长的情况 */
+        word-wrap: break-word; /* 自动换行 */
+    }
+    .box .top span.date {
+        text-align: right; /* 将日期向右对齐 */
+    }
+    
+    .box .top > div {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding-top: 5px;
+padding-bottom: 5px;
+        border-bottom: 1px dashed white;
+}
+
+.box .top > div > span.date {
+    text-align: right;
+    flex: 1;
+}
+   #editor{
+        height: 250px;
+    }
+    .comment_input input{
+        border: none;
+        width: 260px;;
+    }
+    .comment_input input:focus {
+        outline: none;
+        border: none;
+    }
+    .comment_input input::placeholder {
+        font-size: 13px;
+        color: #999;
+    }
+    .comment_input span{
+        color: #e4dddb;
+    }
+    .comment_btn{
+        margin-top: 20px;
+    }
+    .comment_btn input{
+        border-radius: 3px;
+        height: 32px;
+        padding: 0 15px;
+        border: none;
+        background: #409eff;
+        color: #fff;
+        font-size: 14px;
+    }
+    .feedbackItem{
+        margin-bottom:20px;
+    }
+    .feedbackItem:before {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 90px;
+        display: block;
+        z-index: 0;
+        content: "";
+        background-color: #e1e4e8;
+    }
+    .feedbackListSubtitle {
+        clear: both;
+        align-items: center;
+        color: #586069;
+        flex-direction: row-reverse;
+        background-color: #f6f8fa;
+        border: 1px solid #e9e9e9;
+        border-bottom: 1px solid #e9e9e9;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        padding: 10px 20px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    .feedbackListSubtitle span{
+        color: #777;
+        font-weight: 700;
+    }
+    .feedbackCon {
+        padding: 10px 20px;
+        min-height: 35px;
+        line-height: 1.5;
+        border: 1px solid #e9e9e9;
+        border-top: 0;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+        background: #fff;
+    }
+    .feedbackManage {
+        width: 200px;
+        text-align: right;
+        float: right;
+    }
+    .comment_actions_link{
+        color: #777;
+        font-weight: 700;
+        text-decoration: none;
+    }
+    .comment_actions:hover .comment_actions_link{
+        cursor: pointer;
+        color:red;
+    }
+    
+        .feedback_area_title{
+            font: normal normal 16px/35px "Microsoft YaHei";
+            margin: 10px 0 30px;
+        }
+        .feedback_area_title:after {
+            left: 80px;
+            content: '';
+            display: block;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            bottom: 16px;
+            border-bottom: 1px dashed #e9e9e9;
+        }
+        .feedbackListSubtitle-louzhu {
+            background-color: #f1f8ff!important;
+            border-bottom-color: #c0d3eb!important;
+        }
+</style>
+
+<div class="container px-4 py-3">
+    <h2 class="d-flex w-100 justify-content-between pb-2 mb-3 border-bottom">
+        <div>MessageBoard</div>
+        <div>网站留言板</div>
+    </h2>
+
+    <div class="containertwo">
+        @foreach (var m in Model.MessagesList)
+        {
+            @await Html.PartialAsync("Widgets/MsgBox",m)
+        }
+    </div>
+    <div class="d-flex w-100 pb-2 mb-3 border-bottom justify-content-center">
+        <div style="font-size: 24px;text-shadow:0 1px 2px rgba(0, 0, 0, 0.25);">留言（@Model.MessagesList.Count）</div>
+    </div>
+    <div class="row">
+        <div class="my-3" id = "CommentList">
+            <div class="feedback_area_title">
+                留言列表
+            </div>
+            @foreach (var m in Model.PagedList)
+            {
+                @await Html.PartialAsync("Widgets/MsgBoxList",m)
+            }
+        </div>
+          <nav aria-label="Page navigation example">
+                    @Html.PagedListPager(Model.PagedList, page => Url.Action(RazorHelper.GetCurrentActionName(ViewContext), new {page}),
+                new PagedListRenderOptions {
+                LiElementClasses = new[] {"page-item"},
+                PageClasses = new[] {"page-link"},
+                UlElementClasses = new[] {"pagination justify-content-center"}
+                })
+                </nav>
+        <div class="my-3">
+            <form>
+                <div id="liveAlertPlaceholder"></div>
+                <div class="comment_input">
+                    <input type="text" placeholder="请输入昵称..." name="Name" id="Name"/>
+                    <span>|</span>
+                    <input type="email" placeholder="请输入邮箱..." name="Email" id="Email"/>
+                    <span>|</span>
+                </div>
+                <div id="editor">
+                </div>
+                <div class="comment_btn">
+                    <input type="button" value="留下你的足迹" id="btnComent"/>
+                </div>
+                <div class="hidden" hidden="hidden">
+                    <textarea id="Content" name="Content"></textarea>
+                    <input id="MessageId" name="MessageId" type="text"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section bottom
+{
+    <script src="https://cdn.bootcdn.net/ajax/libs/quill/1.3.7/quill.min.js"></script>
+    <script>
+      var content = document.getElementById("Content")
+      var toolbarOptions = [
+        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+      ];
+      var quill = new Quill('#editor', {
+      modules: {
+        toolbar: toolbarOptions
+      },
+      theme: 'snow',
+    });
+      quill.on('editor-change', function(eventName, ...args) {
+              var text = quill.getContents();
+              console.log(text)
+              if (eventName === 'text-change') {
+                  content.value = JSON.stringify(text.ops)
+              } else if (eventName === 'selection-change') {
+                  content.value = JSON.stringify(text.ops)
+              }
+        });
+      const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+                const alert = (message, type) => {
+                  const wrapper = document.createElement('div')
+                  wrapper.innerHTML = [
+                    `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+                    `<div>${message}</div>`,
+                    ` <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`,
+                    '</div>'
+                  ].join('')
+                    alertPlaceholder.append(wrapper)
+                }
+                
+                var timerId;
+                
+                function deleteAlert(){
+                    while (alertPlaceholder.firstChild) {
+                      alertPlaceholder.removeChild(alertPlaceholder.firstChild);
+                    }
+                }
+                
+                function execute() {
+                  // 在设置新的定时器之前，清除上一个定时器
+                  clearTimeout(timerId);
+                  timerId = setTimeout(deleteAlert, 5000);
+                }
+      function clearInput(){
+          $('#Name').val("")
+          $('#MessageId').val("")
+          $('#Content').val("")
+          $('#Email').val("")
+          // 清空文本框的内容
+          quill.setText('');
+      }
+    var MessageId = document.getElementById("MessageId");
+    var ReplyEmail = ""
+    function Reply(Id,Name,email){
+        ReplyEmail = email;
+        MessageId.value = Id;
+        quill.setContents([{ insert: `回复给：${Name}`, attributes: { bold: true } }]);
+    }
+     $("#btnComent").click(function (){
+          var Name=$('#Name').val()
+          var Content=content.value
+          var Email = $('#Email').val()
+          var REmail = ""
+          if (ReplyEmail !== ""){ 
+             REmail = ReplyEmail
+          }
+          console.log(Email)
+          if (!quill.getText().trim()) {
+              alert('留言内容不能为空', 'warning')
+              execute()
+              return
+          }
+          if(MessageId.value){
+              ReplyMsg(Name,Content,Email,REmail)
+          }else{
+              SubMsg(Name,Content,Email)
+          }
+          execute()
+     })
+     function SubMsg(Name,Content,Email){
+        $("#btnComent").prop("disabled", true); 
+         $.ajax({
+            url:'/MsgBoard/SubMessage/',
+            type:'post',
+            data:JSON.stringify({
+                "Name":""+Name+"",
+                "Email":""+Email+"",
+                "Message":""+Content+""
+            }),
+            contentType: 'application/json',
+            success:function (data){
+                if (data.statusCode === 200){
+                    alert(data.message, 'success')
+                     const CommentList = document.getElementById('CommentList')
+                    const html = data.data
+                    CommentList.insertAdjacentHTML('beforeend', html);
+                    clearInput()
+                }else{
+                    alert(data.data, 'danger')
+                }
+                 $("#btnComent").prop("disabled", false); 
+            },
+            error:function(xhr,status,error){
+                 $("#btnComent").prop("disabled", false); 
+                 if (xhr.status === 429){
+                    alert("请求过于频繁，请稍后再试。",'warning')
+                }else if (xhr.status === 422){
+                    alert(xhr.responseJSON.message,'warning')
+                 }
+                else{
+                    alert("服务器异常，请稍后再试！！！",'danger')
+                }
+            }
+          })
+     }
+     function ReplyMsg(Name,Content,Email,Reamil){
+    $("#btnComent").prop("disabled", true); 
+      $.ajax({
+         url:`/MsgBoard/ReplyMessage?replyEmail=${Reamil}`,
+         type:'post',
+         data:JSON.stringify({
+             "MessageId":""+MessageId.value+"",
+             "Email":""+Email+"",
+             "Name":""+Name+"",
+             "Reply":""+Content+"",
+         }),
+         contentType: 'application/json',
+         success:function (data){
+             if (data.statusCode === 200){
+                 alert(data.message, 'success')
+                  const CommentList = document.getElementById('CommentList')
+                 const html = data.data
+                 CommentList.insertAdjacentHTML('beforeend', html);
+                 clearInput()
+             }else{
+                 alert(data.data, 'danger')
+             }
+              $("#btnComent").prop("disabled", false); 
+         },
+         error:function(xhr,status,error){
+              if (xhr.status === 429){
+                 alert("请求过于频繁，请稍后再试。",'warning')
+             }else if (xhr.status === 422){
+                 alert(xhr.responseJSON.message,'warning')
+              }
+             else{
+                 alert("服务器异常，请稍后再试！！！",'danger')
+             }
+              $("#btnComent").prop("disabled", false); 
+         }
+       })
+    }
+    </script>
+}
+<script>
+    // 获取所有的小盒子
+    var boxes = document.querySelectorAll('.box');
+
+    // 遍历每个小盒子
+    boxes.forEach(function(box) {
+        // 生成随机的背景颜色
+        var r = Math.floor(Math.random() * 256);
+        var g = Math.floor(Math.random() * 256);
+        var b = Math.floor(Math.random() * 256);
+        var alpha = 0.5;
+    
+        // 设置小盒子的背景颜色
+        box.style.backgroundColor = 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
+        // 生成随机的初始位置
+        var left = Math.floor(Math.random() * (box.parentNode.offsetWidth - box.offsetWidth));
+        var top = Math.floor(Math.random() * (box.parentNode.offsetHeight - box.offsetHeight));
+    
+        // 设置小盒子的位置
+        box.style.left = left + 'px';
+        box.style.top = top + 'px';
+        // 初始化拖动事件
+        box.addEventListener('mousedown', function(e) {
+            // 记录鼠标按下时的位置
+            var startX = e.pageX - box.offsetLeft;
+            var startY = e.pageY - box.offsetTop;
+
+            // 添加鼠标移动事件
+            document.addEventListener('mousemove', moveBox);
+
+            // 添加鼠标松开事件
+            document.addEventListener('mouseup', function() {
+                document.removeEventListener('mousemove', moveBox);
+            });
+
+            // 移动小盒子的函数
+            function moveBox(e) {
+                // 计算鼠标移动的距离
+                var newLeft = e.pageX - startX;
+                var newTop = e.pageY - startY;
+
+                // 确保小盒子不会移动出大盒子的范围
+                if (newLeft < 0) {
+                    newLeft = 0;
+                } else if (newLeft > box.parentNode.offsetWidth - box.offsetWidth) {
+                    newLeft = box.parentNode.offsetWidth - box.offsetWidth;
+                }
+
+                if (newTop < 0) {
+                    newTop = 0;
+                } else if (newTop > box.parentNode.offsetHeight - box.offsetHeight) {
+                    newTop = box.parentNode.offsetHeight - box.offsetHeight;
+                }
+
+                // 移动小盒子
+                box.style.left = newLeft + 'px';
+                box.style.top = newTop + 'px';
+            }
+        });
+    });
+</script>
+
+

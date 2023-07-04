@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Personalblog.Migrate
+@model Personalblog.Model.ViewModels.FeaturedPostTopCardModel
+
+<div class="col-md-6">
+    <div class="row g-0 border rounded overflow-hidden flex-md-row mb-3 shadow-sm h-md-250 position-relative box">
+        <div class="col p-4 d-flex flex-column position-static">
+            <strong class="d-inline-block mb-2 text-primary">@Model.FeaturedPost.Categories.Name</strong>
+            <h5 class="mb-0">@Model.FeaturedPost.Title.Limit(15)</h5>
+            <div class="mb-1 text-muted d-flex align-items-center">
+                <span class="me-2">@Model.FeaturedPost.LastUpdateTime.ToShortDateString()</span>
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-eye bi-sm me-1"></i>
+                    <span style="font-size: 0.875rem;">@Model.FeaturedPost.ViewCount</span>
+                </div>
+                <span style="width: 10px;"></span> <!-- 这里设置了一个 10px 的间距 -->
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-chat-square-dots bi-sm me-1"></i>
+                    <span style="font-size: 0.875rem;">@Model.FeaturedPost.Comments.Count</span>
+                </div>
+            </div>
+            <a class="stretched-link"
+               asp-controller="Blog" asp-action="Post" asp-route-id="@Model.FeaturedPost.Id">
+                Continue reading
+            </a>
+            @if (Model.Number == 1)
+            {
+                <div class="recommendation recommendation-first">之前</div>
+            }
+            else if (Model.Number == 2)
+            {
+                <div class="recommendation recommendation-last">最新</div>
+            }
+            else
+            {
+                <div class="recommendation recommendation-last">推荐</div>
+            }
+        </div>
+    </div>
+</div>

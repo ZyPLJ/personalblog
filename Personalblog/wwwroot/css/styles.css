@@ -1,0 +1,138 @@
+﻿.player-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.preview {
+    display: flex;
+    align-items: center;
+}
+
+.cover {
+    position: relative;
+}
+
+.disc {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+    .disc img.blur {
+        filter: blur(5px);
+        width: 100px;
+        height: 100px;
+    }
+
+.info {
+    margin-left: 20px;
+}
+
+    .info h4.title {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .info span {
+        font-size: 1rem;
+        display: block;
+        margin-bottom: 1rem;
+    }
+
+.lrc {
+    overflow: hidden;
+    height: 200px;
+    width: 300px;
+    position: relative;
+}
+
+    .lrc .inner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transition: transform 0.3s;
+    }
+
+    .lrc p {
+        margin: 0;
+        padding: 0;
+        line-height: 2;
+    }
+
+        .lrc p.current {
+            font-weight: bold;
+            color: #ff4081;
+        }
+
+.controller {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+    .controller .btn {
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .controller .volume {
+        position: relative;
+    }
+
+        .controller .volume .bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 100%;
+            background-color: #ff4081;
+        }
+
+.playlist {
+    margin-top: 1rem;
+}
+
+    .playlist ol {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        .playlist ol li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+            .playlist ol li .info {
+                display: flex;
+                flex-direction: column;
+            }
+
+                .playlist ol li .info span {
+                    font-size: 0.9rem;
+                }
+
+            .playlist ol li .progress {
+                width: 100%;
+                height: 2px;
+                background-color: #ccc;
+                position: relative;
+            }
+
+                .playlist ol li .progress .bar {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    height: 100%;
+                    background-color: #ff4081;
+                }

@@ -1,0 +1,35 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Personalblog.Migrate
+@model Personalblog.Model.Entitys.Post
+
+
+<div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative box">
+        <div class="col-auto d-none d-lg-block">
+            <img class="bd-placeholder-img" alt="" style="  width: 100%;
+                                                            height: 250px;
+                                                            object-fit: cover;"
+                 @* src="@Url.Action("GetRandomImage", "PicLib" ,new { seed = @Model.Id,Width = 1520, Height =1240})"> *@
+                 src="@Url.Action("GetRandomImageTop", "PicLib")" alt=""/>
+        </div>
+        <div class="col p-4 d-flex flex-column position-static">
+            <strong class="d-inline-block mb-2 text-primary">@Model.Categories.Name</strong>
+            <h5 class="mb-0">@Model.Title.Limit(15)</h5>
+            <div class="mb-3 text-muted d-flex align-items-center">
+                <span class="me-2">@Model.LastUpdateTime.ToShortDateString()</span>
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-eye bi-sm me-1"></i>
+                    <span style="font-size: 0.875rem;">@Model.ViewCount</span>
+                </div>
+                <span style="width: 10px;"></span> <!-- 这里设置了一个 10px 的间距 -->
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-chat-square-dots bi-sm me-1"></i>
+                    <span style="font-size: 0.875rem;">@Model.Comments.Count</span>
+                </div>
+            </div>
+            <a class="stretched-link"
+               asp-controller="Blog" asp-action="Post" asp-route-id="@Model.Id">
+                Continue reading
+            </a>
+            <div class="recommendation-Max">阅读最多</div>
+        </div>
+    </div>

@@ -1,0 +1,46 @@
+﻿@using Personalblog.Model.ViewModels
+@model BackToTopViewModel
+
+
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Z-Y</strong>
+            <small>微信号</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            <div class="card border-0">
+                <img src="~/images/5192045913af4a31a7988ed7077a1e0.jpg" alt="qrcode" class="card-img-top">
+                <div class="card-body">
+                    <h6 class="card-title">虚心请教~</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="btn-group-vertical position-fixed bottom-0 end-0 me-3 mb-3" role="group" aria-label="右下角工具" style="z-index: 11">
+    <button type="button" class="btn btn-success" id="liveToastBtn">
+        <i class="fa-brands fa-weixin"></i>
+        @if (Model.IsShowText)
+        {
+            <span>微信公众号</span>
+        }
+    </button>
+    <a class="btn btn-warning" href="#CommentList" role="button">
+        <i class="fa-regular fa-comment-dots"></i>
+        @if (Model.IsShowText)
+        {
+            <span>评论列表</span>
+        }
+    </a>
+    <a class="btn btn-primary" href="#" role="button">
+        <i class="fa-solid fa-arrow-up"></i>
+        @if (Model.IsShowText)
+        {
+            <span>返回顶部</span>
+        }
+    </a>
+</div>

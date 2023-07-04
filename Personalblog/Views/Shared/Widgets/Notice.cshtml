@@ -1,0 +1,40 @@
+﻿@model List<Personalblog.Model.Entitys.Notice>
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+    <div id="liveToast2" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">公告</strong>
+            <small>ZY知识库</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            <div class="card border-0">
+                <div class="card-body">
+                    <h6 class="card-title">虚心请教~</h6>
+                    <p>博客文章都是原创的,借鉴部分已标明出处，不存在抄袭一说！！！</p>
+                    <p> 我们希望读者也能尊重知识产权，并遵守相关法律法规和道德规范
+                        。如果您想要转载我们的文章，请务必获得我们的授权，并注明文章来源和作者信息。我
+                        们欢迎您分享我们的文章，但请不要以任何形式抄袭或侵犯知识产权。</p>
+                    <p>谢谢您的支持和理解！</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 11;margin-top: calc(400px + 20px);" >
+    <div id="liveToast3" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">通知</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            <div class="card border-0">
+                <div class="card-body">
+                    @foreach (var n in Model)
+                    {
+                         <p>@n.Content</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

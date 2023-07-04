@@ -1,0 +1,185 @@
+﻿@{
+    ViewData["Title"] = "关于本网站";
+}
+<style>
+    .containertwo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        border: 1px solid rgba(0, 0, 0, 0.175);
+        border-radius: 0.375rem;
+        padding:10px;
+        margin-bottom:5px;
+    }
+
+    .circle-image {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .left-image {
+        margin-right: 10px;
+    }
+
+    .right-image {
+        margin-left: 10px;
+    }
+
+    .time-text {
+        font-size: 14px;
+        font-family: Arial, sans-serif;
+    }
+    .circle-container {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .circle-bubble {
+        position: absolute;
+        bottom: 0;
+        width: 8px;
+        height: 8px;
+        background-color: #FF69B4;
+        border-radius: 50%;
+        animation: bubble 5s linear infinite;
+        opacity: 0;
+    }
+
+    @@keyframes bubble {
+        0% {
+            bottom: 0;
+            opacity: 0;
+        }
+        5% {
+            opacity: 0.5;
+        }
+        100% {
+            bottom: 100%;
+            opacity: 0;
+        }
+    }
+
+    /* 随机位置和动画时长 */
+    .circle-bubble:nth-child(1) {
+        left: 20%;
+        animation-duration: 3s;
+    }
+
+    .circle-bubble:nth-child(2) {
+        left: 40%;
+        animation-duration: 5s;
+    }
+
+    .circle-bubble:nth-child(3) {
+        left: 60%;
+        animation-duration: 6s;
+    }
+
+    .circle-bubble:nth-child(4) {
+        left: 80%;
+        animation-duration: 8s;
+    }
+
+    .circle-bubble:nth-child(5) {
+        left: 90%;
+        animation-duration: 7s;
+    }
+</style>
+<div class="container px-4 py-3">
+    <h2 class="d-flex w-100 justify-content-between pb-2 mb-3 border-bottom">
+        <div>About</div>
+        <div>关于本网站</div>
+    </h2>
+
+    <div class="row">
+        <div class="col-sm-6 col-lg-4 mb-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">关于站长</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">盼盼的老父亲 (Zy)</h6>
+                    <p class="card-text">啥都干开发者、原神爱好者（老原p了）</p>
+                    <p class="card-text">在此声明 本站的图片喜欢的自取 如需下架联系站长 邮箱 1767992919@qq.com</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">主要技能</h5>
+                    <p class="card-text text-muted">以CRUD为主，熟练使用搜索引擎，擅长各种CV操作，精通git clone代码转移大法</p>
+                </div>
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item">后端开发 / C# / Python / Java</div>
+                    <div class="list-group-item">前端开发 Vue</div>
+                    <div class="list-group-item">数据分析</div>
+                    <div class="list-group-item">爬虫</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-4 mb-4">
+            <div class="containertwo circle-container">
+                <!-- 添加多个圆形元素 -->
+                <div class="circle-bubble"></div>
+                <div class="circle-bubble"></div>
+                <div class="circle-bubble"></div>
+                <div class="circle-bubble"></div>
+                <div class="circle-bubble"></div>
+                <img src="./images/left.jpg" alt="左边图片" class="circle-image left-image">
+                <span class="time-text">我们相恋了 <span id="time">time</span> 天</span>
+                <img src="./images/right.jpg" alt="右边图片" class="circle-image right-image">
+            </div>
+            <div class="card">
+                <img src="~/images/logo.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">ZY 知识库</h5>
+                    <div class="card-text">一个技术探索与分享的平台</div>
+                    <small class="card-text text-muted">
+                        专注于互联网热门新技术探索与团队敏捷开发实践，包括Web前后端、Docker、爬虫、数据分析、算法、Linux等技术，欢迎探讨、分享学习实践经验。
+                    </small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-4 mb-4">
+            <div class="card">
+                <img src="~/images/5192045913af4a31a7988ed7077a1e0.jpg" class="card-img-top" alt="..." />
+                <div class="card-body">
+                    <h5 class="card-title">微信号</h5>
+                    <div class="card-text">欢迎扫码交流</div>
+                    <small class="card-text text-muted">
+                        ok了，当你看见这个二维码，说明你有意了解互联网知识，扫他让你成为互联网的新卷子吧！博主技术虽然一般，但有一颗卷子的心。
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function calculateTimeDifference(startDate) {
+        const now = new Date();
+        const timeDifference = now - startDate;
+        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+        const hours = now.getHours(); // 使用24小时制
+        const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+        return { days, hours, minutes, seconds };
+    }
+    function updateSiteRunningTime2() {
+        const startDate2 = new Date("2016-11-23");
+
+        // 计算运行时间
+        const timeDifference2 = calculateTimeDifference(startDate2);
+
+        // 更新显示网站运行时间的元素
+        const runningTimeElement2 = document.getElementById("time");
+        runningTimeElement2.textContent = `${timeDifference2.days}天 ${timeDifference2.hours}时 ${timeDifference2.minutes}分 ${timeDifference2.seconds}秒`;
+    }
+
+
+    // 立即更新网站运行时间
+    updateSiteRunningTime2();
+
+    // 每秒更新一次网站运行时间
+    setInterval(updateSiteRunningTime2, 1000);
+</script>

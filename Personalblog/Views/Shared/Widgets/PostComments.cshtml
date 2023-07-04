@@ -1,0 +1,25 @@
+﻿@using Ganss.Xss
+@model Personalblog.Model.Entitys.Comments
+
+
+
+<div class="feedbackItem">
+        <div class="feedbackListSubtitle">
+            <div class="feedbackManage">
+                <span class="comment_actions">
+                    <a class="comment_actions_link" href="#reply" onclick="Reply(@Model.CommentId,'@Model.Name')" id="Reply">回复</a>
+                </span>
+            </div>
+            <span class="comment_date">@Model.CreateTime</span>
+            <span class="a_comment_author_5166961">@Model.Name</span>
+        </div>
+    <div class="feedbackCon">
+        @{
+            var sanitizer = new HtmlSanitizer();
+            sanitizer.AllowedCssProperties.Clear(); // clear all allowed CSS properties
+            sanitizer.AllowedCssProperties.Add("text-align"); 
+            string sanitizedHtml = sanitizer.Sanitize(@Model.Content);
+        }
+        @Html.Raw(sanitizedHtml)
+    </div>   
+</div>

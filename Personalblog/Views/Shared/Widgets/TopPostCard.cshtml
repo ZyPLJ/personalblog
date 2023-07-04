@@ -1,0 +1,62 @@
+﻿@using Personalblog.Model.Entitys
+@model Post
+@inject IConfiguration Configuration
+
+<div class="row  rounded mb-4 shadow-sm box border" style="margin-left:3px;margin-right:3px">
+    <div class="col-md-6">
+        <div class="p-4 p-md-5 mb-4 text-black">
+            <div class="display-6 fst-italic">@Model.Title</div>
+            <p class="lead my-3">@Model.Summary</p>
+            <p class="lead mb-0">
+                <a class="text-black fw-bold"
+                   asp-controller="Blog" asp-action="Post" asp-route-id="@Model.Id">
+                    Continue reading...
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="col-md-6" style="padding-right:0">
+        @if (false)
+        {
+                    @* @{ *@
+        @*     var imageData = ""; *@
+        @*     var apiUrl = "http://zy.pljzy.top/Api/Image/GetImage?width=600&height=375"; *@
+        @*     try *@
+        @*     { *@
+        @*         using (var client = new System.Net.Http.HttpClient()) *@
+        @*         { *@
+        @*             var response = client.GetAsync(apiUrl).Result; *@
+        @*             response.EnsureSuccessStatusCode(); *@
+        @*             var responseContent = response.Content.ReadAsStringAsync().Result; *@
+        @*             var responseObject = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(responseContent); *@
+        @*             imageData = responseObject.data; *@
+        @*         } *@
+        @*     } *@
+        @*     catch (Exception ex) *@
+        @*     { *@
+        @*         // handle exception *@
+        @*     } *@
+        @* } *@
+        @* <img class="bd-placeholder-img img-fluid no-padding rounded" style="object-fit: cover; object-position: center;width:100%;height:100%" *@
+        @*      src="@imageData" alt=""/> *@
+        @* <img class="bd-placeholder-img img-fluid no-padding rounded" style="object-fit: cover; object-position: center;width:100%;height:500px" *@
+        @*      src="@Url.Action("GetRandomImage", "PicLib", new { seed = Model.Id, Width = 1080, Height = 1380 })" alt=""/>        *@
+        }
+        @* <img class="bd-placeholder-img img-fluid no-padding rounded" style="object-fit: cover; object-position: center;width:100%;height:500px" *@
+        @*      src="@Url.Action("GetRandomImageTop", "PicLib",new { seed = Model.Id})" alt=""/> *@
+        @if (Configuration.GetSection("Qiliu").GetValue<string>("StarandOff") == "Star")
+        {
+            // 调用GetRandomImageTopQiliu方法获取图片路径
+            <div class="loading" v-if="isLoading">
+                <div class="loading-spinner"></div>
+            </div>
+            <img id="random-image" class="bd-placeholder-img img-fluid no-padding rounded" style="object-fit: cover; object-position: center;width:100%;height:500px" :src="imageSrc" alt="" v-if="!isLoading"/>
+        }
+        else
+        {
+            <img class="bd-placeholder-img img-fluid no-padding rounded" style="object-fit: cover; object-position: center;width:100%;height:500px"
+                 src="@Url.Action("GetRandomImageTop", "PicLib", new { seed = Model.Id })" alt=""/>
+        }
+
+    </div>
+</div>

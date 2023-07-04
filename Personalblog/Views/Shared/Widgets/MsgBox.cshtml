@@ -1,0 +1,21 @@
+﻿@using Ganss.Xss
+@model Personalblog.Model.Entitys.Messages
+<div class="box" id="box1">
+    <div class="top">
+        <div>
+            <span>@Model.Name</span>
+            <span class="date">@Model.created_at.ToString("yyyy/MM/dd")</span>
+        </div>
+    </div>
+    <div class="bottom">
+        <div>
+            @{
+                var sanitizer = new HtmlSanitizer();
+                sanitizer.AllowedCssProperties.Clear(); // clear all allowed CSS properties
+                sanitizer.AllowedCssProperties.Add("text-align"); 
+                string sanitizedHtml = sanitizer.Sanitize(@Model.Message);
+            }
+            @Html.Raw(sanitizedHtml)
+        </div>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+﻿@using Ganss.Xss
+@model ICollection<Personalblog.Model.Entitys.Replies>
+
+@foreach (var r in Model)
+{
+    <div class="feedbackItem">
+        <div class="feedbackListSubtitle feedbackListSubtitle-louzhu">
+            <div class="feedbackManage">
+                <span class="comment_actions">
+                    <a class="comment_actions_link" href="#reply" onclick="Reply(@r.MessageId,'@r.Name','@r.Email')" id="Reply">回复</a>
+                </span>
+            </div>
+            <span class="comment_date">@r.created_at</span>
+            <span class="a_comment_author_5166961">@r.Name</span>
+        </div>
+        <div class="feedbackCon">
+            @{
+                var sanitizer = new HtmlSanitizer();
+                sanitizer.AllowedCssProperties.Clear(); // clear all allowed CSS properties
+                sanitizer.AllowedCssProperties.Add("text-align"); 
+                string sanitizedHtml = sanitizer.Sanitize(@r.Reply);
+            }
+            @Html.Raw(sanitizedHtml)
+        </div>   
+    </div>
+}

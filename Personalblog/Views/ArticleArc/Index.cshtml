@@ -1,0 +1,156 @@
+﻿@using Personalblog.Model.ViewModels
+@model Personalblog.Model.ViewModels.Arc.ArcViewPost
+
+@{
+    ViewData["Title"] = "文章归档";
+}
+
+
+@section head
+{
+    <style>
+        .Arc{
+           margin-bottom: 15px;
+           font-size: 14px;
+           font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+        }
+        .ArcBox{
+            display: flex; 
+            width: 100%;
+            background-color:#f2f6fc;
+            align-items: center;
+            border-radius:4px;
+            height: 40px;
+            cursor: pointer;
+        }
+        .Arc a{
+            color: #606266;
+        }
+        .Arc a:hover{
+            color:#56C1FF;
+        }
+        .Arc ol li{
+            padding-bottom:8px;
+        }
+    </style>
+    <script src="~/js/chart.js"></script>
+}
+
+<div class="container px-4 py-3">
+    <h2 class="d-flex w-100 justify-content-between pb-2 mb-3 border-bottom">
+        <div>STATS</div>
+        <div>数据统计</div>
+    </h2>
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <div class="card text-bg-light mb-3 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">文章数</h5>
+                    <p class="card-text">@Model.PostCount</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <div class="card text-center text-bg-light mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">评论数</h5>
+                    <p class="card-text">@Model.CommentCount</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <div class="card text-center text-bg-light mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">分类数</h5>
+                    <p class="card-text">@Model.CateGoryCount</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <div class="card text-center text-bg-light mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">阅读量</h5>
+                    <p class="card-text">@Model.ViewCount</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-2">
+        <div class="card-header">
+            分类统计
+        </div>
+        <div class="card-body">
+            <canvas id="myChart" width="400" height="400"></canvas>
+        </div>
+    </div>
+    <div id="liveAlertPlaceholder"></div>
+    <div class="container card" style="padding:0">
+        <div class="card-header">
+            文章归档
+        </div>
+        <div class="card-body">
+            <div id="data-list">
+            </div>
+            <div class="ArcBtn" id="ArcBtn">
+                <button type="button" class="btn" id="load-more" style="background-color:#33c2ff;color:white">加载更多</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+  
+
+var currentPage = 2;
+// 页面加载时渲染第一页的数据
+$.ajax({
+  url: '/ArticleArc/GetPageData',
+  type: 'GET',
+  data: { page: 1, pageSize: 2 },
+  success: function(data) {
+    // 将数据渲染到页面中
+    $('#data-list').html(data);
+  },
+  error: function() {
+    // 处理错误
+  }
+});
+
+$('#load-more').click(function() {
+  var $btn = $(this);
+
+  // 禁用按钮，显示loading...
+  $btn.prop('disabled', true).text('loading...');
+
+  $.ajax({
+    url: '/ArticleArc/GetPageData',
+    type: 'GET',
+    data: { page: currentPage },
+    success: function(data) {
+      // 处理返回的数据
+
+      // 更新当前页码
+      currentPage++;
+
+      // 更新页面中的页码显示
+      // $('#current-page').text(currentPage);
+
+      // 将数据渲染到页面中
+      $('#data-list').append(data);
+
+      // 将按钮的文本内容改回“加载更多”，并启用它
+      $btn.prop('disabled', false).text('加载更多');
+    },
+    error: function() {
+      // 处理错误
+       showAlert('没有更多内容了哟，快去关注公众号支持一下作者吧~', 'info')
+      // 将按钮的文本内容改回“加载更多”，并启用它
+      $btn.prop('disabled', false).text('加载更多');
+    }
+  });
+});
+</script>
+
+@section bottom
+{
+    <script src="~/js/bar.js"></script>
+}
