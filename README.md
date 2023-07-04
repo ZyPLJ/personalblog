@@ -107,6 +107,24 @@ mysql如下：
 
 [命令行运行](https://www.cnblogs.com/ZYPLJ/p/17138996.html)
 
+## 运行成功没有图片怎么办
+
+在Personalblog\wwwroot\media添加如下文件夹即可
+
+blog 为文章的存储文件夹 创建即可 后台管理上传
+
+photofraphy 为博客图片存放的文件夹 创建即可 后台管理上传
+
+Top 为博客首页文章显示的大图文件夹  创建之后放入自己喜欢的图片即可
+
+yasuo 为博客首页文章显示的小图文件夹 创建之后放入自己喜欢的图片即可
+
+yasuo2  为博客图片压缩图片存放路径，创建即可 后台管理上传![](D:\.net6\Presonablog最新\personalblog-master\截图\屏幕截图162907.png)
+
+## 运行成功，文章列表显示不安全怎么办
+
+> 这是因为我在列表跳转的时候加上了https，只需要修改Personalblog.Services下的CategoryService类中GetNodes方法的new { categoryId = c.Id },"https" 改成http即可
+
 # 声明
 
 该项目是基于 **[画星星博客主页](https://github.com/Deali-Axy/StarBlog)** 博主的项目而来。
