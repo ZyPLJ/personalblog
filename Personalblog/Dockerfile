@@ -7,6 +7,9 @@ EXPOSE 7031
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
+
+COPY fonts/ /usr/share/fonts/dejavu/
+
 COPY . .
 
 ENV TZ=Asia/Shanghai

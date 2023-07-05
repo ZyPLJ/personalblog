@@ -2,8 +2,12 @@
 using Qiniu.Http;
 using Qiniu.Storage;
 using Qiniu.Util;
+using SixLabors.Fonts;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Advanced;
+using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
 namespace Personalblog.Services
@@ -93,6 +97,8 @@ namespace Personalblog.Services
                 cropWidth = (int)(image.Height / scleHeight * scaleWidth);
             }
 
+            
+            
             var cropRect = new Rectangle((image.Width - cropWidth) / 2, (image.Height - cropHeight) / 2, cropWidth, cropHeight);
             image.Mutate(a => a.Crop(cropRect));
             image.Mutate(a => a.Resize(width, height));
