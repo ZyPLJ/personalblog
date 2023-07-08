@@ -178,7 +178,8 @@ namespace Personalblog.Controllers
             
                     try
                     {
-                        SendEmail(email, content.Content, $"{comments.PostId}");
+                        await ArticelsService.SendEmailOnAdd(email, content.Content, $"{comments.PostId}");
+                        // SendEmail(email, content.Content, $"{comments.PostId}");
                     }
                     catch (Exception e)
                     {
@@ -234,13 +235,14 @@ namespace Personalblog.Controllers
             }
         }*/
         #endregion
+        #region 废弃发送邮件
         private static void SendEmail(string email, string content, string link)
         {
             try
             {
                 // 创建邮件
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("ZY", "1767992919@qq.com"));
+                message.From.Add(new MailboxAddress("ZY", "zy1767992919@163.com"));
                 message.To.Add(new MailboxAddress("", email));
                 message.Subject = "ZY知识库评论通知";
                 message.Body = new TextPart("html")
@@ -250,8 +252,8 @@ namespace Personalblog.Controllers
                 // 发送邮件
                 using (var client = new SmtpClient())
                 {
-                    client.Connect("smtp.qq.com", 465, true);
-                    client.Authenticate("1767992919@qq.com", "wnfgbdddlsmcbfbj");
+                    client.Connect("smtp.163.com", 465, true);
+                    client.Authenticate("zy1767992919@163.com", "TYRTKMDEPQMOXXKG");
                     client.Send(message);
                     client.Disconnect(true);
                 }
@@ -263,7 +265,8 @@ namespace Personalblog.Controllers
                 throw;
             }
         }
-
+        #endregion
+        
         public string GetHtml(Comments comments)
         {
             string html = $@"

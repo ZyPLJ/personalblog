@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Personalblog.Extensions.SendEmail;
+using Personalblog.Extensions.SendEmail.Services;
 using Personalblog.Model;
 using Personalblog.Model.Entitys;
 using Personalblog.Model.Extensions.Markdown;
@@ -19,15 +21,18 @@ namespace PersonalblogServices.Articels
         private readonly LinkGenerator _generator;
         private readonly IHttpContextAccessor _accessor;
         private readonly IConfiguration _configuration;
+        private IEmailService emailService;
+        private readonly EmailServiceFactory _emailServiceFactory;
         public ArticelsService(MyDbContext myDbContext, IMapper mapper,
             LinkGenerator linkGenerator, IHttpContextAccessor accessor,
-            IConfiguration configuration)
+            IConfiguration configuration,EmailServiceFactory emailServiceFactory)
         {
             _myDbContext = myDbContext;
             _mapper = mapper;
             _generator = linkGenerator;
             _accessor = accessor;
             _configuration = configuration;
+            _emailServiceFactory = emailServiceFactory;
         }
 
         public Post AddPost(Post post)
@@ -124,6 +129,14 @@ namespace PersonalblogServices.Articels
         public async Task<Post> MaxPostAsync()
         {
             return await _myDbContext.posts.OrderByDescending(p => p.ViewCount).FirstOrDefaultAsync();
+        }
+
+        public async Task SendEmailOnAdd(string email, string content, string link)
+        {
+            emailService = await _emailServiceFactory.CreateEmailService();
+            var template = new CommentNotificationEmailTemplate();
+            await emailService.SendEmail(email, template,
+                new EmailContent() { Content = content, Link = link });
         }
     }
 }

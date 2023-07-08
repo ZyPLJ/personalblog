@@ -1,5 +1,7 @@
 ﻿using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Personalblog.Extensions.SendEmail;
+using Personalblog.Extensions.SendEmail.Services;
 using Personalblog.Migrate;
 using Personalblog.Model;
 using Personalblog.Model.Entitys;
@@ -13,10 +15,12 @@ namespace PersonalblogServices.Messages;
 public class MessagesService:IMessagesService
 {
     private readonly MyDbContext _myDbContext;
-
-    public MessagesService(MyDbContext myDbContext)
+    private IEmailService emailService;
+    private readonly EmailServiceFactory _emailServiceFactory;
+    public MessagesService(MyDbContext myDbContext,EmailServiceFactory emailServiceFactory)
     {
         _myDbContext = myDbContext;
+        _emailServiceFactory = emailServiceFactory;
     }
     public async Task<Personalblog.Model.Entitys.Messages> SubmitMessageAsync(Personalblog.Model.Entitys.Messages messages)
     {
@@ -108,5 +112,13 @@ public class MessagesService:IMessagesService
             Console.WriteLine(e);
             return new ApiResponse { Message = "删除失败！", StatusCode = 500 };
         }
+    }
+
+    public async Task SendEmailOnAdd(string email, string content)
+    {
+        emailService = await _emailServiceFactory.CreateEmailService();
+        var template = new MessageBoardNotificationEmailTemplate();
+        await emailService.SendEmail(email, template,
+            new EmailContent() { Content = content });
     }
 }

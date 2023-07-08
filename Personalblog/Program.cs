@@ -23,6 +23,8 @@ using StackExchange.Profiling.Storage;
 using System.Text;
 using AspNetCoreRateLimit;
 using Microsoft.Extensions.Caching.Memory;
+using Personalblog.Extensions.SendEmail;
+using Personalblog.Model.ViewModels;
 using PersonalblogServices.ArticelArc;
 using PersonalblogServices.CommentService;
 using PersonalblogServices.Messages;
@@ -73,6 +75,7 @@ builder.Services.AddTransient<INoticeService, NoticeService>();
 builder.Services.AddTransient<ILinkExchangeService, LinkExchangeService>();
 builder.Services.AddTransient<IMessagesService, MessagesService>();
 builder.Services.AddTransient<IArcService, ArcService>();
+builder.Services.AddTransient<EmailServiceFactory>();
 
 builder.Services.AddHttpContextAccessor();
 
@@ -93,6 +96,7 @@ builder.Services.AddSingleton<CrawlService>();
 
 
 builder.Services.Configure<SecuritySetting>(builder.Configuration.GetSection(nameof(SecuritySetting)));
+builder.Services.Configure<EmailConfig>(builder.Configuration.GetSection("Email"));
 
 builder.Services.AddMiniProfiler(options =>
 {

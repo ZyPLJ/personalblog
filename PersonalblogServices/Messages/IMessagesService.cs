@@ -24,4 +24,7 @@ public interface IMessagesService
     IPagedList<Replies> GetAllReply(QueryParameters param);
     //删除回复留言
     Task<ApiResponse> DelMessageReplyAsync(int id);
+    //发送邮件
+    Task SendEmailOnAdd(string email, string content);
+    
 }

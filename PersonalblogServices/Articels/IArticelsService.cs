@@ -25,5 +25,7 @@ namespace PersonalblogServices.Articels
         Task<List<Post>> FirstLastPostAsync();
         //获取阅读最多文章
         Task<Post> MaxPostAsync();
+        //发送邮件
+        Task SendEmailOnAdd(string email, string content, string link);
     }
 }

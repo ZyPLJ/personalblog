@@ -1,5 +1,7 @@
 ﻿using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Personalblog.Extensions.SendEmail;
+using Personalblog.Extensions.SendEmail.Services;
 using Personalblog.Model;
 using Personalblog.Model.Entitys;
 
@@ -7,13 +9,17 @@ namespace PersonalblogServices.Links;
 
 public class LinkExchangeService:ILinkExchangeService
 {
+    private IEmailService emailService;
     private readonly ILinkService _linkService;
     private readonly MyDbContext _myDbContext;
+    private readonly EmailServiceFactory _emailServiceFactory;
 
-    public LinkExchangeService(ILinkService linkService, MyDbContext myDbContext)
+    public LinkExchangeService(ILinkService linkService, MyDbContext myDbContext,
+        EmailServiceFactory emailServiceFactory)
     {
         _myDbContext = myDbContext;
         _linkService = linkService;
+        _emailServiceFactory = emailServiceFactory;
     }
     public async Task<bool> HasId(int id)
     {
@@ -98,57 +104,38 @@ public class LinkExchangeService:ILinkExchangeService
 
     public async Task SendEmailOnAdd(LinkExchange item)
     {
-        const string blogLink = "<a href=\"https://pljzy.top\">ZY知识库</a>";
-        var sb = new StringBuilder();
-        sb.AppendLine($"<p>友链申请已提交，正在处理中，请及时关注邮件通知~</p>");
-        sb.AppendLine($"<br>");
-        sb.AppendLine($"<p>以下是您申请的友链信息：</p>");
-        sb.AppendLine($"<p>网站名称：{item.Name}</p>");
-        sb.AppendLine($"<p>介绍：{item.Description}</p>");
-        sb.AppendLine($"<p>网址：{item.Url}</p>");
-        sb.AppendLine($"<p>站长：{item.WebMaster}</p>");
-        sb.AppendLine($"<br>");
-        sb.AppendLine($"<br>");
-        sb.AppendLine($"<br>");
-        sb.AppendLine($"<p>本消息由 {blogLink} 自动发送，无需回复。</p>");
-        await EmailUtils.SendEmailAsync(item.Email, sb.ToString());
+        emailService = await _emailServiceFactory.CreateEmailService();
+        var template = new LinksNotificationEmailTemplate(); 
+        await emailService.SendEmail(item.Email, template,
+            new EmailContent<LinkExchange>()
+            {
+                Content = "您好，友链申请已提交！感谢支持，请留意邮箱信息~",
+                Data = item
+            });
+        // await EmailUtils.SendEmailAsync(item.Email, sb.ToString());
     }
 
     public async Task SendEmailOnAccept(LinkExchange item)
     {
-        const string blogLink = "<a href=\"https://pljzy.top\">ZY知识库</a>";
-        var sb = new StringBuilder();
-        sb.AppendLine($"<p>您好，友链申请已通过！感谢支持，欢迎互访哦~</p>");
-        sb.AppendLine($"<br>");
-        sb.AppendLine($"<p>以下是您申请的友链信息：</p>");
-        sb.AppendLine($"<p>网站名称：{item.Name}</p>");
-        sb.AppendLine($"<p>介绍：{item.Description}</p>");
-        sb.AppendLine($"<p>网址：{item.Url}</p>");
-        sb.AppendLine($"<p>站长：{item.WebMaster}</p>");
-        sb.AppendLine($"<p>补充信息：{item.Reason}</p>");
-        sb.AppendLine($"<br>");
-        sb.AppendLine($"<br>");
-        sb.AppendLine($"<br>");
-        sb.AppendLine($"<p>本消息由 {blogLink} 自动发送，无需回复。</p>");
-        await EmailUtils.SendEmailAsync(item.Email, sb.ToString());
+        emailService = await _emailServiceFactory.CreateEmailService();
+        var template = new LinksNotificationEmailTemplate(); 
+        await emailService.SendEmail(item.Email, template,
+            new EmailContent<LinkExchange>()
+            {
+                Content = "您好，友链申请已通过！感谢支持，欢迎互访哦~",
+                Data = item
+            });
     }
 
     public async Task SendEmailOnReject(LinkExchange item)
     {
-        const string blogLink = "<a href=\"https://pljzy.top\">ZY知识库</a>";
-        var sb = new StringBuilder();
-        sb.AppendLine($"<p>很抱歉，友链申请未通过！建议您查看补充信息，调整后再次进行申请，感谢您的理解与支持~</p>");
-        sb.AppendLine($"<br>");
-        sb.AppendLine($"<p>以下是您申请的友链信息：</p>");
-        sb.AppendLine($"<p>网站名称：{item.Name}</p>");
-        sb.AppendLine($"<p>介绍：{item.Description}</p>");
-        sb.AppendLine($"<p>网址：{item.Url}</p>");
-        sb.AppendLine($"<p>站长：{item.WebMaster}</p>");
-        sb.AppendLine($"<p>补充信息：{item.Reason}</p>");
-        sb.AppendLine($"<br>");
-        sb.AppendLine($"<br>");
-        sb.AppendLine($"<br>");
-        sb.AppendLine($"<p>本消息由 {blogLink} 自动发送，无需回复。</p>");
-        await EmailUtils.SendEmailAsync(item.Email, sb.ToString());
+        emailService = await _emailServiceFactory.CreateEmailService();
+        var template = new LinksNotificationEmailTemplate(); 
+        await emailService.SendEmail(item.Email, template,
+            new EmailContent<LinkExchange>()
+            {
+                Content = "很抱歉，友链申请未通过！建议您查看补充信息，调整后再次进行申请，感谢您的理解与支持~",
+                Data = item
+            });
     }
 }

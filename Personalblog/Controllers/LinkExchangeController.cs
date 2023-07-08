@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Personalblog.Contrib.SiteMessage;
+using Personalblog.Extensions.SendEmail;
 using Personalblog.Model.Entitys;
 using Personalblog.Model.ViewModels.LinkExchange;
 using PersonalblogServices.Links;
@@ -44,8 +45,7 @@ public class LinkExchangeController : Controller
 
         var item = _mapper.Map<LinkExchange>(vm);
         item = await _linkExchangeService.AddOrUpdate(item);
-
-        // 发送邮件通知
+        
         await _linkExchangeService.SendEmailOnAdd(item);
 
         _messages.Info("友链申请已提交，正在处理中，请及时关注邮件通知~");
