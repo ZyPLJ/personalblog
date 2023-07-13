@@ -8,15 +8,24 @@ namespace Personalblog.Model.ViewModels.Categories
 {
     public class PaginationMetadata
     {
-        public int PageCount { get; set; }
-        public int TotalItemCount { get; set; }
-        public int PageNumber { get; set; }
-        public int PageSize { get; set; }
+        public long PageCount { get; set; }
+
+        public long TotalItemCount { get; set; }
+
+        public long PageNumber { get; set; }
+
+        public long PageSize { get; set; }
+
         public bool HasPreviousPage { get; set; }
+
         public bool HasNextPage { get; set; }
+
         public bool IsFirstPage { get; set; }
+
         public bool IsLastPage { get; set; }
-        public int FirstItemOnPage { get; set; }
-        public int LastItemOnPage { get; set; }
+
+        public long FirstItemOnPage { get; set; }
+
+        public long LastItemOnPage { get; set; }
     }
 }

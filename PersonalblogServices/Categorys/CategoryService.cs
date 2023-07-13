@@ -23,11 +23,6 @@ namespace PersonalblogServices.Categorys
 
         public List<Category> categories()
         {
-            //List<Category> categories = _myDbContext.categories.ToList();
-            //foreach (var item in categories)
-            //{
-            //    item.Posts = _myDbContext.posts.Where(p => p.CategoryId == item.Id).ToList();
-            //}
             List<Category> categories = _myDbContext.categories.Include("Posts").ToList();
             return categories;
         }

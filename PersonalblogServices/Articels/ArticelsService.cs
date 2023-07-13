@@ -10,6 +10,7 @@ using Personalblog.Model;
 using Personalblog.Model.Entitys;
 using Personalblog.Model.Extensions.Markdown;
 using Personalblog.Model.ViewModels;
+using Personalblog.Model.ViewModels.Blog;
 using X.PagedList;
 
 namespace PersonalblogServices.Articels
@@ -99,7 +100,7 @@ namespace PersonalblogServices.Articels
                 TocNodes = post.ExtractToc()
             };
             // 异步获取 CommentsList
-            model.CommentsList = await _myDbContext.comments.Where(c => c.PostId == post.Id).ToListAsync();
+            model.CommentsList = await _myDbContext.Comments.Where(c => c.PostId == post.Id).ToListAsync();
 
             // 异步获取 ConfigItem
             model.ConfigItem = await _myDbContext.configItems.FirstOrDefaultAsync();
@@ -131,12 +132,12 @@ namespace PersonalblogServices.Articels
             return await _myDbContext.posts.OrderByDescending(p => p.ViewCount).FirstOrDefaultAsync();
         }
 
-        public async Task SendEmailOnAdd(string email, string content, string link)
+        public async Task SendEmailOnAdd(CommentSendEmailDto dto)
         {
             emailService = await _emailServiceFactory.CreateEmailService();
             var template = new CommentNotificationEmailTemplate();
-            await emailService.SendEmail(email, template,
-                new EmailContent() { Content = content, Link = link });
+            await emailService.SendEmail(dto.email, template,
+                new EmailContent() { Content = dto.content, Link = dto.postId,Name = dto.name});
         }
     }
 }

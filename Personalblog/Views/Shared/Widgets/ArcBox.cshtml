@@ -5,30 +5,34 @@
 
 @foreach (var a in @Model)
 {
-    <div class="Arc">
-        <div class="ArcBox toggle-icon" data-bs-toggle="collapse" href="#id_@a.Year@a.Month" aria-expanded="false" aria-controls="collapseExample">
-            <div style="width: 100px;margin-left:10px">@a.Year 年 @a.Month 月</div>
-            <div style="margin-left: auto;">
-                <a class="btn btn-light" role="button">
-                    <i class="fa fa-chevron-down cd"></i>
-                </a>
+    <div class="item">
+        <div class="tail"></div>
+        <div class="head"></div>
+        <div class="Arc">
+            <div class="ArcBox toggle-icon" data-bs-toggle="collapse" href="#id_@a.Year@a.Month" aria-expanded="false" aria-controls="collapseExample">
+                <div style="width: 100px;margin-left:10px">@a.Year 年 @a.Month 月</div>
+                <div style="margin-left: auto;">
+                    <a class="btn btn-light" role="button">
+                        <i class="fa fa-chevron-down cd"></i>
+                    </a>
+                </div>
             </div>
-        </div>
-        <div class="collapse" id="id_@a.Year@a.Month">
-            <div class="card card-body" style="border:0;padding-bottom:0">
-                <ol style="list-style-type: none;margin: 0">
-                    @foreach (var ap in a.Posts)
-                    {
-                        string? url = _generator.GetUriByAction(
-                            _accessor.HttpContext!,
-                            "Post", "Blog",
-                            new { @ap.Id }, "https"
-                            );
-                        <li>
-                            <a href="@url" style="text-decoration: none;">@ap.CreationTime.ToString("MM/dd"):&nbsp;&nbsp;@ap.Title</a>
-                        </li>
-                    }
-                </ol>
+            <div class="collapse" id="id_@a.Year@a.Month">
+                <div class="card card-body" style="border:0;padding-bottom:0">
+                    <ol style="list-style-type: none;margin: 0">
+                        @foreach (var ap in a.Posts)
+                        {
+                            string? url = _generator.GetUriByAction(
+                                _accessor.HttpContext!,
+                                "Post", "Blog",
+                                new { @ap.Id }, "https"
+                                );
+                            <li>
+                                <a href="@url" style="text-decoration: none;">@ap.CreationTime.ToString("MM/dd"):&nbsp;&nbsp;@ap.Title</a>
+                            </li>
+                        }
+                    </ol>
+                </div>
             </div>
         </div>
     </div>

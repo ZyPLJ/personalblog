@@ -37,6 +37,7 @@
     <PackageReference Include="AspNetCoreRateLimit.Redis" Version="2.0.0" />
     <PackageReference Include="AutoMapper" Version="12.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+    <PackageReference Include="CodeLab.Share" Version="1.3.2" />
     <PackageReference Include="HtmlSanitizer" Version="8.0.645" />
     <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="12.2.2" />
     <PackageReference Include="MailKit" Version="4.0.0" />

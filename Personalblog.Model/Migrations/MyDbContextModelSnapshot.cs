@@ -15,7 +15,37 @@ namespace Personalblog.Model.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.7");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
+
+            modelBuilder.Entity("Personalblog.Model.Entitys.AnonymousUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Ip")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AnonymousUsers");
+                });
 
             modelBuilder.Entity("Personalblog.Model.Entitys.Category", b =>
                 {
@@ -26,11 +56,13 @@ namespace Personalblog.Model.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ParentId")
+                    b.Property<int?>("ParentId")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("Visible")
-                        .HasColumnType("INTEGER");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(true);
 
                     b.HasKey("Id");
 
@@ -39,37 +71,48 @@ namespace Personalblog.Model.Migrations
                     b.ToTable("categories");
                 });
 
-            modelBuilder.Entity("Personalblog.Model.Entitys.Comments", b =>
+            modelBuilder.Entity("Personalblog.Model.Entitys.Comment", b =>
                 {
-                    b.Property<int>("CommentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("ArticleId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("AnonymousUserId")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("CreateTime")
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ParentId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PostId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
+                    b.Property<DateTime>("UpdatedTime")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
+                    b.Property<string>("UserAgent")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ParentCommentId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
 
-                    b.HasKey("CommentId");
+                    b.HasKey("Id");
 
-                    b.ToTable("comments");
+                    b.HasIndex("AnonymousUserId");
+
+                    b.HasIndex("ParentId");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("Personalblog.Model.Entitys.ConfigItem", b =>
@@ -80,6 +123,9 @@ namespace Personalblog.Model.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsShowComment")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Key")
                         .IsRequired()
@@ -146,6 +192,9 @@ namespace Personalblog.Model.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PostId");
@@ -176,6 +225,86 @@ namespace Personalblog.Model.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("links");
+                });
+
+            modelBuilder.Entity("Personalblog.Model.Entitys.LinkExchange", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("ApplyTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Verified")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("WebMaster")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LinkExchanges");
+                });
+
+            modelBuilder.Entity("Personalblog.Model.Entitys.Messages", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("created_at")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("Personalblog.Model.Entitys.Notice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("notice");
                 });
 
             modelBuilder.Entity("Personalblog.Model.Entitys.Photo", b =>
@@ -238,11 +367,47 @@ namespace Personalblog.Model.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("ViewCount")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("ViewCount");
+
                     b.ToTable("posts");
+                });
+
+            modelBuilder.Entity("Personalblog.Model.Entitys.Replies", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("MessageId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Reply")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("created_at")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MessageId");
+
+                    b.ToTable("Replies");
                 });
 
             modelBuilder.Entity("Personalblog.Model.Entitys.TopPost", b =>
@@ -313,11 +478,40 @@ namespace Personalblog.Model.Migrations
                 {
                     b.HasOne("Personalblog.Model.Entitys.Category", "Parent")
                         .WithMany()
+                        .HasForeignKey("ParentId");
+
+                    b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("Personalblog.Model.Entitys.Comment", b =>
+                {
+                    b.HasOne("Personalblog.Model.Entitys.AnonymousUser", "AnonymousUser")
+                        .WithMany()
+                        .HasForeignKey("AnonymousUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Personalblog.Model.Entitys.Comment", "Parent")
+                        .WithMany("Comments")
                         .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Personalblog.Model.Entitys.Post", "Post")
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Personalblog.Model.Entitys.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("AnonymousUser");
+
                     b.Navigation("Parent");
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Personalblog.Model.Entitys.FeaturedCategory", b =>
@@ -358,10 +552,21 @@ namespace Personalblog.Model.Migrations
                     b.HasOne("Personalblog.Model.Entitys.Category", "Categories")
                         .WithMany("Posts")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.Navigation("Categories");
+                });
+
+            modelBuilder.Entity("Personalblog.Model.Entitys.Replies", b =>
+                {
+                    b.HasOne("Personalblog.Model.Entitys.Messages", "Message")
+                        .WithMany("Replies")
+                        .HasForeignKey("MessageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Message");
                 });
 
             modelBuilder.Entity("Personalblog.Model.Entitys.TopPost", b =>
@@ -378,6 +583,21 @@ namespace Personalblog.Model.Migrations
             modelBuilder.Entity("Personalblog.Model.Entitys.Category", b =>
                 {
                     b.Navigation("Posts");
+                });
+
+            modelBuilder.Entity("Personalblog.Model.Entitys.Comment", b =>
+                {
+                    b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("Personalblog.Model.Entitys.Messages", b =>
+                {
+                    b.Navigation("Replies");
+                });
+
+            modelBuilder.Entity("Personalblog.Model.Entitys.Post", b =>
+                {
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

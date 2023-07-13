@@ -160,17 +160,6 @@
     }
      
     </style>
-    <script>
-    window.onload = function() {
-        let liveToast2 = document.getElementById('liveToast2')
-        let toast2 = new bootstrap.Toast(liveToast2)
-        toast2.show()
-        let liveToast3 = document.getElementById('liveToast3')
-        let toast3 = new bootstrap.Toast(liveToast3)
-        toast3.show()
-    };
-    </script>
-    @* <script src="~/js/chart.js"></script> *@
     <script type="module" src="~/js/home.js"></script>
 }
 
@@ -221,12 +210,24 @@
                         @{
                             var firstPost = @Model.FirstLastPost.First();
                             var firstPostModel = new FeaturedPostTopCardModel { FeaturedPost = firstPost, Number = 1 };
-                            @await Html.PartialAsync("Widgets/FeaturedPostTopCard", firstPostModel)
+                            if (firstPost != null)
+                            {
+                                @await Html.PartialAsync("Widgets/FeaturedPostTopCard", firstPostModel) 
+                            }else
+                            {
+                                @await Html.PartialAsync("Widgets/PlaceholderCard", "置顶博客")
+                            }
                         }
                         @{
                             var lastPost = @Model.FirstLastPost.Last();
                             var lastPostModel = new FeaturedPostTopCardModel { FeaturedPost = lastPost, Number = 2 };
-                            @await Html.PartialAsync("Widgets/FeaturedPostTopCard", lastPostModel)
+                            if (lastPost != null)
+                            {
+                                @await Html.PartialAsync("Widgets/FeaturedPostTopCard", lastPostModel)
+                            }else
+                            {
+                                @await Html.PartialAsync("Widgets/PlaceholderCard", "置顶博客")
+                            }
                         }
                     </div>
                 </div>
@@ -332,7 +333,7 @@
     }
 </div>
 
-<div class="container px-4 py-3" name="bottomLink">
+<div class="container px-4 py-3">
     <div class="d-flex justify-content-between mb-2 border-bottom">
         <h2>友情链接</h2>
         <a class="btn btn-link" asp-controller="LinkExchange" asp-action="Add">申请友链</a>
@@ -353,25 +354,6 @@
     }
 </div>
 
-
-<!-- 弹出框 -->
-@* <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"> *@
-@*   <div class="modal-dialog modal-dialog-centered"> *@
-@*     <div class="modal-content"> *@
-@*       <div class="modal-header"> *@
-@*         <h5 class="modal-title" id="myModalLabel">提示信息</h5> *@
-@*         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> *@
-@*       </div> *@
-@*       <div class="modal-body"> *@
-@*         <p>没有更多内容了哟，快去关注公众号支持一下作者把~</p> *@
-@*       </div> *@
-@*       <div class="modal-footer"> *@
-@*         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button> *@
-@*         <button type="button" class="btn btn-primary">保存</button> *@
-@*       </div> *@
-@*     </div> *@
-@*   </div> *@
-@* </div> *@
 
 @section bottom{
     <script>        

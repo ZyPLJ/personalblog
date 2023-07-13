@@ -14,9 +14,10 @@ namespace Personalblog.Model
         {
             DbContextOptionsBuilder<MyDbContext> builder = new DbContextOptionsBuilder<MyDbContext>();
             //Personalblog
-            string connStr = "Data Source=app.db";
+            string connStr = "Data Source=app.db;Foreign Keys=False";
             //builder.UseMySql(connStr, new MySqlServerVersion(new Version()));
             builder.UseSqlite(connStr);
+
             MyDbContext ctx = new MyDbContext(builder.Options);
             return ctx;
         }

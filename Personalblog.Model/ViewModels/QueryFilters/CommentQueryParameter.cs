@@ -6,4 +6,8 @@ public class CommentQueryParameter:QueryParameters
     /// 排序字段
     /// </summary>
     public new string? Content { get; set; }
+    /// <summary>
+    /// 文章id
+    /// </summary>
+    public string? PostId { get; set; }
 }

@@ -25,7 +25,7 @@ namespace Personalblog.Model.Entitys
         /// </summary>
         public string? Name { get; set; }
 
-        public int ParentId { get; set; }
+        public int? ParentId { get; set; } = 0;
         public Category? Parent { get; set; }
         public List<Post>? Posts { get; set; }
         /// <summary>

@@ -16,3 +16,4 @@ if (currentTheme !== 'Bootstrap') {
     let themeCssUrl = localStorage.getItem('currentThemeCssUrl')
     if (themeCssUrl != null) loadStyles(themeCssUrl)
 }
+

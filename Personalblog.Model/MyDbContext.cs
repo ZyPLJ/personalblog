@@ -10,7 +10,7 @@ using Personalblog.Model.ViewModels.Arc;
 
 namespace Personalblog.Model
 {
-    public class MyDbContext:DbContext
+    public class MyDbContext : DbContext
     {
         public MyDbContext(DbContextOptions<MyDbContext> options) : base(options) { }
         public DbSet<Category> categories { get; set; }
@@ -22,18 +22,64 @@ namespace Personalblog.Model
         public DbSet<FeaturedPost> featuredPosts { get; set; }
         public DbSet<User> users { get; set; }
         public DbSet<VisitRecord> visitRecords { get; set; }
-        public DbSet<ConfigItem> configItems { get; set; } 
+        public DbSet<ConfigItem> configItems { get; set; }
         public DbSet<Link> links { get; set; }
-        public DbSet<Comments> comments { get; set; }
+        public DbSet<Comment> Comments { get; set; }
         public DbSet<Notice> notice { get; set; }
         public DbSet<LinkExchange> LinkExchanges { get; set; }
         public DbSet<Messages> Messages { get; set; }
         public DbSet<Replies> Replies { get; set; }
+        public DbSet<AnonymousUser> AnonymousUsers { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            // 禁用外键约束
+            modelBuilder.Entity<Post>()
+                .HasOne(p => p.Categories)
+                .WithMany()
+                .HasForeignKey(p => p.CategoryId)
+                .OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<Post>()
                 .HasIndex(p => p.ViewCount);
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.Parent)
+                .WithMany(c => c.Comments)
+                .HasForeignKey(c => c.ParentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.Post)
+                .WithMany(p => p.Comments)
+                .HasForeignKey(c => c.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.AnonymousUser)
+                .WithMany()
+                .HasForeignKey(c => c.AnonymousUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            modelBuilder.Entity<Category>()
+                .HasOne(c => c.Parent)
+                .WithMany()
+                .HasForeignKey(c => c.ParentId)
+                .IsRequired(false);
+            modelBuilder.Entity<Category>()
+                .Property(c => c.ParentId)
+                .ValueGeneratedNever();
+
+            modelBuilder.Entity<Category>()
+                .HasMany(c => c.Posts)
+                .WithOne(p => p.Categories)
+                .HasForeignKey(p => p.CategoryId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Category>()
+                .Property(c => c.Visible)
+                .HasDefaultValue(true);
+
             modelBuilder.ApplyConfigurationsFromAssembly(
                 this.GetType().Assembly);
         }

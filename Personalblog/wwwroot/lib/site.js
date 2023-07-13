@@ -1,9 +1,8 @@
-﻿
-let app = new Vue({
-    el: '#vue-header',
-    data: {
-        currentTheme: '',
-        themes: [
+﻿const { ref, onMounted } = Vue
+let app = Vue.createApp({
+    setup() {
+        const currentTheme = ref('');
+        const themes = [
             { "name": "Bootstrap" },
             { "name": "lux", "cssUrl": "https://cdn.bootcdn.net/ajax/libs/bootswatch/5.2.3/lux/bootstrap.min.css" },
             { "name": "cerulean", "cssUrl": "https://cdn.bootcdn.net/ajax/libs/bootswatch/5.2.3/cerulean/bootstrap.min.css" },
@@ -30,39 +29,71 @@ let app = new Vue({
             { "name": "vapor", "cssUrl": "https://cdn.bootcdn.net/ajax/libs/bootswatch/5.2.3/vapor/bootstrap.min.css" },
             { "name": "yeti", "cssUrl": "https://cdn.bootcdn.net/ajax/libs/bootswatch/5.2.3/yeti/bootstrap.min.css" },
             { "name": "zephyr", "cssUrl": "https://cdn.bootcdn.net/ajax/libs/bootswatch/5.2.3/zephyr/bootstrap.min.css" },
-        ]
-    },
-    created: function () {
-        //fetch('/Api/Theme')
-        //    .then(res => res.json())
-        //    .then(res => {
-        //        this.themes = res.data
-        //    })
+        ];
 
-        // 读取本地主题配置
-        let theme = localStorage.getItem('currentTheme')
-        if (theme != null) this.currentTheme = theme
-    },
-    methods: {
-        setTheme(themeName) {
-            let theme = this.themes.find(t => t.name === themeName)
-            loadStyles(theme.cssUrl)
-            this.currentTheme = themeName
-            localStorage.setItem('currentTheme', themeName)
-            localStorage.setItem('currentThemeCssUrl', theme.cssUrl)
-            // 换主题之后最好要刷新页面，不然可能样式冲突
-            location.reload()
-        }
+        const loadStyles = (cssUrl) => {
+            // 实现加载样式的逻辑
+            let link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.type = "text/css";
+            link.href = cssUrl;
+            let head = document.getElementsByTagName("head")[0];
+            head.appendChild(link);
+        };
+
+        const setTheme = (themeName) => {
+            const theme = themes.find(t => t.name === themeName);
+            if (theme) {
+                loadStyles(theme.cssUrl);
+                currentTheme.value = themeName;
+                localStorage.setItem('currentTheme', themeName);
+                localStorage.setItem('currentThemeCssUrl', theme.cssUrl);
+                location.reload();
+            }
+        };
+
+        let toastTrigger;
+        let toastLiveExample;
+        let liveToast2;
+        let toast2;
+        let liveToast3;
+        let toast3;
+
+        onMounted(()=>{
+            console.log(121231231233123)
+            let currentTheme = localStorage.getItem('currentTheme')
+            if (currentTheme !== 'Bootstrap') {
+                let themeCssUrl = localStorage.getItem('currentThemeCssUrl')
+                if (themeCssUrl != null) loadStyles(themeCssUrl)
+            }
+
+            toastTrigger = document.getElementById('liveToastBtn');
+            toastLiveExample = document.getElementById('liveToast');
+
+            if (toastTrigger) {
+                toastTrigger.addEventListener('click', function () {
+                    let toast = new bootstrap.Toast(toastLiveExample);
+                    toast.show();
+                });
+            }
+        })
+
+        // 在created钩子中执行逻辑
+        const created = () => {
+            console.log(123123)
+            let theme = localStorage.getItem('currentTheme');
+            if (theme) {
+                currentTheme.value = theme;
+            }
+        };
+        
+        return {
+            currentTheme,
+            themes,
+            setTheme,
+            created
+        };
     }
 })
 
-
-let toastTrigger = document.getElementById('liveToastBtn')
-let toastLiveExample = document.getElementById('liveToast')
-
-if (toastTrigger) {
-    toastTrigger.addEventListener('click', function () {
-        let toast = new bootstrap.Toast(toastLiveExample)
-        toast.show()
-    })
-}
+app.mount('#vue-header')

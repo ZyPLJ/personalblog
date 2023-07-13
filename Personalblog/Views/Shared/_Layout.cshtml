@@ -18,13 +18,16 @@
     <link rel="stylesheet" href="/css/footer.css">
     <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-icons/1.10.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="/css/nprogress.css" rel="stylesheet"/>
     @* <link href="~/mp3/index.aed4c9e8.css" rel="stylesheet" /> *@
     <script src="/js/siteLoad.js"></script>
     <script src="/script/global-audio.js"></script>
 
     <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.14/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.47/vue.global.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
+    
     @await RenderSectionAsync("head", false)
     @*    <style type="text/css">
         body,html{
@@ -81,14 +84,25 @@
                 margin-top: 20px;
                 transition: opacity 0.3s ease-in-out;
               }
-                    @@media (max-width: 576px) {
-                        .custom-alert {
-                            width: 100%;
-                            left: 0;
-                            transform: none;
-                            margin-top: 0;
-                        }
-                    }
+        @@media (max-width: 576px) {
+            .custom-alert {
+                width: 100%;
+                left: 0;
+                transform: none;
+                margin-top: 0;
+            }
+        }
+        
+        
+        /* 设置滚动条的宽度 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            border-radius: 4px;
+            background-color: #c0c4cc;
+        }
     </style>
 </head>
 <body>
@@ -279,13 +293,13 @@
         </div>
     </div>
 </footer>
-<script>
-    // 监听按钮的点击事件
-    document.querySelector('#button').addEventListener('click', () => {
-      // 滚动页面到网站主要内容的位置
-      document.querySelector('#main-content').scrollIntoView({ behavior: 'smooth' });
-    });
-  </script>
+@* <script> *@
+@*     // 监听按钮的点击事件 *@
+@*     document.querySelector('#button').addEventListener('click', () => { *@
+@*       // 滚动页面到网站主要内容的位置 *@
+@*       document.querySelector('#main-content').scrollIntoView({ behavior: 'smooth' }); *@
+@*     }); *@
+@*   </script> *@
 <script>
         !function (e, t, a) {
             function r() {
@@ -559,6 +573,12 @@
          }
        }
 </script>
+    <script>
+        NProgress.start();
+        window.onload = function() {
+            NProgress.done();
+        };
+    </script>
 <script src="~/lib/site.js"></script>
 @* <script src="https://unpkg.com/petite-vue@0.4.1/dist/petite-vue.iife.js"></script> *@
 @await RenderSectionAsync("bottom", false)

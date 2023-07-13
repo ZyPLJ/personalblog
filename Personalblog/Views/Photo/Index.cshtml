@@ -15,7 +15,7 @@
     </h2>
     <p class="status">&nbsp;</p>
     @if(Model.photos.Any()){
-        <div class="row" data-masonry='{"percentPosition": true }'>
+        <div class="row row-photo" data-masonry='{"percentPosition": true }'>
             @foreach (var photo in Model.photos)
             {
                 <div class="col-sm-6 col-lg-4 mb-4">
@@ -63,7 +63,7 @@
               $status.text(imgLoad.images.length + ' Picture loading completed');
           }
           );
-          var $grid = $('.row').masonry({
+          var $grid = $('.row-photo').masonry({
               //itemSelector: '.img-grid',
               percentPosition: true,
               //columnWidth: '.img-grid'

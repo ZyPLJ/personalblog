@@ -57,7 +57,7 @@ namespace Personalblog.Apis
             Category c2;
             if (category == null)
             {
-                Category c = new Category() { Name = Categoryname, Visible = true, ParentId = 0 };
+                Category c = new Category() { Name = Categoryname, Visible = true };
                 cid = categoryService.AddCategory(c);
             }
             else

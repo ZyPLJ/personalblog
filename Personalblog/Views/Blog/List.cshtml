@@ -34,7 +34,10 @@
     <div class="container px-4 py-3">
         <h2 class="d-flex w-100 justify-content-between pb-2 mb-3 border-bottom">
             <div>Blog / @Model.CurrentCategory.Name</div>
-            <div>@Model.Posts.TotalItemCount.ToString() Posts</div>
+            @if (Model.Posts.Count != 0)
+            {
+                <div>@Model.Posts.TotalItemCount.ToString() Posts</div>         
+            }
         </h2>
         <div class="row">
             <!--这是文章列表-->

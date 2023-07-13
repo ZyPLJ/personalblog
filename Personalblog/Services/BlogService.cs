@@ -83,7 +83,7 @@ namespace Personalblog.Services
         }
         public Post? GetTopOnePost()
         {
-            return _myDbContext.topPosts.Include(a => a.Post.Categories).First()?.Post;
+            return _myDbContext.topPosts.Include(a => a.Post.Categories).FirstOrDefault()?.Post;
         }
         /// <summary>
         /// 上传md文件

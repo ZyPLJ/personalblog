@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Personalblog.Model.ViewModels.Blog;
 using X.PagedList;
 
 namespace PersonalblogServices.Articels
@@ -26,6 +27,6 @@ namespace PersonalblogServices.Articels
         //获取阅读最多文章
         Task<Post> MaxPostAsync();
         //发送邮件
-        Task SendEmailOnAdd(string email, string content, string link);
+        Task SendEmailOnAdd(CommentSendEmailDto dto);
     }
 }

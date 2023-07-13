@@ -50,7 +50,7 @@ namespace Personalblog.Model.Entitys
         /// 导航属性
         /// </summary>
         public Category? Categories { get; set; }
-        public List<Comments> Comments { get; set; }
+        public List<Comment>? Comments { get; set; }
         /// <summary>
         /// 浏览量
         /// </summary>

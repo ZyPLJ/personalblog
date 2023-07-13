@@ -10,12 +10,14 @@
 {
     <style>
         .Arc{
-           margin-bottom: 15px;
            font-size: 14px;
-           font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+           font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;  
+            padding-left: 30px;
+            padding-bottom: 15px;
         }
         .ArcBox{
             display: flex; 
+            position: relative;
             width: 100%;
             background-color:#f2f6fc;
             align-items: center;
@@ -31,6 +33,62 @@
         }
         .Arc ol li{
             padding-bottom:8px;
+        }
+        .item .tail{
+            position: absolute;
+            left: 6px;
+            top: 0;
+            width: 1px;
+            height: 100%;
+            background: #ebeef5;
+        }
+        .item .head{
+            position: absolute;
+            top: 14px;
+            width: 13px;
+            height: 13px;
+            background: #ebeef5;
+            border-radius: 50%;
+        }
+        .ArcBox::before{
+            content: '';
+            position: absolute;
+            top: 50%;
+            -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
+            left: -8px;
+            width: 0;
+            height: 0;
+            border-right: 8px solid #f2f6fc;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+        }
+        .item{
+            position: relative;
+        }
+        
+        .ArcBtn button{
+            position: relative;
+            margin-left: 30px;
+            border: none;
+            color: #fff;
+            border-radius: 4px;
+            padding: 0 12px;
+            height: 34px;
+            font-size: 13px;
+        }
+        .ArcBtn button::before{
+            content: '';
+            position: absolute;
+            top: 50%;
+            -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
+            left: -8px;
+            width: 0;
+            height: 0;
+            border-right: 8px solid #33c2ff;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
         }
     </style>
     <script src="~/js/chart.js"></script>
@@ -91,8 +149,12 @@
         <div class="card-body">
             <div id="data-list">
             </div>
-            <div class="ArcBtn" id="ArcBtn">
-                <button type="button" class="btn" id="load-more" style="background-color:#33c2ff;color:white">加载更多</button>
+            <div class="item">
+                <div class="tail"></div>
+                <div class="head"></div>
+                <div class="ArcBtn" id="ArcBtn">
+                    <button type="button" class="btn" id="load-more" style="background-color:#33c2ff;color:white">加载更多</button>
+                </div>
             </div>
         </div>
     </div>

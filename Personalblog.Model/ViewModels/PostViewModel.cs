@@ -24,7 +24,7 @@ namespace Personalblog.Model.ViewModels
         public DateTime LastUpdateTime { get; set; }
         public Category Category { get; set; }
         public List<Category> Categories { get; set; }
-        public List<Comments> CommentsList { get; set; }
+        public List<Comment> CommentsList { get; set; }
         public ConfigItem ConfigItem { get; set; }
         public List<TocNode>? TocNodes { get; set; }
 

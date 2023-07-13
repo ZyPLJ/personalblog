@@ -1,0 +1,130 @@
+﻿@model Personalblog.Model.ViewModels.PostViewModel
+
+<div class="mt-5" id="vue-comment">
+    <div class="d-flex justify-content-between border-bottom pb-1">
+        <h5><i class="fa-solid fa-comment-dots"></i>&nbsp;讨论区</h5>
+        <span>共 {{comments.length}} 条讨论</span>
+    </div>
+
+    <el-form :model="form" :rules="formRules" ref="ruleFormRef" class="my-3">
+        <div class="row">
+            <div class="col-4">
+                <el-form-item prop="email">
+                    <el-input type="email" size="large" v-model="form.email" placeholder="邮箱地址"></el-input>
+                </el-form-item>
+            </div>
+            <div class="col-4">
+                <el-form-item prop="userName">
+                    <el-input type="text" size="large" v-model="form.userName" placeholder="昵称"></el-input>
+                </el-form-item>
+            </div>
+            <div class="col-4">
+                <el-form-item prop="url">
+                    <el-input type="text" size="large" v-model="form.url" placeholder="网址" @@blur="handleUrlBlur">
+                        <template #prepend>
+                            <i class="fa-solid fa-earth-asia"></i>
+                        </template>
+                    </el-input>
+                </el-form-item>
+            </div>
+        </div>
+        <el-form-item prop="content">
+            <el-input ref="contentRef" type="textarea" :rows="4" v-model="form.content" maxlength="300" show-word-limit placeholder="友善的评论是交流的起点">
+            </el-input>
+            <div class="form-text mt-0" style="line-height:1.5rem">良言一句三冬暖，恶语伤人六月寒。</div>
+            &nbsp;&nbsp;
+            <div class="d-flex align-items-center" v-if="replyComment">
+                <span class="me-1">回复</span>
+                <el-tag closable
+                        :disable-transitions="false"
+                        @@close="handleReplyTagClose">
+                    @@{{replyComment.anonymousUser.name}}
+                </el-tag>
+            </div>
+        </el-form-item>
+        <div class="d-flex justify-content-between">
+            <div>
+                <el-button type="primary" size="large" plain :loading="refreshLoading" @@click="handleRefresh" round>
+                    <el-icon class="fa-solid fa-rotate"></el-icon>&nbsp;&nbsp;刷新
+                </el-button>
+            </div>
+            <div>
+                <el-button round size="large" plainround type="info" plain @@click="handleReset(ruleFormRef)">
+                    <el-icon class="fa-solid fa-xmark"></el-icon>&nbsp;&nbsp;重置
+                </el-button>
+                <el-button round size="large" type="success" plain @@click="handleSubmit(ruleFormRef)">
+                    <el-icon class="fa-solid fa-user-pen"></el-icon>&nbsp;&nbsp;发表
+                </el-button>
+            </div>
+        </div>
+    </el-form>
+
+    <el-divider content-position="left">
+        <i class="fa-solid fa-book-open-reader"></i>
+    </el-divider>
+
+    <div class="mt-3" v-loading="refreshLoading">
+        <el-empty description="暂无讨论" v-if="comments.length===0"></el-empty>
+        <div class="list-group list-group-flush">
+            <div class="list-group-item" v-for="comment in comments">
+                <div class="row">
+                    <div class="col-auto">
+                        <el-popover placement="top-start" :width="400" trigger="hover" v-if="comments.length!==0">
+                            <template #reference>
+                                <el-avatar :src="comment.avatar" :size="50"></el-avatar>
+                            </template>
+                           <div class="row">
+                              <div class="col-auto">
+                                  <el-avatar class="ms-3" :src="comment.avatar" :size="100"></el-avatar>
+                              </div>
+                              <div class="col-auto">
+                                  <h5 class="ms-3">{{comment.anonymousUser.name}}</h5>
+                                  <ul class="list-group list-group-flush">
+                                      <li class="list-group-item">首次发言：{{comment.anonymousUser.createdTime}}</li>
+                                      <li class="list-group-item">网站地址：{{comment.anonymousUser.url}}</li>
+                                  </ul>
+                              </div>
+                          </div>
+                        </el-popover>
+                    </div>
+                    <div class="col">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{comment.anonymousUser.name}}</h5>
+                            <small class="text-muted">{{comment.createdTime}}</small>
+                        </div>
+                        <div class="mb-1">
+                            <el-link v-if="comment.replyUser">@@{{comment.replyUser}}</el-link>
+                            {{comment.content}}
+                        </div>
+                        <div class="d-flex w-100 justify-content-between">
+                            <a class="text-muted small" :href="`//${comment.anonymousUser.url}`" target="_blank">{{comment.anonymousUser.url}}</a>
+                            <el-link type="primary"  @@click="handleReply(comment)">回复</el-link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <el-divider content-position="right">
+        <i class="fa-solid fa-cannabis"></i>
+    </el-divider>
+
+    <nav aria-label="评论分页" class="my-3">
+        <div class="d-flex justify-content-center">
+            <el-pagination
+                background
+                layout="prev, pager, next, sizes, total"
+                :total="total"
+                :current-page="page"
+                :page-sizes="[5, 10, 20, 50]"
+                :page-size="pageSize"
+                @@current-change="handleCurrentChange"
+                @@size-change="handleSizeChange"
+                >
+            </el-pagination>
+        </div>
+    </nav>
+</div>
+
+<script>const POST_ID = '@Model.Id'</script>

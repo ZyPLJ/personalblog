@@ -1,171 +1,206 @@
 const HEIGHT = 400
+const { onMounted } = Vue
 
-let homeApp = new Vue({
-    el: '#vue-app',
-    data: {
-        poem: {},
-        hitokoto: {},
-        poemSimple: '',
-        chartTypes: ['bubble', 'bar'],
-        currentChartTypeIndex: 0,
-        currentChart: null,
-        imageSrc:'',
-        isLoading: true
-    },
-    computed: {
-        chartElem() {
-            return document.getElementById('myChart')
-        }
-    },
-    created() {
-        this.loadPoem()
-        this.loadHitokoto()
-        this.getRandomImage()
-    },
-    mounted() {
-        if (CHART_VISIBLE === true) this.loadChart()
-    },
-    methods: {
-        getRandomImage() {
-            const img = document.getElementById('random-image')
+const homeApp = Vue.createApp({
+    setup() {
+        const poem = ref({});
+        const hitokoto = ref({});
+        const poemSimple = ref('');
+        const chartTypes = ['bubble', 'bar'];
+        const currentChartTypeIndex = ref(0);
+        const currentChart = ref(null);
+        const imageSrc = ref('');
+        const isLoading = ref(true);
+
+        const chartElem = ref(null);
+
+        const getRandomImage = () => {
+            const img = document.getElementById('random-image');
             fetch(`/PicLib/GetRandomImageTopQiliu`)
                 .then(res => res.json())
                 .then(data => {
-                    this.imageSrc = data.data
-                    this.isLoading = false
+                    imageSrc.value = data.data;
+                    isLoading.value = false;
                 })
                 .catch(() => {
-                    console.log('Error retrieving random image.')
-                    this.isLoading = false
-                })
-        },
-        loadPoem() {
+                    console.log('Error retrieving random image.');
+                    isLoading.value = false;
+                });
+        };
+
+        const loadPoem = () => {
             fetch('/Api/DataAcq/Poem')
-                .then(res => res.json()).then(res => this.poemSimple = res.data)
-        },
-        loadHitokoto() {
+                .then(res => res.json())
+                .then(res => (poemSimple.value = res.data));
+        };
+
+        const loadHitokoto = () => {
             fetch('/Api/DataAcq/Hitokoto')
-                .then(res => res.json()).then(res => this.hitokoto = res.data)
-        },
-        /**
-         * 生成随机RGB颜色字符串，例如：rgb(123,123,123)
-         * @returns {string}
-         */
-        randomRGB() {
-            return 'rgb(' + this.randomColorArray().join(',') + ')'
-        },
-        // 生成随机RGBA字符串，例如：rgba(123,123,123,0.2)
-        randomRGBA(a) {
-            return this.convertRGBA(this.randomColorArray(), a)
-        },
-        // RGB数组转换成RGBA字符串
-        convertRGBA(rgbArray, a) {
-            let color = Array.from(rgbArray)
-            color.push(a)
-            return 'rgba(' + color.join(',') + ')'
-        },
-        randomColorArray() {
+                .then(res => res.json())
+                .then(res => (hitokoto.value = res.data));
+        };
+
+        const randomRGB = () => {
+            return 'rgb(' + randomColorArray().join(',') + ')';
+        };
+
+        const randomRGBA = (a) => {
+            return convertRGBA(randomColorArray(), a);
+        };
+
+        const convertRGBA = (rgbArray, a) => {
+            let color = Array.from(rgbArray);
+            color.push(a);
+            return 'rgba(' + color.join(',') + ')';
+        };
+
+        const randomColorArray = () => {
             return [
                 Math.round(Math.random() * 255),
                 Math.round(Math.random() * 255),
                 Math.round(Math.random() * 255),
-            ]
-        },
-        switchChartType() {
-            if (this.currentChartTypeIndex >= this.chartTypes.length - 1)
-                this.currentChartTypeIndex = 0
-            else
-                this.currentChartTypeIndex++
-            if (this.currentChart)
-                this.currentChart.destroy()
-            this.chartElem.setAttribute('style', '')
-            this.loadChart()
-        },
-        loadChart() {
-            let chartType = this.chartTypes[this.currentChartTypeIndex]
+            ];
+        };
+
+        const switchChartType = () => {
+            if (currentChartTypeIndex.value >= chartTypes.length - 1)
+                currentChartTypeIndex.value = 0;
+            else currentChartTypeIndex.value++;
+            if (currentChart.value) currentChart.value.destroy();
+            chartElem.value.setAttribute('style', '');
+            loadChart();
+        };
+
+        const loadChart = () => {
+            let chartType = chartTypes[currentChartTypeIndex.value];
             switch (chartType) {
                 case 'bubble':
-                    this.loadBubbleChart()
-                    break
+                    loadBubbleChart();
+                    break;
                 case 'bar':
-                    this.loadBarChart()
-                    break
+                    loadBarChart();
+                    break;
                 default:
             }
-        },
-        loadBubbleChart() {
-            fetch('/Api/Category/WordCloud').then(res => res.json())
+        };
+
+        const loadBubbleChart = () => {
+            fetch('/Api/Category/WordCloud')
+                .then(res => res.json())
                 .then(res => {
-                    let datasets = []
+                    let datasets = [];
                     res.data.forEach(item => {
-                        let color = this.randomColorArray()
+                        let color = randomColorArray();
                         datasets.push({
                             label: item.name,
-                            data: [{
-                                x: Math.round(Math.random() * 50),
-                                y: Math.round(Math.random() * 50),
-                                r: item.value
-                            }],
-                            backgroundColor: this.convertRGBA(color, 0.2),
-                            borderColor: this.convertRGBA(color, 1),
-                            borderWidth: 1
-                        })
-                    })
+                            data: [
+                                {
+                                    x: Math.round(Math.random() * 50),
+                                    y: Math.round(Math.random() * 50),
+                                    r: item.value,
+                                },
+                            ],
+                            backgroundColor: convertRGBA(color, 0.2),
+                            borderColor: convertRGBA(color, 1),
+                            borderWidth: 1,
+                        });
+                    });
                     let data = {
-                        datasets: datasets
+                        datasets: datasets,
                     };
                     let config = {
                         type: 'bubble',
                         data: data,
                         options: {
                             maintainAspectRatio: false,
-                        }
+                        },
                     };
-                    this.currentChart = new Chart(this.chartElem, config)
-                    this.currentChart.resize(null, HEIGHT)
-                })
-        },
-        loadBarChart() {
-            fetch('/Api/Category/WordCloud').then(res => res.json())
+                    currentChart.value = new Chart(chartElem.value, config);
+                    currentChart.value.resize(null, HEIGHT);
+                });
+        };
+
+        const loadBarChart = () => {
+            fetch('/Api/Category/WordCloud')
+                .then(res => res.json())
                 .then(res => {
-                    let labels = []
-                    let values = []
-                    let backgroundColors = []
-                    let borderColors = []
+                    let labels = [];
+                    let values = [];
+                    let backgroundColors = [];
+                    let borderColors = [];
                     res.data.forEach(item => {
-                        labels.push(item.name)
-                        values.push(item.value)
-                        let color = this.randomColorArray()
-                        backgroundColors.push(this.convertRGBA(color, 0.2))
-                        borderColors.push(this.convertRGBA(color, 1))
-                    })
+                        labels.push(item.name);
+                        values.push(item.value);
+                        let color = randomColorArray();
+                        backgroundColors.push(convertRGBA(color, 0.2));
+                        borderColors.push(convertRGBA(color, 1));
+                    });
                     let data = {
                         labels: labels,
-                        datasets: [{
-                            label: '# of Votes',
-                            data: values,
-                            backgroundColor: backgroundColors,
-                            borderColor: borderColors,
-                            borderWidth: 1
-                        }]
-                    }
+                        datasets: [
+                            {
+                                label: '# of Votes',
+                                data: values,
+                                backgroundColor: backgroundColors,
+                                borderColor: borderColors,
+                                borderWidth: 1,
+                            },
+                        ],
+                    };
                     let config = {
                         type: 'bar',
                         data: data,
                         options: {
                             maintainAspectRatio: false,
-                        }
-                    }
+                        },
+                    };
 
-                    this.currentChart = new Chart(this.chartElem, config)
-                    this.currentChart.resize(null, HEIGHT)
-                })
-        }
-    }
+                    currentChart.value = new Chart(chartElem.value, config);
+                    currentChart.value.resize(null, HEIGHT);
+                });
+        };
+
+        onMounted(() => {
+            loadPoem();
+            loadHitokoto();
+            getRandomImage();
+            console.log(123123)
+            if (CHART_VISIBLE === true) loadChart();
+            // Enable tooltips
+            console.log('Enable tooltips')
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+            let liveToast2 = document.getElementById('liveToast2')
+            let toast2 = new bootstrap.Toast(liveToast2)
+            toast2.show()
+            let liveToast3 = document.getElementById('liveToast3')
+            let toast3 = new bootstrap.Toast(liveToast3)
+            toast3.show()
+        });
+
+        return {
+            poem,
+            hitokoto,
+            poemSimple,
+            chartTypes,
+            currentChartTypeIndex,
+            currentChart,
+            imageSrc,
+            isLoading,
+            chartElem,
+            getRandomImage,
+            loadPoem,
+            loadHitokoto,
+            randomRGB,
+            randomRGBA,
+            convertRGBA,
+            randomColorArray,
+            switchChartType,
+            loadChart,
+            loadBubbleChart,
+            loadBarChart,
+        };
+    },
 })
-
-
-// Enable tooltips
-console.log('Enable tooltips')
-const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+homeApp.mount("#vue-app")

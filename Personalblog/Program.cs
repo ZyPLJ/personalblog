@@ -48,7 +48,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<MyDbContext>(opt =>
 {
     //opt.UseMySql(connStr, new MySqlServerVersion(new Version(5, 7, 40)));   
-    string connStr = "Data Source=app.db";
+    string connStr = "Data Source=app.db;Foreign Keys=False";
     opt.UseSqlite(connStr);
 });
 
@@ -93,6 +93,7 @@ builder.Services.AddSingleton<Messages>();
 builder.Services.AddSingleton<CommonService>();
 builder.Services.AddSingleton<PiCLibService>();
 builder.Services.AddSingleton<CrawlService>();
+builder.Services.AddSingleton<TempFilterService>();
 
 
 builder.Services.Configure<SecuritySetting>(builder.Configuration.GetSection(nameof(SecuritySetting)));
