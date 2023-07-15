@@ -8,17 +8,17 @@
 
     <el-form :model="form" :rules="formRules" ref="ruleFormRef" class="my-3">
         <div class="row">
-            <div class="col-4">
+            <div class="col-lg-4 col-md-6 col-sm-12">
                 <el-form-item prop="email">
                     <el-input type="email" size="large" v-model="form.email" placeholder="邮箱地址"></el-input>
                 </el-form-item>
             </div>
-            <div class="col-4">
+            <div class="col-lg-4 col-md-6 col-sm-12">
                 <el-form-item prop="userName">
                     <el-input type="text" size="large" v-model="form.userName" placeholder="昵称"></el-input>
                 </el-form-item>
             </div>
-            <div class="col-4">
+            <div class="col-lg-4 col-md-6 col-sm-12">
                 <el-form-item prop="url">
                     <el-input type="text" size="large" v-model="form.url" placeholder="网址" @@blur="handleUrlBlur">
                         <template #prepend>

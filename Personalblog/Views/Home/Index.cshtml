@@ -6,160 +6,7 @@
 @model HomeViewModel
 
 @section head{
-    <style>
-    .card {
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-    }
-        .flip{
-            transition: transform ease-in-out 1.2s;
-            transform-style: preserve-3d;
-        }
-
-        .flip-container:hover .flip {
-            /*transform: rotateX(360deg);*/
-            transform: rotateY(-180deg);
-        }
-
-        .flip-container:not(:hover) .flip {
-            transform: rotateY(0deg);
-        }
-
-
-       .roller {
-         list-style: none;
-         margin: 0;
-         padding: 0;
-         width: 100%;
-         height: 100%;
-         overflow: auto;
-         scroll-snap-type: y mandatory;
-       }
-       
-       .roller li {
-         width: 100%;
-         display: flex;
-         justify-content: center;
-         align-items: center;
-         font-size: 1.2rem;
-         color: #333;
-         scroll-snap-align: center;
-       }
-       .roller:before{
-        height:20px;
-       }
-       
-       .roller-wrapper {
-               height:60px;
-         position: relative;
-         border-radius: 12px;
-       }
-       
-       .roller-wrapper::after {
-         content: '';
-         position: absolute;
-         top: 2px;
-         width: 100%;
-         height: 30px;
-         box-shadow: 0px 4px 12px rgba(0, 0, 0, .12);
-         border-top: 1px solid rgba(0, 0, 0, .12);
-         border-bottom: 1px solid rgba(0, 0, 0, .12);
-         pointer-events: none;
-       }
-       
-       .roller li:last-child {
-         margin-bottom: 40px;
-       }
-       .recommendation{
-           position: absolute;
-           top: 0;
-           right: 0;         
-           color: white;
-           padding: 5px;
-           font-size: 14px;
-           font-weight: bold;
-       }
-       .recommendation-first {
-            background-color: darkgray;
-       }
-      .recommendation-last {
-           background-color: lightskyblue;
-      }
-      .recommendation-Max{
-        position: absolute;
-        top: 0;
-        right: 0;
-        background-color: #FF6B6B;
-           color: white;
-           font-size: 14px;
-                      font-weight: bold;
-        padding: 0.25rem 0.5rem;
-        border-bottom-left-radius: 0.25rem;
-      }
-      #myAlert {
-          position: fixed;
-          right: 0;
-          display: none;
-      }
-    .toast-body {
-      background-color: #fff;
-      padding: 20px;
-    }
-    .card {
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-    .card-title {
-      font-family: Arial, sans-serif;
-      font-size: 20px;
-      font-weight: bold;
-      color: #333;
-      margin-bottom: 20px;
-    }
-    .card-body p {
-      font-family: Arial, sans-serif;
-      font-size: 16px;
-      line-height: 1.5;
-      margin-bottom: 10px;
-    }
-    .card-body p:last-child {
-      margin-bottom: 0;
-    }
-    .box {
-      transition: transform 0.3s ease-in-out;
-    }
-    
-    .box:hover {
-      transform: scale(1.05);
-    }
-.loading {
-  position: relative;
-  width: 100%;
-  height: 500px;
-}
-
-.loading-spinner {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 40px;
-  height: 40px;
-  margin-top: -20px;
-  margin-left: -20px;
-  border: 3px solid rgba(0, 0, 0, 0.3);
-  border-top-color: rgba(0, 0, 0, 0.6);
-  border-radius: 50%;
-  animation: loading-spinner 0.8s linear infinite;
-}
-
-    @@keyframes loading-spinner {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-     
-    </style>
+    <link rel="stylesheet" href="~/lib/Home/HomeIndex.css"/>
     <script type="module" src="~/js/home.js"></script>
 }
 
@@ -212,8 +59,9 @@
                             var firstPostModel = new FeaturedPostTopCardModel { FeaturedPost = firstPost, Number = 1 };
                             if (firstPost != null)
                             {
-                                @await Html.PartialAsync("Widgets/FeaturedPostTopCard", firstPostModel) 
-                            }else
+                                @await Html.PartialAsync("Widgets/FeaturedPostTopCard", firstPostModel)
+                            }
+                            else
                             {
                                 @await Html.PartialAsync("Widgets/PlaceholderCard", "置顶博客")
                             }
@@ -224,7 +72,8 @@
                             if (lastPost != null)
                             {
                                 @await Html.PartialAsync("Widgets/FeaturedPostTopCard", lastPostModel)
-                            }else
+                            }
+                            else
                             {
                                 @await Html.PartialAsync("Widgets/PlaceholderCard", "置顶博客")
                             }
@@ -232,26 +81,6 @@
                     </div>
                 </div>
             </div>
-            @* <div class="row"> *@
-            @*      <div class="col-lg-6"> *@
-            @*          @{ *@
-            @*             var firstPost = @Model.FirstLastPost.First(); *@
-            @*             var firstPostModel = new FeaturedPostTopCardModel { FeaturedPost = firstPost, Number = 1 }; *@
-            @*             <partial name="Widgets/FeaturedPostTopCard" model="firstPostModel"/> *@
-            @*         } *@
-            @*         @{ *@
-            @*             var lastPost = @Model.FirstLastPost.Last(); *@
-            @*             var lastPostModel = new FeaturedPostTopCardModel { FeaturedPost = lastPost, Number = 2 }; *@
-            @*             <partial name="Widgets/FeaturedPostTopCard" model="lastPostModel"/> *@
-            @*         } *@
-            @*     </div> *@
-            @*     <div class="col-lg-6"> *@
-            @*         @{ *@
-            @* *@
-            @*             <partial name="Widgets/FeaturedPostTopCardMax" model="Model.MaxPost"/> *@
-            @*         } *@
-            @*     </div> *@
-            @* </div> *@
         </div>
     </div>
 </div>
@@ -296,7 +125,6 @@
 </div>
 
 <div class="container px-4 py-3">
-    @* <h2 class="pb-2 border-bottom">Top Blog Posts</h2> *@
     <h2 class="d-flex w-100 justify-content-between pb-2 mb-3 border-bottom">
         <div>Top Blog Posts</div>
         <div>文章推荐</div>
@@ -314,15 +142,17 @@
     @if (Model.FeaturedPosts.Any())
     {
         <div class="row mb-2" id="Home-list">
-            @await Html.PartialAsync("Widgets/FeaturedPostCard",Model.FeaturedPosts)
+            @await Html.PartialAsync("Widgets/FeaturedPostCard", Model.FeaturedPosts)
         </div>
         <div class="row justify-content-center">
             <div class="col align-self-center text-center">
                 <div class="ArcBtn" id="HomeBtn">
-                    <button type="button" class="btn" 
-                            id="Home-more" 
+                    <button type="button" class="btn"
+                            id="Home-more"
                             style="background-color:#33c2ff;color:white;box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);"
-                            onclick="LoadHome()">加载更多</button>
+                            onclick="LoadHome()">
+                        加载更多
+                    </button>
                 </div>
             </div>
         </div>
@@ -338,65 +168,27 @@
         <h2>友情链接</h2>
         <a class="btn btn-link" asp-controller="LinkExchange" asp-action="Add">申请友链</a>
     </div>
-    @if (Model.Links.Any())
-    {
-        <div class="d-grid gap-2 d-md-block">
+    <div class="row">
+        @if (Model.Links.Any())
+        {
             @foreach (var link in Model.Links)
             {
-                @await Html.PartialAsync("Widgets/ColorfulButton",
-                           new ColorfulButtonViewModel { Name = link.Name, Url = link.Url, Description = link.Description })
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    @await Html.PartialAsync("Widgets/LinkExchange",
+                               new ColorfulButtonViewModel { Name = link.Name, Url = link.Url, Description = link.Description,favicon = link.favicon})
+                </div>
             }
-        </div>
-    }
-    else
-    {
-        @await Html.PartialAsync("Widgets/PlaceholderCard", "友情链接")
-    }
+        }
+        else
+        {
+            @await Html.PartialAsync("Widgets/PlaceholderCard", "友情链接")
+        }
+    </div>
 </div>
 
 
 @section bottom{
-    <script>        
-    var currentPage = 2;
-    
-    function LoadHome() {
-      var $btn = $('#Home-more');
-      console.log(123123)
-    
-      // 禁用按钮，显示loading...
-        $btn.prop('disabled', true).text('loading...');
-    
-      $.ajax({
-        url: '/Home/GetFeaturedPosts',
-        type: 'GET',
-        data: { page: currentPage },
-        success: function(data,status, xhr) {
-          // 处理返回的数据
-          if (xhr.status === 204){
-               showAlert('没有更多内容了哟，快去关注公众号支持一下作者吧~', 'info')
-               $btn.prop('disabled', false).text('加载更多');
-          }else{
-                // 更新当前页码
-                currentPage++;
-                // 更新页面中的页码显示
-                // 将数据渲染到页面中
-                $('#Home-list').append(data);
-                // 将按钮的文本内容改回“加载更多”，并启用它
-                $btn.prop('disabled', false).text('加载更多');
-          }
-        },
-        error: function() {
-          // 处理错误
-          // var modal = new bootstrap.Modal(document.getElementById('myModal'));
-          // modal.show();
-          //没有更多内容了哟，快去关注公众号支持一下作者吧~
-         showAlert('请求出错了~', 'error')
-          // 将按钮的文本内容改回“加载更多”，并启用它
-          $btn.prop('disabled', false).text('加载更多');
-        }
-      });
-    }
-    </script>
+    <script src="~/lib/Home/HomeIndex.js"></script>
     @if (Model.TopPost != null)
     {
         <script>const CHART_VISIBLE = false</script>

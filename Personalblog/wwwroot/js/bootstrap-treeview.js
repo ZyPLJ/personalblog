@@ -1,1244 +1,330 @@
-﻿/* =========================================================
- * bootstrap-treeview.js v1.3.0
- * =========================================================
- * Copyright 2021 DealiAxy
- * Project URL : https://github.com/Deali-Axy/bootstrap5-treeview
- * 
- * (fork from) Copyright 2013 Jonathan Miles
- * (fork from) Project URL : http://www.jondmiles.com/bootstrap-treeview
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * ========================================================= */
-
-;(function ($, window, document, undefined) {
-
-    /*global jQuery, console*/
-
-    'use strict';
-
-    let pluginName = 'treeview';
-
-    let _default = {};
-
-    _default.settings = {
-
-        injectStyle: true,
-
-        levels: 2,
-
-        expandIcon: "fa fa-chevron-right",
-        collapseIcon: "fa fa-chevron-down",
-        emptyIcon: 'fa',
-        nodeIcon: '',
-        selectedIcon: '',
-        checkedIcon: 'fa fa-check-circle-o',
-        uncheckedIcon: 'fa fa-circle-thin',
-
-        color: undefined, // '#000000',
-        backColor: undefined, // '#FFFFFF',
-        borderColor: undefined, // '#dddddd',
-        onhoverColor: '#F5F5F5',
-        selectedColor: '#FFFFFF',
-        selectedBackColor: '#428bca',
-        searchResultColor: '#D9534F',
-        searchResultBackColor: undefined, //'#FFFFFF',
-
-        enableLinks: false,
-        enableIndent: true, // 添加了控制是否启用缩进的开关
-        highlightSelected: true,
-        highlightSearchResults: true,
-        showBorder: true,
-        showIcon: true,
-        showCheckbox: false,
-        showTags: false,
-        multiSelect: false,
-
-        // Event handlers
-        onNodeChecked: undefined,
-        onNodeCollapsed: undefined,
-        onNodeDisabled: undefined,
-        onNodeEnabled: undefined,
-        onNodeExpanded: undefined,
-        onNodeSelected: undefined,
-        onNodeUnchecked: undefined,
-        onNodeUnselected: undefined,
-        onSearchComplete: undefined,
-        onSearchCleared: undefined
-    };
-
-    _default.options = {
-        silent: false,
-        ignoreChildren: false
-    };
-
-    _default.searchOptions = {
-        ignoreCase: true,
-        exactMatch: false,
-        revealResults: true
-    };
-
-    let Tree = function (element, options) {
-
-        this.$element = $(element);
-        this.elementId = element.id;
-        this.styleId = this.elementId + '-style';
-
-        this.init(options);
-
-        return {
-
-            // Options (public access)
+﻿!function (e, t, o, s) {
+    "use strict";
+    let i = {
+        settings: {
+            injectStyle: !0,
+            levels: 2,
+            expandIcon: "fa fa-chevron-right",
+            collapseIcon: "fa fa-chevron-down",
+            emptyIcon: "fa",
+            nodeIcon: "",
+            selectedIcon: "",
+            checkedIcon: "fa fa-check-circle-o",
+            uncheckedIcon: "fa fa-circle-thin",
+            color: void 0,
+            backColor: void 0,
+            borderColor: void 0,
+            onhoverColor: "#F5F5F5",
+            selectedColor: "#FFFFFF",
+            selectedBackColor: "#428bca",
+            searchResultColor: "#D9534F",
+            searchResultBackColor: void 0,
+            enableLinks: !1,
+            enableIndent: !0,
+            highlightSelected: !0,
+            highlightSearchResults: !0,
+            showBorder: !0,
+            showIcon: !0,
+            showCheckbox: !1,
+            showTags: !1,
+            multiSelect: !1,
+            onNodeChecked: void 0,
+            onNodeCollapsed: void 0,
+            onNodeDisabled: void 0,
+            onNodeEnabled: void 0,
+            onNodeExpanded: void 0,
+            onNodeSelected: void 0,
+            onNodeUnchecked: void 0,
+            onNodeUnselected: void 0,
+            onSearchComplete: void 0,
+            onSearchCleared: void 0
+        }, options: {silent: !1, ignoreChildren: !1}, searchOptions: {ignoreCase: !0, exactMatch: !1, revealResults: !0}
+    }, n = function (t, o) {
+        return this.$element = e(t), this.elementId = t.id, this.styleId = this.elementId + "-style", this.init(o), {
             options: this.options,
-
-            // Initialize / destroy methods
-            init: $.proxy(this.init, this),
-            remove: $.proxy(this.remove, this),
-
-            // Get methods
-            getNode: $.proxy(this.getNode, this),
-            getParent: $.proxy(this.getParent, this),
-            getSiblings: $.proxy(this.getSiblings, this),
-            getSelected: $.proxy(this.getSelected, this),
-            getUnselected: $.proxy(this.getUnselected, this),
-            getExpanded: $.proxy(this.getExpanded, this),
-            getCollapsed: $.proxy(this.getCollapsed, this),
-            getChecked: $.proxy(this.getChecked, this),
-            getUnchecked: $.proxy(this.getUnchecked, this),
-            getDisabled: $.proxy(this.getDisabled, this),
-            getEnabled: $.proxy(this.getEnabled, this),
-
-            // Select methods
-            selectNode: $.proxy(this.selectNode, this),
-            unselectNode: $.proxy(this.unselectNode, this),
-            toggleNodeSelected: $.proxy(this.toggleNodeSelected, this),
-
-            // Expand / collapse methods
-            collapseAll: $.proxy(this.collapseAll, this),
-            collapseNode: $.proxy(this.collapseNode, this),
-            expandAll: $.proxy(this.expandAll, this),
-            expandNode: $.proxy(this.expandNode, this),
-            toggleNodeExpanded: $.proxy(this.toggleNodeExpanded, this),
-            revealNode: $.proxy(this.revealNode, this),
-
-            // Expand / collapse methods
-            checkAll: $.proxy(this.checkAll, this),
-            checkNode: $.proxy(this.checkNode, this),
-            uncheckAll: $.proxy(this.uncheckAll, this),
-            uncheckNode: $.proxy(this.uncheckNode, this),
-            toggleNodeChecked: $.proxy(this.toggleNodeChecked, this),
-
-            // Disable / enable methods
-            disableAll: $.proxy(this.disableAll, this),
-            disableNode: $.proxy(this.disableNode, this),
-            enableAll: $.proxy(this.enableAll, this),
-            enableNode: $.proxy(this.enableNode, this),
-            toggleNodeDisabled: $.proxy(this.toggleNodeDisabled, this),
-
-            // Search methods
-            search: $.proxy(this.search, this),
-            clearSearch: $.proxy(this.clearSearch, this)
-        };
-    };
-
-    Tree.prototype.init = function (options) {
-
-        this.tree = [];
-        this.nodes = [];
-
-        if (options.data) {
-            if (typeof options.data === 'string') {
-                options.data = $.parseJSON(options.data);
-            }
-            this.tree = $.extend(true, [], options.data);
-            delete options.data;
-        }
-        this.options = $.extend({}, _default.settings, options);
-
-        this.destroy();
-        this.subscribeEvents();
-        this.setInitialStates({ nodes: this.tree }, 0);
-        this.render();
-    };
-
-    Tree.prototype.remove = function () {
-        this.destroy();
-        $.removeData(this, pluginName);
-        $('#' + this.styleId).remove();
-    };
-
-    Tree.prototype.destroy = function () {
-
-        if (!this.initialized) return;
-
-        this.$wrapper.remove();
-        this.$wrapper = null;
-
-        // Switch off events
-        this.unsubscribeEvents();
-
-        // Reset this.initialized flag
-        this.initialized = false;
-    };
-
-    Tree.prototype.unsubscribeEvents = function () {
-
-        this.$element.off('click');
-        this.$element.off('nodeChecked');
-        this.$element.off('nodeCollapsed');
-        this.$element.off('nodeDisabled');
-        this.$element.off('nodeEnabled');
-        this.$element.off('nodeExpanded');
-        this.$element.off('nodeSelected');
-        this.$element.off('nodeUnchecked');
-        this.$element.off('nodeUnselected');
-        this.$element.off('searchComplete');
-        this.$element.off('searchCleared');
-    };
-
-    Tree.prototype.subscribeEvents = function () {
-
-        this.unsubscribeEvents();
-
-        this.$element.on('click', $.proxy(this.clickHandler, this));
-
-        if (typeof (this.options.onNodeChecked) === 'function') {
-            this.$element.on('nodeChecked', this.options.onNodeChecked);
-        }
-
-        if (typeof (this.options.onNodeCollapsed) === 'function') {
-            this.$element.on('nodeCollapsed', this.options.onNodeCollapsed);
-        }
-
-        if (typeof (this.options.onNodeDisabled) === 'function') {
-            this.$element.on('nodeDisabled', this.options.onNodeDisabled);
-        }
-
-        if (typeof (this.options.onNodeEnabled) === 'function') {
-            this.$element.on('nodeEnabled', this.options.onNodeEnabled);
-        }
-
-        if (typeof (this.options.onNodeExpanded) === 'function') {
-            this.$element.on('nodeExpanded', this.options.onNodeExpanded);
-        }
-
-        if (typeof (this.options.onNodeSelected) === 'function') {
-            this.$element.on('nodeSelected', this.options.onNodeSelected);
-        }
-
-        if (typeof (this.options.onNodeUnchecked) === 'function') {
-            this.$element.on('nodeUnchecked', this.options.onNodeUnchecked);
-        }
-
-        if (typeof (this.options.onNodeUnselected) === 'function') {
-            this.$element.on('nodeUnselected', this.options.onNodeUnselected);
-        }
-
-        if (typeof (this.options.onSearchComplete) === 'function') {
-            this.$element.on('searchComplete', this.options.onSearchComplete);
-        }
-
-        if (typeof (this.options.onSearchCleared) === 'function') {
-            this.$element.on('searchCleared', this.options.onSearchCleared);
+            init: e.proxy(this.init, this),
+            remove: e.proxy(this.remove, this),
+            getNode: e.proxy(this.getNode, this),
+            getParent: e.proxy(this.getParent, this),
+            getSiblings: e.proxy(this.getSiblings, this),
+            getSelected: e.proxy(this.getSelected, this),
+            getUnselected: e.proxy(this.getUnselected, this),
+            getExpanded: e.proxy(this.getExpanded, this),
+            getCollapsed: e.proxy(this.getCollapsed, this),
+            getChecked: e.proxy(this.getChecked, this),
+            getUnchecked: e.proxy(this.getUnchecked, this),
+            getDisabled: e.proxy(this.getDisabled, this),
+            getEnabled: e.proxy(this.getEnabled, this),
+            selectNode: e.proxy(this.selectNode, this),
+            unselectNode: e.proxy(this.unselectNode, this),
+            toggleNodeSelected: e.proxy(this.toggleNodeSelected, this),
+            collapseAll: e.proxy(this.collapseAll, this),
+            collapseNode: e.proxy(this.collapseNode, this),
+            expandAll: e.proxy(this.expandAll, this),
+            expandNode: e.proxy(this.expandNode, this),
+            toggleNodeExpanded: e.proxy(this.toggleNodeExpanded, this),
+            revealNode: e.proxy(this.revealNode, this),
+            checkAll: e.proxy(this.checkAll, this),
+            checkNode: e.proxy(this.checkNode, this),
+            uncheckAll: e.proxy(this.uncheckAll, this),
+            uncheckNode: e.proxy(this.uncheckNode, this),
+            toggleNodeChecked: e.proxy(this.toggleNodeChecked, this),
+            disableAll: e.proxy(this.disableAll, this),
+            disableNode: e.proxy(this.disableNode, this),
+            enableAll: e.proxy(this.enableAll, this),
+            enableNode: e.proxy(this.enableNode, this),
+            toggleNodeDisabled: e.proxy(this.toggleNodeDisabled, this),
+            search: e.proxy(this.search, this),
+            clearSearch: e.proxy(this.clearSearch, this)
         }
     };
-
-    /*
-        Recurse the tree structure and ensure all nodes have
-        valid initial states.  User defined states will be preserved.
-        For performance we also take this opportunity to
-        index nodes in a flattened structure
-    */
-    Tree.prototype.setInitialStates = function (node, level) {
-
-        if (!node.nodes) return;
-        level += 1;
-
-        let parent = node;
-        let _this = this;
-        $.each(node.nodes, function checkStates(index, node) {
-
-            // nodeId : unique, incremental identifier
-            node.nodeId = _this.nodes.length;
-
-            // parentId : transversing up the tree
-            node.parentId = parent.nodeId;
-
-            // if not provided set selectable default value
-            if (!node.hasOwnProperty('selectable')) {
-                node.selectable = false;
+    n.prototype.init = function (t) {
+        this.tree = [], this.nodes = [], t.data && ("string" == typeof t.data && (t.data = e.parseJSON(t.data)), this.tree = e.extend(!0, [], t.data), delete t.data), this.options = e.extend({}, i.settings, t), this.destroy(), this.subscribeEvents(), this.setInitialStates({nodes: this.tree}, 0), this.render()
+    }, n.prototype.remove = function () {
+        this.destroy(), e.removeData(this, "treeview"), e("#" + this.styleId).remove()
+    }, n.prototype.destroy = function () {
+        this.initialized && (this.$wrapper.remove(), this.$wrapper = null, this.unsubscribeEvents(), this.initialized = !1)
+    }, n.prototype.unsubscribeEvents = function () {
+        this.$element.off("click"), this.$element.off("nodeChecked"), this.$element.off("nodeCollapsed"), this.$element.off("nodeDisabled"), this.$element.off("nodeEnabled"), this.$element.off("nodeExpanded"), this.$element.off("nodeSelected"), this.$element.off("nodeUnchecked"), this.$element.off("nodeUnselected"), this.$element.off("searchComplete"), this.$element.off("searchCleared")
+    }, n.prototype.subscribeEvents = function () {
+        this.unsubscribeEvents(), this.$element.on("click", e.proxy(this.clickHandler, this)), "function" == typeof this.options.onNodeChecked && this.$element.on("nodeChecked", this.options.onNodeChecked), "function" == typeof this.options.onNodeCollapsed && this.$element.on("nodeCollapsed", this.options.onNodeCollapsed), "function" == typeof this.options.onNodeDisabled && this.$element.on("nodeDisabled", this.options.onNodeDisabled), "function" == typeof this.options.onNodeEnabled && this.$element.on("nodeEnabled", this.options.onNodeEnabled), "function" == typeof this.options.onNodeExpanded && this.$element.on("nodeExpanded", this.options.onNodeExpanded), "function" == typeof this.options.onNodeSelected && this.$element.on("nodeSelected", this.options.onNodeSelected), "function" == typeof this.options.onNodeUnchecked && this.$element.on("nodeUnchecked", this.options.onNodeUnchecked), "function" == typeof this.options.onNodeUnselected && this.$element.on("nodeUnselected", this.options.onNodeUnselected), "function" == typeof this.options.onSearchComplete && this.$element.on("searchComplete", this.options.onSearchComplete), "function" == typeof this.options.onSearchCleared && this.$element.on("searchCleared", this.options.onSearchCleared)
+    }, n.prototype.setInitialStates = function (t, o) {
+        if (!t.nodes) return;
+        o += 1;
+        let s = t, i = this;
+        e.each(t.nodes, function (e, t) {
+            t.nodeId = i.nodes.length, t.parentId = s.nodeId, t.hasOwnProperty("selectable") || (t.selectable = !1), t.state = t.state || {}, t.state.hasOwnProperty("checked") || (t.state.checked = !1), t.state.hasOwnProperty("disabled") || (t.state.disabled = !1), t.state.hasOwnProperty("expanded") || (!t.state.disabled && o < i.options.levels && t.nodes && t.nodes.length > 0 ? t.state.expanded = !0 : t.state.expanded = !1), t.state.hasOwnProperty("selected") || (t.state.selected = !1), i.nodes.push(t), t.nodes && i.setInitialStates(t, o)
+        })
+    }, n.prototype.clickHandler = function (t) {
+        this.options.enableLinks || t.preventDefault();
+        let o = e(t.target), s = this.findNode(o);
+        if (!s || s.state.disabled) return;
+        let n = o.attr("class") ? o.attr("class").split(" ") : [];
+        -1 !== n.indexOf("expand-icon") ? (this.toggleExpandedState(s, i.options), this.render()) : -1 !== n.indexOf("check-icon") ? (this.toggleCheckedState(s, i.options), this.render()) : (s.selectable ? this.toggleSelectedState(s, i.options) : this.toggleExpandedState(s, i.options), this.render())
+    }, n.prototype.findNode = function (e) {
+        let t = e.closest("li.list-group-item").attr("data-nodeid"), o = this.nodes[t];
+        return o || console.log("Error: node does not exist"), o
+    }, n.prototype.toggleExpandedState = function (e, t) {
+        e && this.setExpandedState(e, !e.state.expanded, t)
+    }, n.prototype.setExpandedState = function (t, o, s) {
+        o !== t.state.expanded && (o && t.nodes ? (t.state.expanded = !0, s.silent || this.$element.trigger("nodeExpanded", e.extend(!0, {}, t))) : o || (t.state.expanded = !1, s.silent || this.$element.trigger("nodeCollapsed", e.extend(!0, {}, t)), t.nodes && !s.ignoreChildren && e.each(t.nodes, e.proxy(function (e, t) {
+            this.setExpandedState(t, !1, s)
+        }, this))))
+    }, n.prototype.toggleSelectedState = function (e, t) {
+        e && this.setSelectedState(e, !e.state.selected, t)
+    }, n.prototype.setSelectedState = function (t, o, s) {
+        o !== t.state.selected && (o ? (this.options.multiSelect || e.each(this.findNodes("true", "g", "state.selected"), e.proxy(function (e, t) {
+            this.setSelectedState(t, !1, s)
+        }, this)), t.state.selected = !0, s.silent || this.$element.trigger("nodeSelected", e.extend(!0, {}, t))) : (t.state.selected = !1, s.silent || this.$element.trigger("nodeUnselected", e.extend(!0, {}, t))))
+    }, n.prototype.toggleCheckedState = function (e, t) {
+        e && this.setCheckedState(e, !e.state.checked, t)
+    }, n.prototype.setCheckedState = function (t, o, s) {
+        o !== t.state.checked && (o ? (t.state.checked = !0, s.silent || this.$element.trigger("nodeChecked", e.extend(!0, {}, t))) : (t.state.checked = !1, s.silent || this.$element.trigger("nodeUnchecked", e.extend(!0, {}, t))))
+    }, n.prototype.setDisabledState = function (t, o, s) {
+        o !== t.state.disabled && (o ? (t.state.disabled = !0, this.setExpandedState(t, !1, s), this.setSelectedState(t, !1, s), this.setCheckedState(t, !1, s), s.silent || this.$element.trigger("nodeDisabled", e.extend(!0, {}, t))) : (t.state.disabled = !1, s.silent || this.$element.trigger("nodeEnabled", e.extend(!0, {}, t))))
+    }, n.prototype.render = function () {
+        this.initialized || (this.$element.addClass("treeview"), this.$wrapper = e(this.template.list), this.injectStyle(), this.initialized = !0), this.$element.empty().append(this.$wrapper.empty()), this.buildTree(this.tree, 0)
+    }, n.prototype.buildTree = function (t, o) {
+        if (!t) return;
+        o += 1;
+        let s = this;
+        e.each(t, function (t, i) {
+            let n = e(s.template.itemWrapper).addClass("node-" + s.elementId).addClass(i.state.checked ? "node-checked" : "").addClass(i.state.disabled ? "node-disabled" : "").addClass(i.state.selected ? "node-selected" : "").addClass(i.searchResult ? "search-result" : "").attr("data-nodeid", i.nodeId).attr("style", s.buildStyleOverride(i)),
+                d = e(s.template.itemLeftElem), r = e(s.template.itemRightElem);
+            if (n.append(d), n.append(r), s.options.enableIndent) for (let e = 0; e < o - 1; e++) d.append(s.template.indent);
+            let l = [];
+            if (i.nodes ? (l.push("expand-icon"), i.state.expanded ? l.push(s.options.collapseIcon) : l.push(s.options.expandIcon)) : l.push(s.options.emptyIcon), d.append(e(s.template.icon).addClass(l.join(" "))), s.options.showIcon) {
+                let t = ["node-icon"];
+                t.push(i.icon || s.options.nodeIcon), i.state.selected && (t.pop(), t.push(i.selectedIcon || s.options.selectedIcon || i.icon || s.options.nodeIcon)), d.append(e(s.template.icon).addClass(t.join(" ")))
             }
-
-            // where provided we should preserve states
-            node.state = node.state || {};
-
-            // set checked state; unless set always false
-            if (!node.state.hasOwnProperty('checked')) {
-                node.state.checked = false;
+            if (s.options.showCheckbox) {
+                let t = ["check-icon"];
+                i.state.checked ? t.push(s.options.checkedIcon) : t.push(s.options.uncheckedIcon), d.append(e(s.template.icon).addClass(t.join(" ")))
             }
-
-            // set enabled state; unless set always false
-            if (!node.state.hasOwnProperty('disabled')) {
-                node.state.disabled = false;
-            }
-
-            // set expanded state; if not provided based on levels
-            if (!node.state.hasOwnProperty('expanded')) {
-                if (!node.state.disabled &&
-                    (level < _this.options.levels) &&
-                    (node.nodes && node.nodes.length > 0)) {
-                    node.state.expanded = true;
-                } else {
-                    node.state.expanded = false;
-                }
-            }
-
-            // set selected state; unless set always false
-            if (!node.state.hasOwnProperty('selected')) {
-                node.state.selected = false;
-            }
-
-            // index nodes in a flattened structure for use later
-            _this.nodes.push(node);
-
-            // recurse child nodes and transverse the tree
-            if (node.nodes) {
-                _this.setInitialStates(node, level);
-            }
-        });
-    };
-
-    Tree.prototype.clickHandler = function (event) {
-
-        if (!this.options.enableLinks) event.preventDefault();
-
-        let target = $(event.target);
-        let node = this.findNode(target);
-        if (!node || node.state.disabled) return;
-
-        let classList = target.attr('class') ? target.attr('class').split(' ') : [];
-        if ((classList.indexOf('expand-icon') !== -1)) {
-
-            this.toggleExpandedState(node, _default.options);
-            this.render();
-        } else if ((classList.indexOf('check-icon') !== -1)) {
-
-            this.toggleCheckedState(node, _default.options);
-            this.render();
-        } else {
-
-            if (node.selectable) {
-                this.toggleSelectedState(node, _default.options);
-            } else {
-                this.toggleExpandedState(node, _default.options);
-            }
-
-            this.render();
-        }
-    };
-
-    // Looks up the DOM for the closest parent list item to retrieve the
-    // data attribute nodeid, which is used to lookup the node in the flattened structure.
-    Tree.prototype.findNode = function (target) {
-
-        let nodeId = target.closest('li.list-group-item').attr('data-nodeid');
-        let node = this.nodes[nodeId];
-
-        if (!node) {
-            console.log('Error: node does not exist');
-        }
-        return node;
-    };
-
-    Tree.prototype.toggleExpandedState = function (node, options) {
-        if (!node) return;
-        this.setExpandedState(node, !node.state.expanded, options);
-    };
-
-    Tree.prototype.setExpandedState = function (node, state, options) {
-
-        if (state === node.state.expanded) return;
-
-        if (state && node.nodes) {
-
-            // Expand a node
-            node.state.expanded = true;
-            if (!options.silent) {
-                this.$element.trigger('nodeExpanded', $.extend(true, {}, node));
-            }
-        } else if (!state) {
-
-            // Collapse a node
-            node.state.expanded = false;
-            if (!options.silent) {
-                this.$element.trigger('nodeCollapsed', $.extend(true, {}, node));
-            }
-
-            // Collapse child nodes
-            if (node.nodes && !options.ignoreChildren) {
-                $.each(node.nodes, $.proxy(function (index, node) {
-                    this.setExpandedState(node, false, options);
-                }, this));
-            }
-        }
-    };
-
-    Tree.prototype.toggleSelectedState = function (node, options) {
-        if (!node) return;
-        this.setSelectedState(node, !node.state.selected, options);
-    };
-
-    Tree.prototype.setSelectedState = function (node, state, options) {
-
-        if (state === node.state.selected) return;
-
-        if (state) {
-
-            // If multiSelect false, unselect previously selected
-            if (!this.options.multiSelect) {
-                $.each(this.findNodes('true', 'g', 'state.selected'), $.proxy(function (index, node) {
-                    this.setSelectedState(node, false, options);
-                }, this));
-            }
-
-            // Continue selecting node
-            node.state.selected = true;
-            if (!options.silent) {
-                this.$element.trigger('nodeSelected', $.extend(true, {}, node));
-            }
-        } else {
-
-            // Unselect node
-            node.state.selected = false;
-            if (!options.silent) {
-                this.$element.trigger('nodeUnselected', $.extend(true, {}, node));
-            }
-        }
-    };
-
-    Tree.prototype.toggleCheckedState = function (node, options) {
-        if (!node) return;
-        this.setCheckedState(node, !node.state.checked, options);
-    };
-
-    Tree.prototype.setCheckedState = function (node, state, options) {
-
-        if (state === node.state.checked) return;
-
-        if (state) {
-
-            // Check node
-            node.state.checked = true;
-
-            if (!options.silent) {
-                this.$element.trigger('nodeChecked', $.extend(true, {}, node));
-            }
-        } else {
-
-            // Uncheck node
-            node.state.checked = false;
-            if (!options.silent) {
-                this.$element.trigger('nodeUnchecked', $.extend(true, {}, node));
-            }
-        }
-    };
-
-    Tree.prototype.setDisabledState = function (node, state, options) {
-
-        if (state === node.state.disabled) return;
-
-        if (state) {
-
-            // Disable node
-            node.state.disabled = true;
-
-            // Disable all other states
-            this.setExpandedState(node, false, options);
-            this.setSelectedState(node, false, options);
-            this.setCheckedState(node, false, options);
-
-            if (!options.silent) {
-                this.$element.trigger('nodeDisabled', $.extend(true, {}, node));
-            }
-        } else {
-
-            // Enabled node
-            node.state.disabled = false;
-            if (!options.silent) {
-                this.$element.trigger('nodeEnabled', $.extend(true, {}, node));
-            }
-        }
-    };
-
-    Tree.prototype.render = function () {
-
-        if (!this.initialized) {
-
-            // Setup first time only components
-            this.$element.addClass(pluginName);
-            this.$wrapper = $(this.template.list);
-
-            this.injectStyle();
-
-            this.initialized = true;
-        }
-
-        this.$element.empty().append(this.$wrapper.empty());
-
-        // Build tree
-        this.buildTree(this.tree, 0);
-    };
-
-    // Starting from the root node, and recursing down the
-    // structure we build the tree one node at a time
-    Tree.prototype.buildTree = function (nodes, level) {
-
-        if (!nodes) return;
-        level += 1;
-
-        let _this = this;
-        $.each(nodes, function addNodes(id, node) {
-
-            // 最外层包装
-            let treeItem = $(_this.template.itemWrapper)
-                .addClass('node-' + _this.elementId)
-                .addClass(node.state.checked ? 'node-checked' : '')
-                .addClass(node.state.disabled ? 'node-disabled' : '')
-                .addClass(node.state.selected ? 'node-selected' : '')
-                .addClass(node.searchResult ? 'search-result' : '')
-                .attr('data-nodeid', node.nodeId)
-                .attr('style', _this.buildStyleOverride(node));
-
-            // item 内分成两个元素，用flex布局分布在左右两边
-            let treeItemLeft = $(_this.template.itemLeftElem)
-            let treeItemRight = $(_this.template.itemRightElem)
-            treeItem.append(treeItemLeft)
-            treeItem.append(treeItemRight)
-
-            // Add indent/spacer to mimic tree structure
-            // 添加了控制是否启用缩进的开关
-            if (_this.options.enableIndent) {
-                for (let i = 0; i < (level - 1); i++) {
-                    treeItemLeft.append(_this.template.indent);
-                }
-            }
-
-            // Add expand, collapse or empty spacer icons
-            let classList = [];
-            if (node.nodes) {
-                classList.push('expand-icon');
-                if (node.state.expanded) {
-                    classList.push(_this.options.collapseIcon);
-                } else {
-                    classList.push(_this.options.expandIcon);
-                }
-            } else {
-                classList.push(_this.options.emptyIcon);
-            }
-
-            treeItemLeft.append(
-                $(_this.template.icon).addClass(classList.join(' '))
-            );
-
-
-            // Add node icon
-            if (_this.options.showIcon) {
-
-                let classList = ['node-icon'];
-
-                classList.push(node.icon || _this.options.nodeIcon);
-                if (node.state.selected) {
-                    classList.pop();
-                    classList.push(node.selectedIcon || _this.options.selectedIcon ||
-                        node.icon || _this.options.nodeIcon);
-                }
-
-                treeItemLeft.append(
-                    $(_this.template.icon).addClass(classList.join(' '))
-                );
-            }
-
-            // Add check / unchecked icon
-            if (_this.options.showCheckbox) {
-
-                let classList = ['check-icon'];
-                if (node.state.checked) {
-                    classList.push(_this.options.checkedIcon);
-                } else {
-                    classList.push(_this.options.uncheckedIcon);
-                }
-
-                treeItemLeft.append(
-                    $(_this.template.icon).addClass(classList.join(' '))
-                );
-            }
-
-            // Add text
-            if (_this.options.enableLinks) {
-                // Add hyperlink
-                treeItemLeft.append(
-                    $(_this.template.link)
-                        .attr('href', node.href)
-                        .append(node.text)
-                );
-            } else {
-                // otherwise just text
-                treeItemLeft.append(node.text);
-            }
-
-            // Add tags as badges
-            if (_this.options.showTags && node.tags) {
-                $.each(node.tags, function addTag(id, tag) {
-                    treeItemRight.append(
-                        $(_this.template.badge).append(tag)
-                    );
-                });
-            }
-
-            // Add item to the tree
-            _this.$wrapper.append(treeItem);
-
-            // Recursively add child ndoes
-            if (node.nodes && node.state.expanded && !node.state.disabled) {
-                return _this.buildTree(node.nodes, level);
-            }
-        });
-    };
-
-    // Define any node level style override for
-    // 1. selectedNode
-    // 2. node|data assigned color overrides
-    Tree.prototype.buildStyleOverride = function (node) {
-
-        if (node.state.disabled) return '';
-
-        let color = node.color;
-        let backColor = node.backColor;
-
-        if (this.options.highlightSelected && node.state.selected) {
-            if (this.options.selectedColor) {
-                color = this.options.selectedColor;
-            }
-            if (this.options.selectedBackColor) {
-                backColor = this.options.selectedBackColor;
-            }
-        }
-
-        if (this.options.highlightSearchResults && node.searchResult && !node.state.disabled) {
-            if (this.options.searchResultColor) {
-                color = this.options.searchResultColor;
-            }
-            if (this.options.searchResultBackColor) {
-                backColor = this.options.searchResultBackColor;
-            }
-        }
-
-        return 'color:' + color +
-            ';background-color:' + backColor + ';';
-    };
-
-    // Add inline style into head
-    Tree.prototype.injectStyle = function () {
-
-        if (this.options.injectStyle && !document.getElementById(this.styleId)) {
-            $('<style type="text/css" id="' + this.styleId + '"> ' + this.buildStyle() + ' </style>').appendTo('head');
-        }
-    };
-
-    // Construct trees style based on user options
-    Tree.prototype.buildStyle = function () {
-
-        let style = '.node-' + this.elementId + '{';
-
-        if (this.options.color) {
-            style += 'color:' + this.options.color + ';';
-        }
-
-        if (this.options.backColor) {
-            style += 'background-color:' + this.options.backColor + ';';
-        }
-
-        if (!this.options.showBorder) {
-            style += 'border:none;';
-        } else if (this.options.borderColor) {
-            style += 'border:1px solid ' + this.options.borderColor + ';';
-        }
-        style += '}';
-
-        if (this.options.onhoverColor) {
-            style += '.node-' + this.elementId + ':not(.node-disabled):hover{' +
-                'background-color:' + this.options.onhoverColor + ';' +
-                '}';
-        }
-
-        return this.css + style;
-    };
-
-    Tree.prototype.template = {
+            if (s.options.enableLinks ? d.append(e(s.template.link).attr("href", i.href).append(i.text)) : d.append(i.text), s.options.showTags && i.tags && e.each(i.tags, function (t, o) {
+                r.append(e(s.template.badge).append(o))
+            }), s.$wrapper.append(n), i.nodes && i.state.expanded && !i.state.disabled) return s.buildTree(i.nodes, o)
+        })
+    }, n.prototype.buildStyleOverride = function (e) {
+        if (e.state.disabled) return "";
+        let t = e.color, o = e.backColor;
+        return this.options.highlightSelected && e.state.selected && (this.options.selectedColor && (t = this.options.selectedColor), this.options.selectedBackColor && (o = this.options.selectedBackColor)), this.options.highlightSearchResults && e.searchResult && !e.state.disabled && (this.options.searchResultColor && (t = this.options.searchResultColor), this.options.searchResultBackColor && (o = this.options.searchResultBackColor)), "color:" + t + ";background-color:" + o + ";"
+    }, n.prototype.injectStyle = function () {
+        this.options.injectStyle && !o.getElementById(this.styleId) && e('<style type="text/css" id="' + this.styleId + '"> ' + this.buildStyle() + " </style>").appendTo("head")
+    }, n.prototype.buildStyle = function () {
+        let e = ".node-" + this.elementId + "{";
+        return this.options.color && (e += "color:" + this.options.color + ";"), this.options.backColor && (e += "background-color:" + this.options.backColor + ";"), this.options.showBorder ? this.options.borderColor && (e += "border:1px solid " + this.options.borderColor + ";") : e += "border:none;", e += "}", this.options.onhoverColor && (e += ".node-" + this.elementId + ":not(.node-disabled):hover{background-color:" + this.options.onhoverColor + ";}"), this.css + e
+    }, n.prototype.template = {
         list: '<ul class="list-group"></ul>',
         itemWrapper: '<li class="list-group-item d-flex justify-content-between align-items-start"></li>',
         itemLeftElem: '<div class="w-100"></div>',
-        itemRightElem: '<div></div>',
+        itemRightElem: "<div></div>",
         indent: '<span class="mx-2"></span>',
         icon: '<span class="icon"></span>',
         link: '<a class="w-75" href="#" style="display:inline-block; color:inherit; text-decoration:none;"></a>',
         badge: '<span class="ms-1 badge bg-primary rounded-pill"></span>'
-    };
-
-    Tree.prototype.css = '.treeview .list-group-item{cursor:pointer}' +
-        // '.treeview span.indent{margin-left:5px;margin-right:5px}' +
-        '.treeview span.icon{width:12px;margin-right:5px}' +
-        '.treeview .node-disabled{color:silver;cursor:not-allowed}'
-
-
-    /**
-     Returns a single node object that matches the given node id.
-     @param {Number} nodeId - A node's unique identifier
-     @return {Object} node - Matching node
-     */
-    Tree.prototype.getNode = function (nodeId) {
-        return this.nodes[nodeId];
-    };
-
-    /**
-     Returns the parent node of a given node, if valid otherwise returns undefined.
-     @param {Object|Number} identifier - A valid node or node id
-     @returns {Object} node - The parent node
-     */
-    Tree.prototype.getParent = function (identifier) {
-        let node = this.identifyNode(identifier);
-        return this.nodes[node.parentId];
-    };
-
-    /**
-     Returns an array of sibling nodes for a given node, if valid otherwise returns undefined.
-     @param {Object|Number} identifier - A valid node or node id
-     @returns {Array} nodes - Sibling nodes
-     */
-    Tree.prototype.getSiblings = function (identifier) {
-        let node = this.identifyNode(identifier);
-        let parent = this.getParent(node);
-        let nodes = parent ? parent.nodes : this.tree;
-        return nodes.filter(function (obj) {
-            return obj.nodeId !== node.nodeId;
-        });
-    };
-
-    /**
-     Returns an array of selected nodes.
-     @returns {Array} nodes - Selected nodes
-     */
-    Tree.prototype.getSelected = function () {
-        return this.findNodes('true', 'g', 'state.selected');
-    };
-
-    /**
-     Returns an array of unselected nodes.
-     @returns {Array} nodes - Unselected nodes
-     */
-    Tree.prototype.getUnselected = function () {
-        return this.findNodes('false', 'g', 'state.selected');
-    };
-
-    /**
-     Returns an array of expanded nodes.
-     @returns {Array} nodes - Expanded nodes
-     */
-    Tree.prototype.getExpanded = function () {
-        return this.findNodes('true', 'g', 'state.expanded');
-    };
-
-    /**
-     Returns an array of collapsed nodes.
-     @returns {Array} nodes - Collapsed nodes
-     */
-    Tree.prototype.getCollapsed = function () {
-        return this.findNodes('false', 'g', 'state.expanded');
-    };
-
-    /**
-     Returns an array of checked nodes.
-     @returns {Array} nodes - Checked nodes
-     */
-    Tree.prototype.getChecked = function () {
-        return this.findNodes('true', 'g', 'state.checked');
-    };
-
-    /**
-     Returns an array of unchecked nodes.
-     @returns {Array} nodes - Unchecked nodes
-     */
-    Tree.prototype.getUnchecked = function () {
-        return this.findNodes('false', 'g', 'state.checked');
-    };
-
-    /**
-     Returns an array of disabled nodes.
-     @returns {Array} nodes - Disabled nodes
-     */
-    Tree.prototype.getDisabled = function () {
-        return this.findNodes('true', 'g', 'state.disabled');
-    };
-
-    /**
-     Returns an array of enabled nodes.
-     @returns {Array} nodes - Enabled nodes
-     */
-    Tree.prototype.getEnabled = function () {
-        return this.findNodes('false', 'g', 'state.disabled');
-    };
-
-
-    /**
-     Set a node state to selected
-     @param {Object|Number} identifiers - A valid node, node id or array of node identifiers
-     @param {optional Object} options
-     */
-    Tree.prototype.selectNode = function (identifiers, options) {
-        this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
-            this.setSelectedState(node, true, options);
-        }, this));
-
-        this.render();
-    };
-
-    /**
-     Set a node state to unselected
-     @param {Object|Number} identifiers - A valid node, node id or array of node identifiers
-     @param {optional Object} options
-     */
-    Tree.prototype.unselectNode = function (identifiers, options) {
-        this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
-            this.setSelectedState(node, false, options);
-        }, this));
-
-        this.render();
-    };
-
-    /**
-     Toggles a node selected state; selecting if unselected, unselecting if selected.
-     @param {Object|Number} identifiers - A valid node, node id or array of node identifiers
-     @param {optional Object} options
-     */
-    Tree.prototype.toggleNodeSelected = function (identifiers, options) {
-        this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
-            this.toggleSelectedState(node, options);
-        }, this));
-
-        this.render();
-    };
-
-
-    /**
-     Collapse all tree nodes
-     @param {optional Object} options
-     */
-    Tree.prototype.collapseAll = function (options) {
-        let identifiers = this.findNodes('true', 'g', 'state.expanded');
-        this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
-            this.setExpandedState(node, false, options);
-        }, this));
-
-        this.render();
-    };
-
-    /**
-     Collapse a given tree node
-     @param {Object|Number} identifiers - A valid node, node id or array of node identifiers
-     @param {optional Object} options
-     */
-    Tree.prototype.collapseNode = function (identifiers, options) {
-        this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
-            this.setExpandedState(node, false, options);
-        }, this));
-
-        this.render();
-    };
-
-    /**
-     Expand all tree nodes
-     @param {optional Object} options
-     */
-    Tree.prototype.expandAll = function (options) {
-        options = $.extend({}, _default.options, options);
-
-        if (options && options.levels) {
-            this.expandLevels(this.tree, options.levels, options);
-        } else {
-            let identifiers = this.findNodes('false', 'g', 'state.expanded');
-            this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
-                this.setExpandedState(node, true, options);
-            }, this));
+    }, n.prototype.css = ".treeview .list-group-item{cursor:pointer}.treeview span.icon{width:12px;margin-right:5px}.treeview .node-disabled{color:silver;cursor:not-allowed}", n.prototype.getNode = function (e) {
+        return this.nodes[e]
+    }, n.prototype.getParent = function (e) {
+        let t = this.identifyNode(e);
+        return this.nodes[t.parentId]
+    }, n.prototype.getSiblings = function (e) {
+        let t = this.identifyNode(e), o = this.getParent(t);
+        return (o ? o.nodes : this.tree).filter(function (e) {
+            return e.nodeId !== t.nodeId
+        })
+    }, n.prototype.getSelected = function () {
+        return this.findNodes("true", "g", "state.selected")
+    }, n.prototype.getUnselected = function () {
+        return this.findNodes("false", "g", "state.selected")
+    }, n.prototype.getExpanded = function () {
+        return this.findNodes("true", "g", "state.expanded")
+    }, n.prototype.getCollapsed = function () {
+        return this.findNodes("false", "g", "state.expanded")
+    }, n.prototype.getChecked = function () {
+        return this.findNodes("true", "g", "state.checked")
+    }, n.prototype.getUnchecked = function () {
+        return this.findNodes("false", "g", "state.checked")
+    }, n.prototype.getDisabled = function () {
+        return this.findNodes("true", "g", "state.disabled")
+    }, n.prototype.getEnabled = function () {
+        return this.findNodes("false", "g", "state.disabled")
+    }, n.prototype.selectNode = function (t, o) {
+        this.forEachIdentifier(t, o, e.proxy(function (e, t) {
+            this.setSelectedState(e, !0, t)
+        }, this)), this.render()
+    }, n.prototype.unselectNode = function (t, o) {
+        this.forEachIdentifier(t, o, e.proxy(function (e, t) {
+            this.setSelectedState(e, !1, t)
+        }, this)), this.render()
+    }, n.prototype.toggleNodeSelected = function (t, o) {
+        this.forEachIdentifier(t, o, e.proxy(function (e, t) {
+            this.toggleSelectedState(e, t)
+        }, this)), this.render()
+    }, n.prototype.collapseAll = function (t) {
+        let o = this.findNodes("true", "g", "state.expanded");
+        this.forEachIdentifier(o, t, e.proxy(function (e, t) {
+            this.setExpandedState(e, !1, t)
+        }, this)), this.render()
+    }, n.prototype.collapseNode = function (t, o) {
+        this.forEachIdentifier(t, o, e.proxy(function (e, t) {
+            this.setExpandedState(e, !1, t)
+        }, this)), this.render()
+    }, n.prototype.expandAll = function (t) {
+        if ((t = e.extend({}, i.options, t)) && t.levels) this.expandLevels(this.tree, t.levels, t); else {
+            let o = this.findNodes("false", "g", "state.expanded");
+            this.forEachIdentifier(o, t, e.proxy(function (e, t) {
+                this.setExpandedState(e, !0, t)
+            }, this))
         }
-
-        this.render();
-    };
-
-    /**
-     Expand a given tree node
-     @param {Object|Number} identifiers - A valid node, node id or array of node identifiers
-     @param {optional Object} options
-     */
-    Tree.prototype.expandNode = function (identifiers, options) {
-        this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
-            this.setExpandedState(node, true, options);
-            if (node.nodes && (options && options.levels)) {
-                this.expandLevels(node.nodes, options.levels - 1, options);
-            }
-        }, this));
-
-        this.render();
-    };
-
-    Tree.prototype.expandLevels = function (nodes, level, options) {
-        options = $.extend({}, _default.options, options);
-
-        $.each(nodes, $.proxy(function (index, node) {
-            this.setExpandedState(node, (level > 0) ? true : false, options);
-            if (node.nodes) {
-                this.expandLevels(node.nodes, level - 1, options);
-            }
-        }, this));
-    };
-
-    /**
-     Reveals a given tree node, expanding the tree from node to root.
-     @param {Object|Number|Array} identifiers - A valid node, node id or array of node identifiers
-     @param {optional Object} options
-     */
-    Tree.prototype.revealNode = function (identifiers, options) {
-        this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
-            let parentNode = this.getParent(node);
-            while (parentNode) {
-                this.setExpandedState(parentNode, true, options);
-                parentNode = this.getParent(parentNode);
-            }
-            ;
-        }, this));
-
-        this.render();
-    };
-
-    /**
-     Toggles a nodes expanded state; collapsing if expanded, expanding if collapsed.
-     @param {Object|Number} identifiers - A valid node, node id or array of node identifiers
-     @param {optional Object} options
-     */
-    Tree.prototype.toggleNodeExpanded = function (identifiers, options) {
-        this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
-            this.toggleExpandedState(node, options);
-        }, this));
-
-        this.render();
-    };
-
-
-    /**
-     Check all tree nodes
-     @param {optional Object} options
-     */
-    Tree.prototype.checkAll = function (options) {
-        let identifiers = this.findNodes('false', 'g', 'state.checked');
-        this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
-            this.setCheckedState(node, true, options);
-        }, this));
-
-        this.render();
-    };
-
-    /**
-     Check a given tree node
-     @param {Object|Number} identifiers - A valid node, node id or array of node identifiers
-     @param {optional Object} options
-     */
-    Tree.prototype.checkNode = function (identifiers, options) {
-        this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
-            this.setCheckedState(node, true, options);
-        }, this));
-
-        this.render();
-    };
-
-    /**
-     Uncheck all tree nodes
-     @param {optional Object} options
-     */
-    Tree.prototype.uncheckAll = function (options) {
-        let identifiers = this.findNodes('true', 'g', 'state.checked');
-        this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
-            this.setCheckedState(node, false, options);
-        }, this));
-
-        this.render();
-    };
-
-    /**
-     Uncheck a given tree node
-     @param {Object|Number} identifiers - A valid node, node id or array of node identifiers
-     @param {optional Object} options
-     */
-    Tree.prototype.uncheckNode = function (identifiers, options) {
-        this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
-            this.setCheckedState(node, false, options);
-        }, this));
-
-        this.render();
-    };
-
-    /**
-     Toggles a nodes checked state; checking if unchecked, unchecking if checked.
-     @param {Object|Number} identifiers - A valid node, node id or array of node identifiers
-     @param {optional Object} options
-     */
-    Tree.prototype.toggleNodeChecked = function (identifiers, options) {
-        this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
-            this.toggleCheckedState(node, options);
-        }, this));
-
-        this.render();
-    };
-
-
-    /**
-     Disable all tree nodes
-     @param {optional Object} options
-     */
-    Tree.prototype.disableAll = function (options) {
-        let identifiers = this.findNodes('false', 'g', 'state.disabled');
-        this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
-            this.setDisabledState(node, true, options);
-        }, this));
-
-        this.render();
-    };
-
-    /**
-     Disable a given tree node
-     @param {Object|Number} identifiers - A valid node, node id or array of node identifiers
-     @param {optional Object} options
-     */
-    Tree.prototype.disableNode = function (identifiers, options) {
-        this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
-            this.setDisabledState(node, true, options);
-        }, this));
-
-        this.render();
-    };
-
-    /**
-     Enable all tree nodes
-     @param {optional Object} options
-     */
-    Tree.prototype.enableAll = function (options) {
-        let identifiers = this.findNodes('true', 'g', 'state.disabled');
-        this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
-            this.setDisabledState(node, false, options);
-        }, this));
-
-        this.render();
-    };
-
-    /**
-     Enable a given tree node
-     @param {Object|Number} identifiers - A valid node, node id or array of node identifiers
-     @param {optional Object} options
-     */
-    Tree.prototype.enableNode = function (identifiers, options) {
-        this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
-            this.setDisabledState(node, false, options);
-        }, this));
-
-        this.render();
-    };
-
-    /**
-     Toggles a nodes disabled state; disabling is enabled, enabling if disabled.
-     @param {Object|Number} identifiers - A valid node, node id or array of node identifiers
-     @param {optional Object} options
-     */
-    Tree.prototype.toggleNodeDisabled = function (identifiers, options) {
-        this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
-            this.setDisabledState(node, !node.state.disabled, options);
-        }, this));
-
-        this.render();
-    };
-
-
-    /**
-     Common code for processing multiple identifiers
-     */
-    Tree.prototype.forEachIdentifier = function (identifiers, options, callback) {
-
-        options = $.extend({}, _default.options, options);
-
-        if (!(identifiers instanceof Array)) {
-            identifiers = [identifiers];
-        }
-
-        $.each(identifiers, $.proxy(function (index, identifier) {
-            callback(this.identifyNode(identifier), options);
-        }, this));
-    };
-
-    /*
-        Identifies a node from either a node id or object
-    */
-    Tree.prototype.identifyNode = function (identifier) {
-        return ((typeof identifier) === 'number') ?
-            this.nodes[identifier] :
-            identifier;
-    };
-
-    /**
-     Searches the tree for nodes (text) that match given criteria
-     @param {String} pattern - A given string to match against
-     @param {optional Object} options - Search criteria options
-     @return {Array} nodes - Matching nodes
-     */
-    Tree.prototype.search = function (pattern, options) {
-        options = $.extend({}, _default.searchOptions, options);
-
-        this.clearSearch({ render: false });
-
-        let results = [];
-        if (pattern && pattern.length > 0) {
-
-            if (options.exactMatch) {
-                pattern = '^' + pattern + '$';
-            }
-
-            let modifier = 'g';
-            if (options.ignoreCase) {
-                modifier += 'i';
-            }
-
-            results = this.findNodes(pattern, modifier);
-
-            // Add searchResult property to all matching nodes
-            // This will be used to apply custom styles
-            // and when identifying result to be cleared
-            $.each(results, function (index, node) {
-                node.searchResult = true;
+        this.render()
+    }, n.prototype.expandNode = function (t, o) {
+        this.forEachIdentifier(t, o, e.proxy(function (e, t) {
+            this.setExpandedState(e, !0, t), e.nodes && t && t.levels && this.expandLevels(e.nodes, t.levels - 1, t)
+        }, this)), this.render()
+    }, n.prototype.expandLevels = function (t, o, s) {
+        s = e.extend({}, i.options, s), e.each(t, e.proxy(function (e, t) {
+            this.setExpandedState(t, o > 0, s), t.nodes && this.expandLevels(t.nodes, o - 1, s)
+        }, this))
+    }, n.prototype.revealNode = function (t, o) {
+        this.forEachIdentifier(t, o, e.proxy(function (e, t) {
+            let o = this.getParent(e);
+            for (; o;) this.setExpandedState(o, !0, t), o = this.getParent(o)
+        }, this)), this.render()
+    }, n.prototype.toggleNodeExpanded = function (t, o) {
+        this.forEachIdentifier(t, o, e.proxy(function (e, t) {
+            this.toggleExpandedState(e, t)
+        }, this)), this.render()
+    }, n.prototype.checkAll = function (t) {
+        let o = this.findNodes("false", "g", "state.checked");
+        this.forEachIdentifier(o, t, e.proxy(function (e, t) {
+            this.setCheckedState(e, !0, t)
+        }, this)), this.render()
+    }, n.prototype.checkNode = function (t, o) {
+        this.forEachIdentifier(t, o, e.proxy(function (e, t) {
+            this.setCheckedState(e, !0, t)
+        }, this)), this.render()
+    }, n.prototype.uncheckAll = function (t) {
+        let o = this.findNodes("true", "g", "state.checked");
+        this.forEachIdentifier(o, t, e.proxy(function (e, t) {
+            this.setCheckedState(e, !1, t)
+        }, this)), this.render()
+    }, n.prototype.uncheckNode = function (t, o) {
+        this.forEachIdentifier(t, o, e.proxy(function (e, t) {
+            this.setCheckedState(e, !1, t)
+        }, this)), this.render()
+    }, n.prototype.toggleNodeChecked = function (t, o) {
+        this.forEachIdentifier(t, o, e.proxy(function (e, t) {
+            this.toggleCheckedState(e, t)
+        }, this)), this.render()
+    }, n.prototype.disableAll = function (t) {
+        let o = this.findNodes("false", "g", "state.disabled");
+        this.forEachIdentifier(o, t, e.proxy(function (e, t) {
+            this.setDisabledState(e, !0, t)
+        }, this)), this.render()
+    }, n.prototype.disableNode = function (t, o) {
+        this.forEachIdentifier(t, o, e.proxy(function (e, t) {
+            this.setDisabledState(e, !0, t)
+        }, this)), this.render()
+    }, n.prototype.enableAll = function (t) {
+        let o = this.findNodes("true", "g", "state.disabled");
+        this.forEachIdentifier(o, t, e.proxy(function (e, t) {
+            this.setDisabledState(e, !1, t)
+        }, this)), this.render()
+    }, n.prototype.enableNode = function (t, o) {
+        this.forEachIdentifier(t, o, e.proxy(function (e, t) {
+            this.setDisabledState(e, !1, t)
+        }, this)), this.render()
+    }, n.prototype.toggleNodeDisabled = function (t, o) {
+        this.forEachIdentifier(t, o, e.proxy(function (e, t) {
+            this.setDisabledState(e, !e.state.disabled, t)
+        }, this)), this.render()
+    }, n.prototype.forEachIdentifier = function (t, o, s) {
+        o = e.extend({}, i.options, o), t instanceof Array || (t = [t]), e.each(t, e.proxy(function (e, t) {
+            s(this.identifyNode(t), o)
+        }, this))
+    }, n.prototype.identifyNode = function (e) {
+        return "number" == typeof e ? this.nodes[e] : e
+    }, n.prototype.search = function (t, o) {
+        o = e.extend({}, i.searchOptions, o), this.clearSearch({render: !1});
+        let s = [];
+        if (t && t.length > 0) {
+            o.exactMatch && (t = "^" + t + "$");
+            let i = "g";
+            o.ignoreCase && (i += "i"), s = this.findNodes(t, i), e.each(s, function (e, t) {
+                t.searchResult = !0
             })
         }
-
-        // If revealResults, then render is triggered from revealNode
-        // otherwise we just call render.
-        if (options.revealResults) {
-            this.revealNode(results);
-        } else {
-            this.render();
-        }
-
-        this.$element.trigger('searchComplete', $.extend(true, {}, results));
-
-        return results;
-    };
-
-    /**
-     Clears previous search results
-     */
-    Tree.prototype.clearSearch = function (options) {
-
-        options = $.extend({}, { render: true }, options);
-
-        let results = $.each(this.findNodes('true', 'g', 'searchResult'), function (index, node) {
-            node.searchResult = false;
+        return o.revealResults ? this.revealNode(s) : this.render(), this.$element.trigger("searchComplete", e.extend(!0, {}, s)), s
+    }, n.prototype.clearSearch = function (t) {
+        t = e.extend({}, {render: !0}, t);
+        let o = e.each(this.findNodes("true", "g", "searchResult"), function (e, t) {
+            t.searchResult = !1
         });
-
-        if (options.render) {
-            this.render();
+        t.render && this.render(), this.$element.trigger("searchCleared", e.extend(!0, {}, o))
+    }, n.prototype.findNodes = function (t, o, s) {
+        o = o || "g", s = s || "text";
+        let i = this;
+        return e.grep(this.nodes, function (e) {
+            let n = i.getNodeValue(e, s);
+            if ("string" == typeof n) return n.match(new RegExp(t, o))
+        })
+    }, n.prototype.getNodeValue = function (e, t) {
+        let o = t.indexOf(".");
+        if (o > 0) {
+            let s = e[t.substring(0, o)], i = t.substring(o + 1, t.length);
+            return this.getNodeValue(s, i)
         }
-
-        this.$element.trigger('searchCleared', $.extend(true, {}, results));
+        return e.hasOwnProperty(t) ? e[t].toString() : void 0
     };
-
-    /**
-     Find nodes that match a given criteria
-     @param {String} pattern - A given string to match against
-     @param {optional String} modifier - Valid RegEx modifiers
-     @param {optional String} attribute - Attribute to compare pattern against
-     @return {Array} nodes - Nodes that match your criteria
-     */
-    Tree.prototype.findNodes = function (pattern, modifier, attribute) {
-
-        modifier = modifier || 'g';
-        attribute = attribute || 'text';
-
-        let _this = this;
-        return $.grep(this.nodes, function (node) {
-            let val = _this.getNodeValue(node, attribute);
-            if (typeof val === 'string') {
-                return val.match(new RegExp(pattern, modifier));
-            }
-        });
+    let d = function (e) {
+        t.console && t.console.error(e)
     };
-
-    /**
-     Recursive find for retrieving nested attributes values
-     All values are return as strings, unless invalid
-     @param {Object} obj - Typically a node, could be any object
-     @param {String} attr - Identifies an object property using dot notation
-     @return {String} value - Matching attributes string representation
-     */
-    Tree.prototype.getNodeValue = function (obj, attr) {
-        let index = attr.indexOf('.');
-        if (index > 0) {
-            let _obj = obj[attr.substring(0, index)];
-            let _attr = attr.substring(index + 1, attr.length);
-            return this.getNodeValue(_obj, _attr);
-        } else {
-            if (obj.hasOwnProperty(attr)) {
-                return obj[attr].toString();
-            } else {
-                return undefined;
-            }
-        }
-    };
-
-    let logError = function (message) {
-        if (window.console) {
-            window.console.error(message);
-        }
-    };
-
-    // Prevent against multiple instantiations,
-    // handle updates and method calls
-    $.fn[pluginName] = function (options, args) {
-
-        let result;
-
-        this.each(function () {
-            let _this = $.data(this, pluginName);
-            if (typeof options === 'string') {
-                if (!_this) {
-                    logError('Not initialized, can not call method : ' + options);
-                } else if (!$.isFunction(_this[options]) || options.charAt(0) === '_') {
-                    logError('No such method : ' + options);
-                } else {
-                    if (!(args instanceof Array)) {
-                        args = [args];
-                    }
-                    result = _this[options].apply(_this, args);
-                }
-            } else if (typeof options === 'boolean') {
-                result = _this;
-            } else {
-                $.data(this, pluginName, new Tree(this, $.extend(true, {}, options)));
-            }
-        });
-
-        return result || this;
-    };
-
-})(jQuery, window, document);
+    e.fn.treeview = function (t, o) {
+        let s;
+        return this.each(function () {
+            let i = e.data(this, "treeview");
+            "string" == typeof t ? i ? e.isFunction(i[t]) && "_" !== t.charAt(0) ? (o instanceof Array || (o = [o]), s = i[t].apply(i, o)) : d("No such method : " + t) : d("Not initialized, can not call method : " + t) : "boolean" == typeof t ? s = i : e.data(this, "treeview", new n(this, e.extend(!0, {}, t)))
+        }), s || this
+    }
+}(jQuery, window, document);

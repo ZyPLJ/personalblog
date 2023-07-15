@@ -23,7 +23,6 @@ const homeApp = Vue.createApp({
                     isLoading.value = false;
                 })
                 .catch(() => {
-                    console.log('Error retrieving random image.');
                     isLoading.value = false;
                 });
         };
@@ -164,7 +163,6 @@ const homeApp = Vue.createApp({
             loadPoem();
             loadHitokoto();
             getRandomImage();
-            console.log(123123)
             if (CHART_VISIBLE === true) loadChart();
             // Enable tooltips
             console.log('Enable tooltips')

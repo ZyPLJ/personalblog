@@ -60,7 +60,6 @@ let app = Vue.createApp({
         let toast3;
 
         onMounted(()=>{
-            console.log(121231231233123)
             let currentTheme = localStorage.getItem('currentTheme')
             if (currentTheme !== 'Bootstrap') {
                 let themeCssUrl = localStorage.getItem('currentThemeCssUrl')
@@ -80,7 +79,6 @@ let app = Vue.createApp({
 
         // 在created钩子中执行逻辑
         const created = () => {
-            console.log(123123)
             let theme = localStorage.getItem('currentTheme');
             if (theme) {
                 currentTheme.value = theme;

@@ -80,6 +80,8 @@ builder.Services.AddTransient<EmailServiceFactory>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddHttpClient();
+builder.Services.AddHttpClient<IHttpService, HttpService>();
+
 
 builder.Services.AddScoped<ICategoryService, PersonalblogServices.Categorys.CategoryService>();
 builder.Services.AddScoped<Personalblog.Services.PhotoService>();

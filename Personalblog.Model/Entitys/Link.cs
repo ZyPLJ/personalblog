@@ -31,6 +31,10 @@ namespace Personalblog.Model.Entitys
         /// 网址
         /// </summary>
         public string Url { get; set; }
+        /// <summary>
+        /// 网站图标
+        /// </summary>
+        public string? favicon { get; set; }
 
         /// <summary>
         /// 是否显示

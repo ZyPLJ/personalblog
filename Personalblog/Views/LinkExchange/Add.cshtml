@@ -31,10 +31,17 @@
                     <input asp-for="Description" class="form-control">
                     <span asp-validation-for="Description" class="form-text text-danger"></span>
                 </div>
-                <div class="mb-3">
-                    <label asp-for="Url" class="form-label"></label>
-                    <input asp-for="Url" class="form-control">
-                    <span asp-validation-for="Url" class="form-text text-danger"></span>
+                <div class="mb-3 row">
+                    <div class="col-6">
+                        <label asp-for="Url" class="form-label"></label>
+                        <input asp-for="Url" class="form-control">
+                        <span asp-validation-for="Url" class="form-text text-danger"></span>
+                    </div>
+                    <div class="col-6">
+                        <label asp-for="favicon" class="form-label"></label>
+                        <input asp-for="favicon" class="form-control">
+                        <span asp-validation-for="favicon" class="form-text text-danger"></span>
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label asp-for="WebMaster" class="form-label"></label>
@@ -105,12 +112,14 @@
     <div class="d-flex justify-content-between mb-2 border-bottom">
         <h2>已添加的友情链接</h2>
     </div>
-    <div class="d-grid gap-2 d-md-block">
+    <div class="row">
         @foreach (var link in (@ViewData["Links"] as List<Link>)!)
-        {
-            @await Html.PartialAsync("Widgets/ColorfulButton",
-                       new ColorfulButtonViewModel { Name = link.Name, Url = link.Url, Description = link.Description })
-        }
+        {                
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                @await Html.PartialAsync("Widgets/LinkExchange",
+                           new ColorfulButtonViewModel { Name = link.Name, Url = link.Url, Description = link.Description,favicon = link.favicon })
+            </div>
+            }
     </div>
 </div>
 

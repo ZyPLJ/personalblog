@@ -8,28 +8,11 @@
     ViewData["Title"] = "文章列表";
 }
 
-<style type="text/css">
-    .treeview .list-group-item {
-        cursor: pointer
-    }
+@section head
+{
+    <link rel="stylesheet" href="~/lib/Blog/BlogList.css"/>
+}
 
-    .treeview span.icon {
-        width: 12px;
-        margin-right: 5px
-    }
-
-    .treeview .node-disabled {
-        color: silver;
-        cursor: not-allowed
-    }
-
-    .node-categories {
-    }
-
-        .node-categories:not(.node-disabled):hover {
-            background-color: #F5F5F5;
-        }
-</style>
 @{
     <div class="container px-4 py-3">
         <h2 class="d-flex w-100 justify-content-between pb-2 mb-3 border-bottom">
@@ -66,12 +49,9 @@
     </div>
 }
 @section bottom {
-    @* <script src="~/lib/jquery/dist/jquery.min.js"></script> *@
-    @* <script src="~/lib/bootstrap-treeview/dist/bootstrap-treeview.min.js"></script> *@
     <script type="text/javascript">document.write("<scr"+"ipt src=\"/js/bootstrap-treeview.js\"></sc"+"ript>")
     </script>
-    @* <script src="/js/bootstrap-treeview.js"></script> *@
-    <script src="/lib/boldList.js"></script>
+    <script src="~/lib/Blog/boldList.js"></script>
     <script>
         const categories = '@Html.Raw(Model.CategoryNodesJson)'
         initTreeView(categories);

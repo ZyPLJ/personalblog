@@ -14,5 +14,6 @@
         public string Url { get; set; } = "#";
         public string Target { get; set; } = LinkTarget.Blank;
         public string? Description { get; set; }
+        public string favicon { get; set; }
     }
 }

@@ -77,6 +77,7 @@ public class LinkExchangeService:ILinkExchangeService
                     Name = item.Name,
                     Description = item.Description,
                     Url = item.Url,
+                    favicon = item.favicon,
                     Visible = true
                 });
             }

@@ -222,6 +222,9 @@ namespace Personalblog.Model.Migrations
                     b.Property<bool>("Visible")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("favicon")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("links");
@@ -259,6 +262,9 @@ namespace Personalblog.Model.Migrations
 
                     b.Property<string>("WebMaster")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("favicon")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
