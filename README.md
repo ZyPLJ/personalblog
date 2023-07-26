@@ -9,11 +9,17 @@
 
 [ZY个人博客](https://pljzy.top/)
 
+# 项目部署教程
+
+【.NET 个人博客搭建教程视频】 https://www.bilibili.com/video/BV1YN411a7FY/?share_source=copy_web&vd_source=fce337a51d11a67781404c67ec0b5084
+
+【.NET 个人博客搭建教程文章】https://pljzy.top/blog/post/c05a6442886504c1.html
+
 # 配套后台管理系统
 
 没怎么更新后台管理系统了，如果需要最新的源码吗，请关注公众号联系我，公众号在最下面。
 
-[PersonalblogVue: 基于Vue3框架搭建的个人博客后台管理系统。 (gitee.com)](https://gitee.com/zyplj/personalblog-vue)
+[PersonalblogVue: 基于Vue3框架搭建的个人博客后台管理系统。 (gitee.com)](https://gitee.com/zyplj/personalblog-vue)](https://github.com/ZyPLJ/PersonalblogVue)
 
 # 项目截图
 
