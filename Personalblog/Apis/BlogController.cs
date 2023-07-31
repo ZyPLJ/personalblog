@@ -33,9 +33,9 @@ namespace Personalblog.Apis
         /// </summary>
         /// <returns></returns>
         [HttpGet("Top")]
-        public ApiResponse<Post> GetTopOnePost()
+        public async Task<ApiResponse<List<Post>>> GetTopOnePost()
         {
-            return new ApiResponse<Post> { Data = _blogService.GetTopOnePost() };
+            return new ApiResponse<List<Post>> { Data =await _blogService.GetTopOnePostAsync() };
         }
         /// <summary>
         /// 上传博客压缩包 + 导入

@@ -94,11 +94,11 @@ namespace Personalblog.Apis
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPost("{id}/[action]")]
-        public ApiResponse<TopPost> SetTop(string id)
+        public async Task<ApiResponse<TopPost>> SetTop(string id)
         {
             var post = _postService.GetById(id);
             if (post == null) return ApiResponse.NotFound($"博客 {id} 不存在");
-            var (data, rows) = _blogService.SetTopPost(post);
+            var (data, rows) = await _blogService.SetTopPostAsync(post);
             return new ApiResponse<TopPost> { Data = null, Message = $"ok. deleted {rows} old topPosts." };
         }
         [HttpPost]

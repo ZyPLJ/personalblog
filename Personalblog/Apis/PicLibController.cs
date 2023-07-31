@@ -14,16 +14,21 @@ namespace Personalblog.Apis
     {
         private readonly PiCLibService _service;
         private readonly IConfiguration _configuration;
-        public PicLibController(PiCLibService service,IConfiguration configuration)
+        private readonly QiniuService _qiniuService;
+        public PicLibController(PiCLibService service,IConfiguration configuration,
+            QiniuService qiniuService)
         {
             _service = service;
             _configuration = configuration;
+            _qiniuService = qiniuService;
         }
         private static async Task<IActionResult> GenerateImageResponse(Image image, IImageFormat format)
         {
             var encoder = image.GetConfiguration().ImageFormatsManager.FindEncoder(format);
             await using var stream = new MemoryStream();
             
+            //windows字体 Arial
+            //liunx字体 DejaVu Sans
             var font = SystemFonts.CreateFont("DejaVu Sans", 50);
             
             var location = new PointF(image.Width - 250, image.Height - 100);
@@ -66,6 +71,7 @@ namespace Personalblog.Apis
         public async Task<string> GetRandomImageTopQiliu(string? seed)
         {
             string path = await _service.GetQiliuImageAsyncTop();
+            // string path = await _qiniuService.GetRandomImageAsync();
             return path;
         }
         /// <summary>

@@ -197,6 +197,7 @@ const apptwo = Vue.createApp({
             handleSubmit,
             handleSizeChange,
             handleCurrentChange,
+            handleReplyTagClose,
             contentRef,
             ruleFormRef,
             handleReply,

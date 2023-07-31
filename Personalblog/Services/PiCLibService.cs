@@ -134,10 +134,13 @@ namespace Personalblog.Services
 
         public async Task<string> GetQiliuImageAsyncTop()
         {
-            var rnd = _random;
-            var imagePath = ImageListTop[rnd.Next(0, ImageListTop.Count)];
-            var fileName = Path.GetFileName(imagePath);
-            return Path.Combine("https://cdn.pljzy.top", "Top", fileName);
+            return await Task.Run(() =>
+            {
+                var rnd = _random;
+                var imagePath = ImageListTop[rnd.Next(0, ImageListTop.Count)];
+                var fileName = Path.GetFileName(imagePath);
+                return Path.Combine("https://cdn.pljzy.top", "Top", fileName);
+            });
         }
     }
 }

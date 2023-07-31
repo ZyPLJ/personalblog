@@ -11,17 +11,17 @@ namespace PersonalblogServices.FtopPost
         {
             _myDbContext = myDbContext;
         }
+        
 
-        public Post GetTopOnePost()
+        public async Task<List<Post>> GetTopOnePostAsync()
         {
-            if (_myDbContext.topPosts.Include("Post").FirstOrDefault() == null)
+            var topPosts = await _myDbContext.topPosts.Include(t => t.Post).ToListAsync();
+
+            if (topPosts.Count == 0)
             {
                 return null;
-            }
-            else
-            {
-                return _myDbContext.topPosts.Include("Post").First().Post;
-            }
+            }                
+            return topPosts.Select(tp => tp.Post).ToList();
         }
     }
 }

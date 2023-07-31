@@ -30,9 +30,10 @@ const homeApp = Vue.createApp({
         const loadPoem = () => {
             fetch('/Api/DataAcq/Poem')
                 .then(res => res.json())
-                .then(res => (poemSimple.value = res.data));
+                .then(res => {poemSimple.value = res.data;});
         };
 
+        
         const loadHitokoto = () => {
             fetch('/Api/DataAcq/Hitokoto')
                 .then(res => res.json())
@@ -197,7 +198,7 @@ const homeApp = Vue.createApp({
             switchChartType,
             loadChart,
             loadBubbleChart,
-            loadBarChart,
+            loadBarChart
         };
     },
 })

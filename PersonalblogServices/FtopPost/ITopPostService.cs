@@ -9,6 +9,7 @@ namespace PersonalblogServices.FtopPost
 {
     public interface ITopPostService
     {
-        Post GetTopOnePost();
+        // Post GetTopOnePost();
+        Task<List<Post>> GetTopOnePostAsync();
     }
 }

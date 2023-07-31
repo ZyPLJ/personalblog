@@ -12,19 +12,20 @@
     <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.3/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-icons/1.10.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/aplayer/1.10.1/APlayer.min.css" rel="stylesheet">
     <link rel="stylesheet" href="~/css/features.css">
     <link rel="stylesheet" href="~/css/metro.css">
     <link rel="stylesheet" href="~/css/footer.css">
     @* 主样式 *@
     <link rel="stylesheet" href="~/lib/Master.css"/>
     <link href="~/css/nprogress.css" rel="stylesheet"/>
-    
-    <script src="~/script/global-audio.js"></script>
+    @* 前音乐 废弃 *@
+    @* <script src="~/script/global-audio.js"></script> *@
     <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.47/vue.global.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
-    
+    <script src="https://cdn.bootcdn.net/ajax/libs/aplayer/1.10.1/APlayer.min.js"></script>
 
     @await RenderSectionAsync("head", false)
 </head>
@@ -108,20 +109,20 @@
             </div>
         </div>
     </div>
-    <div class="px-3 py-2 border-bottom mb-3">
+    <div class="px-3 py-2 border-bottom">
         <div class="container d-flex flex-wrap justify-content-center">
             <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto"
                   asp-controller="Search" asp-action="Blog">
-                <input type="search" class="form-control" placeholder="搜索文章..." aria-label="Search" name="keyword">
+                <input type="search" class="form-control" placeholder="全站检索文章(Enter)..." aria-label="Search" name="keyword">
             </form>
 
             <div class="text-end">
-                <span class="dropdown me-2">
-                    <button href="#" class="btn btn-light" id="play-pause-button" role="button">
-                        <i class="bi bi-music-note-beamed"></i>
-                        音乐
-                    </button>
-                </span>
+                @* <span class="dropdown me-2"> *@
+                @*     <button href="#" class="btn btn-light" id="play-pause-button" role="button"> *@
+                @*         <i class="bi bi-music-note-beamed"></i> *@
+                @*         音乐 *@
+                @*     </button> *@
+                @* </span> *@
                 <span class="dropdown me-2">
                     <a href="#" class="btn btn-light" id="dropdown" role="button" onclick="stopp()">
                         <i class="bi bi-arrow-repeat"></i>
@@ -147,13 +148,15 @@
     </div>
 </header>
 <main id="vue-app">
-    <div class="container mt-3">
-        @while (!Messages.IsEmpty)
-        {
-            var message = Messages.Dequeue();
-            <partial name="Widgets/Alert" model="message"/>
-        }
-    </div>
+    @while (!Messages.IsEmpty)
+    {
+        <div class="container mt-3">
+            @{
+                var message = Messages.Dequeue();
+                <partial name="Widgets/Alert" model="message"/>
+            }
+        </div>
+    }
     <div id="HomeAlertPlaceholder" class="custom-alert">
     </div>
     @RenderBody()
@@ -216,7 +219,13 @@
         </div>
     </div>
 </footer>
+<!-- 点击烟花特效 -->
+<canvas width="1366" height="662" style="position: fixed; left: 0px; top: 0px; z-index: 2147483647; pointer-events: none;"></canvas>
+<!-- 为博客底部添加音乐组件 -->
+<div id="player" class="aplayer"></div>
 
+<script src="~/lib/MasterMusic.js"></script>
+<script src="~/lib/cursor-effects.js"></script>
 <script src="~/lib/Master.js"></script>
 <script src="~/lib/site.js"></script>
 @await RenderSectionAsync("bottom", false)
