@@ -33,7 +33,7 @@ public static class ToC {
         for (var i = 0; i < headings.Count; i++) {
             var item = headings[i];
             item.Id = i;
-
+            if(i==7){}
             var text = item.Text ?? "";
             // 包含中文且不包含英文的转换为 section-1 格式
             if (Regex.IsMatch(text, "^((?![a-zA-Z]).)*[\u4e00-\u9fbb]((?![a-zA-Z]).)*$")) {
@@ -44,6 +44,10 @@ public static class ToC {
             else {
                 item.Slug = Regex.Replace(text, @"[^a-zA-Z0-9\s]+", "")
                     .Trim().Replace(" ", "-").ToLower();
+                if (Char.IsDigit(item.Slug[0])) //第一个字符为数字则删除 因为id不支持数字开头
+                {
+                    item.Slug = item.Slug.Substring(1);
+                }
                 if (slugMap.ContainsKey(item.Slug)) {
                     item.Slug = $"{item.Slug}-{slugMap[item.Slug]++}";
                 }

@@ -13,78 +13,34 @@
 @await Html.PartialAsync("Widgets/BackTop", new BackToTopViewModel { IsShowText = false })
 @await Html.PartialAsync("Widgets/Notice", Model.Notices)
 
-<div class="container py-5">
-    <div class="row">
-        <div class="col-lg-6">
-            <h1 class="display-4 fw-bold mb-4">ZY 知识库</h1>
-            <p class="lead mb-4">这是一个用于分享知识和经验的平台，我会在这里分享一些我学习和工作中的经验和心得，希望能够对你有所帮助。</p>
+
+<div class="container">
+    <div class="HomeImg">
+        @await Html.PartialAsync("Widegets/HomeImg")
+        <div class="HomeContent">
+            <div class="mb-4" style="font-size:30px;float:left;">ZY 知识库</div>
             <div class="lead mb-2">
-                <p>一句诗：{{poemSimple}}</p>
-                <p>一言：{{hitokoto}}</p>
+                <p class="text">{{poemSimple}}</p>
+                @* <p>一言：{{hitokoto}}</p> *@
             </div>
-            <div class="d-flex flex-column flex-sm-row">
-                <a class="btn btn-primary btn-lg px-4 me-md-2 mb-3 mb-sm-0" role="button" asp-controller="About" asp-action="Index">了解更多</a>
-                <div class="d-flex flex-row ms-sm-3">
-                    <a class="btn btn-outline-secondary btn-lg px-4 me-2" asp-controller="Blog" asp-action="RandomPost">看文</a>
-                    <a class="btn btn-outline-secondary btn-lg px-4" asp-controller="Photo" asp-action="RandomPhoto">看图</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6 mt-4 mt-lg-0 mb-4">
-            <div class="row d-flex flex-column">
-                <div class="col-lg-12 mb-3">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>网站通知列表</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="roller-wrapper">
-                                <ul class="roller">
-                                    @if (Model.Notices.Any())
-                                    {
-                                        @foreach (var n in Model.Notices)
-                                        {
-                                            <li>@n.Content</li>
-                                        }
-                                    }
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-12 mb-3">
-                    <div class="row d-flex flex-wrap justify-content-between mb-4">
-                        @{
-                            var firstPost = @Model.FirstLastPost.First();
-                            var firstPostModel = new FeaturedPostTopCardModel { FeaturedPost = firstPost, Number = 1 };
-                            if (firstPost != null)
-                            {
-                                @await Html.PartialAsync("Widgets/FeaturedPostTopCard", firstPostModel)
-                            }
-                            else
-                            {
-                                @await Html.PartialAsync("Widgets/PlaceholderCard", "置顶博客")
-                            }
-                        }
-                        @{
-                            var lastPost = @Model.FirstLastPost.Last();
-                            var lastPostModel = new FeaturedPostTopCardModel { FeaturedPost = lastPost, Number = 2 };
-                            if (lastPost != null)
-                            {
-                                @await Html.PartialAsync("Widgets/FeaturedPostTopCard", lastPostModel)
-                            }
-                            else
-                            {
-                                @await Html.PartialAsync("Widgets/PlaceholderCard", "置顶博客")
-                            }
-                        }
-                    </div>
+            <div class="d-flex flex-sm-row Home-btn">
+                <a class="btn btn-outline-secondary btn-lg px-4 mb-sm-0 box" role="button" asp-controller="About" asp-action="Index">了解更多</a>
+                <div class="d-flex flex-row ms-sm-3" style="margin-left: 10px;">
+                    <a class="btn btn-outline-secondary btn-lg px-4 me-2 box" asp-controller="Blog" asp-action="RandomPost">看文</a>
+                    <a class="btn btn-outline-secondary btn-lg px-4 box" asp-controller="Photo" asp-action="RandomPhoto">看图</a>
                 </div>
             </div>
         </div>
     </div>
+    <div class="row">
+        @{
+            @await Html.PartialAsync("Widegets/HomePostTopCard",new FeaturedPostTopCardModel { HomePost = @Model.HomePost.ViewCountMax, Number = 1 })    
+            @await Html.PartialAsync("Widegets/HomePostTopCard",new FeaturedPostTopCardModel { HomePost = @Model.HomePost.CommentMax, Number = 2 })    
+            @await Html.PartialAsync("Widegets/HomePostTopCard",new FeaturedPostTopCardModel { HomePost = @Model.HomePost.FirstPost, Number = 3 })    
+            @await Html.PartialAsync("Widegets/HomePostTopCard",new FeaturedPostTopCardModel { HomePost = @Model.HomePost.LastPost, Number = 4 })    
+        }
+    </div>
 </div>
-
 
 <div class="container px-4 py-3" id="custom-cards">
     <h2 class="pb-2 border-bottom">Photography</h2>
@@ -131,7 +87,7 @@
     </h2>
     @if (Model.TopPost != null)
     {
-        @await Html.PartialAsync("Widgets/TopPostCard", Model.TopPost)
+        @await Html.PartialAsync("Widegets/HomeTopPostCard", Model.TopPost)
     }
     else
     {
@@ -175,7 +131,7 @@
             {
                 <div class="col-lg-3 col-md-6 col-sm-12">
                     @await Html.PartialAsync("Widgets/LinkExchange",
-                               new ColorfulButtonViewModel { Name = link.Name, Url = link.Url, Description = link.Description,favicon = link.favicon})
+                               new ColorfulButtonViewModel { Name = link.Name, Url = link.Url, Description = link.Description, favicon = link.favicon })
                 </div>
             }
         }

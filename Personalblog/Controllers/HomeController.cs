@@ -46,7 +46,7 @@ namespace Personalblog.Controllers
             {
                 FeaturedPhotos = _fPhotoService.GetFeaturePhotos(),
                 FeaturedCategories = _fCategoryService.GetFeaturedCategories(),
-                TopPost = _TopPostService.GetTopOnePost(),
+                TopPost =await _TopPostService.GetTopOnePostAsync(),
                 FeaturedPosts = await _PostService.GetFeaturedPostsAsync(new QueryParameters
                 {
                     Page = 1,
@@ -54,7 +54,7 @@ namespace Personalblog.Controllers
                 }),
                 Links = await _linkService.GetAll(),
                 Notices = await _noticeService.GetAllAsync(),
-                FirstLastPost =await _articelsService.FirstLastPostAsync(),
+                HomePost = await _articelsService.HomePostAsync(),
                 // MaxPost = await _articelsService.MaxPostAsync()
             };
             return View(homeView);

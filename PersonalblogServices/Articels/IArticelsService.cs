@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Personalblog.Model.ViewModels.Blog;
+using Personalblog.Model.ViewModels.Home;
 using X.PagedList;
 
 namespace PersonalblogServices.Articels
@@ -28,5 +29,7 @@ namespace PersonalblogServices.Articels
         Task<Post> MaxPostAsync();
         //发送邮件
         Task SendEmailOnAdd(CommentSendEmailDto dto);
+        //查询评论最多 阅读最多 最新和最旧 4篇文章
+        Task<HomePost> HomePostAsync();
     }
 }

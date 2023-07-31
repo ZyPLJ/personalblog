@@ -71,19 +71,32 @@ namespace Personalblog.Services
         /// </summary>
         /// <param name="post"></param>
         /// <returns>返回 <see cref="TopPost"/> 对象和删除原有置顶博客的行数</returns>
-        public (TopPost, int) SetTopPost(Post post)
+        public async Task<(TopPost, int)> SetTopPostAsync(Post post)
         {
             var data = _myDbContext.topPosts;
-            _myDbContext.RemoveRange(data);
-            var rows = _myDbContext.SaveChanges();
-            var item = new TopPost { PostId = post.Id };
-            _myDbContext.topPosts.Add(item);
-            _myDbContext.SaveChanges();
-            return (item, rows);
+            if (data.Any(t => t.PostId == post.Id))
+            {
+                return (null, 0);
+            }
+            else
+            {
+                int rows = 0;
+                if (data.Count() >= 3)
+                {
+                    var firstPost = await data.FirstAsync();
+                    _myDbContext.topPosts.Remove(firstPost);
+                    rows++;
+                }
+                var item = new TopPost { PostId = post.Id };
+                _myDbContext.topPosts.Add(item);
+                await _myDbContext.SaveChangesAsync();
+                return (item, rows);
+            }
         }
-        public Post? GetTopOnePost()
+        public async Task<List<Post>?> GetTopOnePostAsync()
         {
-            return _myDbContext.topPosts.Include(a => a.Post.Categories).FirstOrDefault()?.Post;
+            var topPost =await _myDbContext.topPosts.Include(a => a.Post.Categories).ToListAsync();
+            return topPost.Select(tp => tp.Post).ToList();
         }
         /// <summary>
         /// 上传md文件

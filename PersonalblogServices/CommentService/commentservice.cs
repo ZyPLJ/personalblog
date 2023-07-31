@@ -140,7 +140,7 @@ public class commentservice:Icommentservice
         {
             PageNumber = param.Page,
             PageSize = param.PageSize,
-            TotalItemCount = await _dbContext.Comments.CountAsync()
+            TotalItemCount = await querySet.CountAsync()
         };
         return (data, pagination);
     }

@@ -33,8 +33,8 @@
                 </div>
 
                 <div id="post-toc-container" style="z-index:0">
-                      <nav id="navbar-example3" class="h-100 flex-column align-items-stretch pe-4 border-end">
-                      </nav>
+                    <nav id="navbar-example3" class="h-100 flex-column align-items-stretch pe-4 border-end">
+                    </nav>
                 </div>
             </div>
         </div>
@@ -53,8 +53,19 @@
         </div>
     </div>
 </div>
+<div id="jsi-flying-fish-container" style="background-color:#fff;"></div>
 @section bottom
 {
+    @* 线条特效 *@
+    <canvas id="c_n9" width="1920" height="990" style="position: fixed; top: 0px; left: 0px; z-index: -1; opacity: 0.5;"></canvas>
+    <script src="~/lib/Blog/BlogPostTeXiao.js"></script>
+    @* 鱼 *@
+    <script src="~/lib/Blog/BlogPostFish.js"></script>
+    <!-- 看板娘模型 -->
+    <script src="~/lib/Blog/L2Dwidget.min.js"></script>
+    <script src="~/lib/Blog/L2Dwidget.0.min.js"></script>
+    <script src="~/lib/Blog/BlogPost2d.js"></script>
+
     <script src="https://cdn.bootcdn.net/ajax/libs/element-plus/2.3.3/index.full.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/axios/1.3.6/axios.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/dayjs/1.11.7/dayjs.min.js"></script>
