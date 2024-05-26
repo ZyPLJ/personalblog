@@ -30,7 +30,7 @@
                         <div class="card-body con-box-content">
                             <h5 class="Home-card-title">@Model.HomePost.Title.Limit(20)</h5>
                             <div class="text-muted d-flex align-items-center" style="font-size: 13px;">
-                                <span class="me-2">@Model.HomePost.LastUpdateTime.ToShortDateString()</span>
+                                <span class="me-2">@Model.HomePost.CreationTime.ToShortDateString()</span>
                                 <div class="d-flex align-items-center">
                                     <i class="bi bi-eye bi-sm me-1"></i>
                                     <span>@Model.HomePost.ViewCount</span>

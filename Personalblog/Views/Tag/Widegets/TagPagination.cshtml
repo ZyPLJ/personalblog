@@ -1,0 +1,24 @@
+﻿@model (Personalblog.Model.ViewModels.Categories.PaginationMetadata,int)
+
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        <li class="page-item @(!Model.Item1.HasPreviousPage ? "disabled" : "")">
+            <a class="page-link" href="#" aria-label="Previous" href="@Url.Action("Index", new { tagId = Model.Item2, page = Model.Item1.PageNumber - 1, pageSize = Model.Item1.PageSize })">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </a>
+        </li>
+        @for (int i = 1; i <= Model.Item1.PageCount; i++)
+        {
+            <li class="page-item @(Model.Item1.PageNumber == i ? "active" : "")">
+                <a class="page-link" href="@Url.Action("Index", new { tagId = Model.Item2, page = i, pageSize = Model.Item1.PageSize })">@i</a>
+            </li>
+        }
+        <li class="page-item @(!Model.Item1.HasNextPage ? "disabled" : "")">
+            <a class="page-link" href="#" aria-label="Next" href="@Url.Action("Index", new { tagId = Model.Item2, page = Model.Item1.PageNumber + 1, pageSize = Model.Item1.PageSize })">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </a>
+        </li>
+    </ul>
+</nav>

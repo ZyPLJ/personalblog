@@ -1,0 +1,47 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Personalblog.Migrate
+@model Personalblog.Model.ViewModels.FeaturedPostTopCardModel
+
+
+<a style="display:contents"
+   asp-controller="Blog" asp-action="Post" asp-route-id="@Model.HomePost.Id">
+    <div class="col-lg-3 col-md-6 col-sm-12" style="padding:10px 15px 15px 15px;">
+        <div class="card position-relative Home-card">
+            <div class="card-body">
+                <h5 class="Home-card-title" style="margin:0;">@Model.HomePost.Title.Limit(12) ...</h5>
+                <div class="text-muted d-flex align-items-center" style="font-size: 13px;">
+                    <span class="me-2">@Model.HomePost.LastUpdateTime.ToShortDateString()</span>
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-eye bi-sm me-1"></i>
+                        <span>@Model.HomePost.ViewCount</span>
+                    </div>
+                    <span style="width: 10px;"></span> <!-- 这里设置了一个 10px 的间距 -->
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-chat-square-dots bi-sm me-1"></i>
+                        <span>@Model.HomePost.Comments.Count</span>
+                    </div>
+                </div>
+                <p class="Home-card-text">@Model.HomePost.Summary.Limit(35) ...</p>
+            </div>
+            <div class="con-box card-body">
+                <p>@Model.HomePost.Summary.Limit(80)</p>
+            </div>
+            @if (Model.Number == 1)
+            {
+                <div class="recommendation recommendation-ViewCountMax">阅读</div>
+            }
+            else if (Model.Number == 2)
+            {
+                <div class="recommendation recommendation-CommentMax">评论</div>
+            }
+            else if (Model.Number == 3)
+            {
+                <div class="recommendation recommendation-last">之前</div>
+            }
+            else
+            {
+                <div class="recommendation recommendation-first">最新</div>
+            }
+        </div>
+    </div>
+</a>

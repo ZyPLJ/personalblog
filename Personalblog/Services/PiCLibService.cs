@@ -18,25 +18,26 @@ namespace Personalblog.Services
     public class PiCLibService
     {
         private readonly IWebHostEnvironment _environment;
-        private readonly Random _random;
+        private readonly Random _random = new Random();
         public List<string> ImageList { get; set; } = new();
         public List<string> ImageListTop { get; set; } = new();
         public PiCLibService(IWebHostEnvironment environment)
         {
             _environment = environment;
             _random = Random.Shared;
-            var impostPath = Path.Combine(_environment.WebRootPath, "media", "yasuo");
-           var impostPathTop = Path.Combine(_environment.WebRootPath, "media", "Top");
+            ImageList = LoadImageList("media/yasuo");
+            ImageListTop = LoadImageList("media/Top");
+        }
+        private List<string> LoadImageList(string imagePath)
+        {
+            var imageList = new List<string>();
+            var impostPath = Path.Combine(_environment.WebRootPath, imagePath);
             var root = new DirectoryInfo(impostPath);
-            var rootTop = new DirectoryInfo(impostPathTop);
-            foreach(var file in root.GetFiles())
+            foreach (var file in root.GetFiles())
             {
-                ImageList.Add(file.FullName);
+                imageList.Add(file.FullName);
             }
-            foreach(var file in rootTop.GetFiles())
-            {
-                ImageListTop.Add(file.FullName);
-            }
+            return imageList;
         }
         /// <summary>
         /// 求最大公约数
@@ -70,15 +71,15 @@ namespace Personalblog.Services
         /// <returns></returns>
         async Task<(Image,IImageFormat)> GenerateSizedImageAsync(string imagePath,int width,int height)
         {
-            await using var fileStream = new FileStream(imagePath, FileMode.Open);
+            using var fileStream = new FileStream(imagePath, FileMode.Open);
             var (image, format) = await Image.LoadWithFormatAsync(fileStream);
 
             //尺寸超出原图片尺寸，放大
-            if(width > image.Width && height > image.Height)
+            if (width > image.Width && height > image.Height)
             {
                 image.Mutate(a => a.Resize(width, height));
             }
-            else if(width > image.Width || height > image.Height)
+            else if (width > image.Width || height > image.Height)
             {
                 // 改变比例大的边
                 if (width / image.Width < height / image.Height)
@@ -91,24 +92,24 @@ namespace Personalblog.Services
             var (scaleWidth, scleHeight) = GetPhotoScale(width, height);
             var cropWidth = image.Width;
             var cropHeight = (int)(image.Width / scaleWidth * scleHeight);
-            if(cropHeight > image.Height)
+            if (cropHeight > image.Height)
             {
                 cropHeight = image.Height;
                 cropWidth = (int)(image.Height / scleHeight * scaleWidth);
             }
 
-            
-            
+
+
             var cropRect = new Rectangle((image.Width - cropWidth) / 2, (image.Height - cropHeight) / 2, cropWidth, cropHeight);
             image.Mutate(a => a.Crop(cropRect));
             image.Mutate(a => a.Resize(width, height));
-
             return (image, format);
+
         }
 
         async Task<(Image, IImageFormat)> GenerateSizedImageAsyncOd(string imagePath)
         {
-            await using var fileStream = new FileStream(imagePath, FileMode.Open);
+            using var fileStream = new FileStream(imagePath, FileMode.Open);
             var (image, format) = await Image.LoadWithFormatAsync(fileStream);
             return (image, format);
         }
@@ -123,7 +124,8 @@ namespace Personalblog.Services
         {
             var rnd = seed == null ? _random : new Random(seed.GetHashCode());
             var imagePath = ImageList[rnd.Next(0, ImageList.Count)];
-            return await GenerateSizedImageAsync(imagePath, width, height);
+            var (image, format) = await GenerateSizedImageAsync(imagePath, width, height);
+            return (image, format);
         }
         public async Task<(Image, IImageFormat)> GetRandomImageAsyncTop(string? seed = null)
         {
@@ -132,15 +134,27 @@ namespace Personalblog.Services
             return await GenerateSizedImageAsyncOd(imagePath);
         }
 
-        public async Task<string> GetQiliuImageAsyncTop()
+        public async Task<List<string>> GetQiliuImageAsyncTop()
         {
-            return await Task.Run(() =>
+            var imagePaths = await Task.Run(() =>
             {
-                var rnd = _random;
-                var imagePath = ImageListTop[rnd.Next(0, ImageListTop.Count)];
-                var fileName = Path.GetFileName(imagePath);
-                return Path.Combine("https://cdn.pljzy.top", "Top", fileName);
+                var rnd = new Random();
+                return ImageListTop.OrderBy(x => rnd.Next()).Take(3)
+                    .Select(imagePath =>
+                    {
+                        var fileName = Path.GetFileName(imagePath);
+                        return Path.Combine("https://cdn.pljzy.top", "Top", fileName);
+                    })
+                    .ToList();
             });
+
+            return imagePaths;
+        }
+        public async Task<(Image, IImageFormat)> GetDesignImageAsync(int width,int height,string seed)
+        {
+            var imagePath = Path.Combine(_environment.WebRootPath, $"media/Tool/{seed}");
+            var (image, format) = await GenerateSizedImageAsync(imagePath, width, height);
+            return (image, format);
         }
     }
 }

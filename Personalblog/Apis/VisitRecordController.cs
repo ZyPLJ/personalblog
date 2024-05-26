@@ -46,10 +46,10 @@ namespace Personalblog.Apis
             return new ApiResponse<List<VisitRecord>>(_service.GetAll());
         }
         [HttpGet]
-        public ApiResponsePaged<VisitRecord> GetList([FromQuery] VisitRecordQueryParameters param)
+        public async Task<ApiResponsePaged<VisitRecord>> GetList([FromQuery] VisitRecordQueryParameters param)
         {
-            var pagedList = _service.GetPagedList(param);
-            return new ApiResponsePaged<VisitRecord>(pagedList);
+            var (data, meta) = await _service.GetPagedList(param);
+            return new ApiResponsePaged<VisitRecord>(data, meta);
         }
     }
 }

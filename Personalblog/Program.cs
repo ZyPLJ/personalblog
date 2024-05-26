@@ -22,6 +22,8 @@ using SixLabors.ImageSharp.Web.DependencyInjection;
 using StackExchange.Profiling.Storage;
 using System.Text;
 using AspNetCoreRateLimit;
+using Hangfire;
+using Hangfire.MemoryStorage;
 using Microsoft.Extensions.Caching.Memory;
 using Personalblog.Extensions.SendEmail;
 using Personalblog.Model.ViewModels;
@@ -29,6 +31,7 @@ using PersonalblogServices.ArticelArc;
 using PersonalblogServices.CommentService;
 using PersonalblogServices.Messages;
 using PersonalblogServices.Notice;
+using PersonalblogServices.Tag;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,7 +61,7 @@ builder.Services.AddCors(options =>
         opt => opt.AllowAnyOrigin()
         .AllowAnyHeader()
         .AllowAnyMethod()
-        .WithExposedHeaders("http://localhost:8080/","http://154.9.25.73:8031"));
+        .WithExposedHeaders("http://localhost:8080/","http://109.206.247.216:8031"));
 });
 
 builder.Services.AddAutoMapper(typeof(AutoMapperConfigs));
@@ -76,6 +79,7 @@ builder.Services.AddTransient<ILinkExchangeService, LinkExchangeService>();
 builder.Services.AddTransient<IMessagesService, MessagesService>();
 builder.Services.AddTransient<IArcService, ArcService>();
 builder.Services.AddTransient<EmailServiceFactory>();
+builder.Services.AddTransient<ITagService,TagService>();
 
 builder.Services.AddHttpContextAccessor();
 
@@ -150,6 +154,11 @@ builder.Services.AddSession();
 builder.Services.AddRateLimit(builder.Configuration);
 builder.Services.AddMemoryCache();
 
+// 添加Hangfire服务
+builder.Services.AddHangfire(configuration => configuration.UseMemoryStorage());
+// 添加定时任务
+builder.Services.AddHangfireServer();
+
 // //注入Miniprofiler
 // builder.Services.AddMiniProfiler(options =>
 // {
@@ -222,7 +231,10 @@ app.UseImageSharp();
 
 app.UseRouting();
 
-
+// 使用Hangfire中间件
+app.UseHangfireDashboard();
+// 启动定时任务
+// RecurringJob.AddOrUpdate(() => YourMethodToTrigger(), Cron.Minutely);
 
 app.UseAuthentication();
 app.UseAuthorization();

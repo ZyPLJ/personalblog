@@ -29,5 +29,10 @@ namespace Personalblog.Model.ViewModels.Blog
         /// 分类ID
         /// </summary>
         public int CategoryId { get; set; }
+        /// <summary>
+        /// 标签
+        /// </summary>
+
+        public List<Entitys.Tag> Tags { get; set; }
     }
 }

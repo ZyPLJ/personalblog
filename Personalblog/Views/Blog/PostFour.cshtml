@@ -13,11 +13,12 @@
 {
     <link rel="stylesheet" href="~/lib/Blog/BlogPost.css"/>
     <link href="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.7.0/styles/base16/papercolor-light.min.css" rel="stylesheet">
-    <link href="https://cdn.bootcdn.net/ajax/libs/element-plus/2.3.3/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/element-plus@2.5.1/dist/index.min.css">
+    @* <link href="https://cdn.bootcdn.net/ajax/libs/element-plus/2.3.3/index.css" rel="stylesheet"> *@
 }
 
 
-@await Html.PartialAsync("Widgets/BackToTop", new BackToTopViewModel {IsShowText = false})
+@await Html.PartialAsync("Widgets/BackToTop", new BackToTopViewModel { IsShowText = false })
 
 
 <div class="container">
@@ -40,20 +41,21 @@
         </div>
         <div class="col-lg-9" id="goTop">
             <partial name="Widegets/PostHeader" model="Model"/>
-            <div class="post-content" data-bs-spy="scroll" 
-                 data-bs-offset="0" 
+            <div class="post-content" data-bs-spy="scroll"
+                 data-bs-offset="0"
                  data-bs-target="#navbar-example3"
-                 class="scrollspy-example-2" 
+                 class="scrollspy-example-2"
                  tabindex="0">
                 @Html.Raw(Model.ContentHtml)
             </div>
             <partial name="Widegets/PostBottom"/>
-            
+
             <partial name="Widegets/Comment" model="Model"/>
         </div>
     </div>
 </div>
 <div id="jsi-flying-fish-container" style="background-color:#fff;"></div>
+
 @section bottom
 {
     @* 线条特效 *@
@@ -62,15 +64,16 @@
     @* 鱼 *@
     <script src="~/lib/Blog/BlogPostFish.js"></script>
     <!-- 看板娘模型 -->
-    <script src="~/lib/Blog/L2Dwidget.min.js"></script>
-    <script src="~/lib/Blog/L2Dwidget.0.min.js"></script>
-    <script src="~/lib/Blog/BlogPost2d.js"></script>
+    @* <script src="~/lib/Blog/L2Dwidget.min.js"></script> *@
+    @* <script src="~/lib/Blog/L2Dwidget.0.min.js"></script> *@
+    @* <script src="~/lib/Blog/BlogPost2d.js"></script> *@
 
-    <script src="https://cdn.bootcdn.net/ajax/libs/element-plus/2.3.3/index.full.min.js"></script>
+    @* <script src="https://cdn.bootcdn.net/ajax/libs/element-plus/2.3.3/index.full.min.js"></script> *@
+    <script src="https://cdn.jsdelivr.net/npm/element-plus@2.5.1/dist/index.full.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/axios/1.3.6/axios.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/dayjs/1.11.7/dayjs.min.js"></script>
     <script src="~/js/comment.js"></script>
-    @* <script src="~/js/bootstrap-treeview.js"></script> *@
+
     <script src="~/js/blog.post.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
     <!-- 引入 clipboard.js 核心文件 -->

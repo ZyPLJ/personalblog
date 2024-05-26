@@ -39,7 +39,10 @@ namespace Personalblog.Services
         //public string Host => "https://localhost:44310/";
         public IPagedList<Post> GetPagedList(PostQueryParameters param)
         {
-            var querySet = _myDbContext.posts.Include(a => a.Categories).Select(a=>new Post
+            var querySet = _myDbContext.posts
+                .Include(a => a.Categories)
+                .Include(a => a.Tags)
+                .Select(a=>new Post
             {
                 Id = a.Id,
                 Categories = a.Categories,
@@ -49,7 +52,9 @@ namespace Personalblog.Services
                 Path = a.Path,
                 Summary = a.Summary,
                 Title = a.Title,
-                ViewCount = a.ViewCount
+                ViewCount = a.ViewCount,
+                Tags = a.Tags,
+                Status = a.Status
             });
             //分类过滤
             if(param.CategoryId != 0)
@@ -60,6 +65,11 @@ namespace Personalblog.Services
             if (!string.IsNullOrEmpty(param.Search))
             {
                 querySet = querySet.Where(a => a.Title.Contains(param.Search));
+            }
+            //标签过滤
+            if (param.TagId != 0)
+            {
+                querySet = querySet.Where(a => a.Tags.Any(t => t.Id == param.TagId));
             }
             // 排序
             if (!string.IsNullOrEmpty(param.SortBy))
@@ -75,7 +85,10 @@ namespace Personalblog.Services
         }
         public Post? GetById(string id)
         {
-            var post = _myDbContext.posts.Where(a => a.Id == id).Include(a => a.Categories).First();
+            var post = _myDbContext.posts.Where(a => a.Id == id)
+                .Include(a => a.Categories)
+                .Include(a => a.Tags)
+                .First();
             if (post != null) post.Content = MdImageLinkConvert(post, true);
             return post;
         }
@@ -130,22 +143,63 @@ namespace Personalblog.Services
         }
         public async Task<Post> InsertOrUpdateAsync(Post post)
         {
-            // 是新文章的话，先保存到数据库
-            if(await _myDbContext.posts.Where(a=>a.Id==post.Id).CountAsync() == 0)
+            await using var transaction = await _myDbContext.Database.BeginTransactionAsync();
+
+            try
             {
-                post.ViewCount = 0;
-                await _myDbContext.posts.AddAsync(post);
+                var tags = post.Tags.ToList();
+                // 移除原有的标签
+                post.Tags.Clear();
+                // 是新文章的话，先保存到数据库
+                if (await _myDbContext.posts.FindAsync(post.Id) == null)
+                {
+                    post.ViewCount = 0;
+                    await _myDbContext.posts.AddAsync(post);
+                }
+                else
+                {
+                    var existingTags = await _myDbContext.PostTags
+                        .Where(pt => pt.PostId == post.Id)
+                        .ToListAsync();
+                    _myDbContext.PostTags.RemoveRange(existingTags);
+                }
+                //修改
+                foreach (var tagName in tags)
+                {
+                    var postTag = new PostTag
+                    {
+                        PostId = post.Id,
+                        TagId = tagName.Id,
+                    };
+
+                    _myDbContext.PostTags.Add(postTag);
+                }
+
+                // 保存更改到数据库
                 await _myDbContext.SaveChangesAsync();
+
+                // 检查文章中的外部图片，下载并进行替换
+                post.Content = await MdExternalUrlDownloadAsync(post);
+
+                // 修改文章时，将markdown中的图片地址替换成相对路径再保存
+                post.Content = MdImageLinkConvert(post, false);
+
+                // 更新文章
+                _myDbContext.posts.Attach(post);
+                _myDbContext.Entry(post).State = EntityState.Modified;
+                await _myDbContext.SaveChangesAsync();
+
+                // 提交事务
+                await transaction.CommitAsync();
+
+                return post;
             }
-            // 检查文章中的外部图片，下载并进行替换
-            post.Content = await MdExternalUrlDownloadAsync(post);
-            // 修改文章时，将markdown中的图片地址替换成相对路径再保存
-            post.Content = MdImageLinkConvert(post, false);
-            // 处理完内容再更新一次
-            _myDbContext.Update(post);
-            EntityState ss = _myDbContext.Entry(post).State;
-            await _myDbContext.SaveChangesAsync();
-            return post;
+            catch (Exception ex)
+            {
+                // 回滚事务
+                await transaction.RollbackAsync();
+                throw ex;
+            }
         }
         /// <summary>
         /// 初始化博客文章的资源目录

@@ -7,6 +7,7 @@ using Personalblog.Utils;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Text;
+using Hangfire;
 using GuidUtils = Personalblog.Utils.GuidUtils;
 
 namespace Personalblog.Services
@@ -104,7 +105,7 @@ namespace Personalblog.Services
         /// <param name="dto"></param>
         /// <param name="file"></param>
         /// <returns></returns>
-        public async Task<Post> Upload(int CategoryId, IFormFile file)
+        public async Task<Post> Upload(int CategoryId, List<string> tags,IFormFile file,DateTime? publishTime)
         {
             var tempFile = Path.GetTempFileName();
             await using (var fs = new FileStream(tempFile, FileMode.Create))
@@ -133,8 +134,27 @@ namespace Personalblog.Services
                 CreationTime = DateTime.Now,
                 LastUpdateTime = DateTime.Now,
                 CategoryId = CategoryId,
-                ViewCount = 0
+                ViewCount = 0,
             };
+            //将文章实例添加到数据库上下文中
+            await _myDbContext.posts.AddAsync(post);
+            foreach (var tagName in tags)
+            {
+                var tag = await _myDbContext.Tags.FirstOrDefaultAsync(t => t.Name == tagName);
+                if (tag == null)
+                {
+                    tag = new Tag { Name = tagName };
+                    _myDbContext.Tags.Add(tag);
+                }
+
+                var postTag = new PostTag
+                {
+                    Post = post,
+                    Tag = tag
+                };
+
+                _myDbContext.PostTags.Add(postTag);
+            }
             // 处理文章正文内容
             var assetsPath = Path.Combine(_environment.WebRootPath, "media", "blog");
             // 导入文章的时候一并导入文章里的图片，并对图片相对路径做替换操作
@@ -145,10 +165,32 @@ namespace Personalblog.Services
             {
                 post.Summary = processor.GetSummary(200);
             }
+            
+            if (publishTime.HasValue && publishTime.Value > DateTime.Now)
+            {
+                // 计算延迟时间
+                var delay = publishTime.Value - DateTime.Now;
+                post.Status = 0;//未发布
+                // 使用Hangfire调度后台任务
+                BackgroundJob.Schedule( () => UpdateStatus(post.Id) ,delay);
+            }
+            else
+            {
+                post.Status = 1; //发布
+            }
             // 存入数据库
-            await _myDbContext.posts.AddAsync(post);
             await _myDbContext.SaveChangesAsync();
             return post;
+        }
+
+        public void UpdateStatus(string id)
+        {
+           var post = _myDbContext.posts.FirstOrDefault(p => p.Id == id);
+           if (post != null)
+           {
+               post.Status = 1;
+               _myDbContext.SaveChanges();
+           }
         }
     }
 }

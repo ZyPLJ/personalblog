@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Personalblog.Model.ViewModels.Categories;
 using Personalblog.Model.ViewModels.Home;
 using X.PagedList;
 
@@ -47,5 +48,6 @@ namespace Personalblog.Model.ViewModels
         /// 阅读最多 评论最多 最新 最旧
         /// </summary>
         public HomePost HomePost { get; set; }
+        public (List<Post>, PaginationMetadata) AllPosts { get; set; }
     }
 }

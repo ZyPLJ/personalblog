@@ -11,22 +11,21 @@ const homeApp = Vue.createApp({
         const currentChart = ref(null);
         const imageSrc = ref('');
         const isLoading = ref(true);
-
+        const imageSrcArray = ref([]);
+        const isLoadingArray = ref(true);
+        
         const chartElem = ref(null);
 
-        const getRandomImage = () => {
-            const img = document.getElementById('random-image');
-            fetch(`/PicLib/GetRandomImageTopQiliu`)
-                .then(res => res.json())
-                .then(data => {
-                    imageSrc.value = data.data;
-                    isLoading.value = false;
-                })
-                .catch(() => {
-                    isLoading.value = false;
-                });
+        // 获取随机图片的方法
+        const getRandomImages = async () => {
+            try {
+                const response = await fetch('/PicLib/GetRandomImageTopQiliu');
+                return await response.json();
+            } catch (error) {
+                console.error(error);
+                return [];
+            }
         };
-
         const loadPoem = () => {
             fetch('/Api/DataAcq/Poem')
                 .then(res => res.json())
@@ -160,10 +159,13 @@ const homeApp = Vue.createApp({
                 });
         };
 
-        onMounted(() => {
+        onMounted(async () => {
             loadPoem();
             loadHitokoto();
-            getRandomImage();
+            const images = await getRandomImages();
+            imageSrcArray.value = images;
+            isLoadingArray.value = false;
+
             if (CHART_VISIBLE === true) loadChart();
             // Enable tooltips
             console.log('Enable tooltips')
@@ -176,6 +178,8 @@ const homeApp = Vue.createApp({
             let liveToast3 = document.getElementById('liveToast3')
             let toast3 = new bootstrap.Toast(liveToast3)
             toast3.show()
+            var exampleModal = new bootstrap.Modal(document.getElementById('exampleModal'))
+            exampleModal.show()
         });
 
         return {
@@ -188,7 +192,7 @@ const homeApp = Vue.createApp({
             imageSrc,
             isLoading,
             chartElem,
-            getRandomImage,
+            getRandomImages,
             loadPoem,
             loadHitokoto,
             randomRGB,
@@ -198,7 +202,9 @@ const homeApp = Vue.createApp({
             switchChartType,
             loadChart,
             loadBubbleChart,
-            loadBarChart
+            loadBarChart,
+            imageSrcArray,
+            isLoadingArray
         };
     },
 })

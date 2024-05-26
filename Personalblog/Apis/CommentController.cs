@@ -20,13 +20,14 @@ public class CommentController : ControllerBase
     private readonly TempFilterService _filter;
 
     public CommentController(Icommentservice commentservice,
-    IArticelsService articelsService,
-    TempFilterService filter)
+        IArticelsService articelsService,
+        TempFilterService filter)
     {
         _commentservice = commentservice;
         _articelsService = articelsService;
         _filter = filter;
     }
+
     /// <summary>
     /// 获取分页评论 可查询全部 可根据文章id 评论内容模糊查询
     /// </summary>
@@ -36,7 +37,7 @@ public class CommentController : ControllerBase
     public async Task<ApiResponsePaged<Comment>> GetPagedList([FromQuery] CommentQueryParameter @params)
     {
         var (data, meta) = await _commentservice.GetPagedList(@params);
-        return new ApiResponsePaged<Comment>(data,meta);
+        return new ApiResponsePaged<Comment>(data, meta);
     }
 
     [HttpPost]
@@ -55,10 +56,12 @@ public class CommentController : ControllerBase
             Content = dto.Content
         };
         string msg;
-        if (_filter.CheckBadWord(dto.Content)) {
+        if (_filter.CheckBadWord(dto.Content))
+        {
             msg = "小管家发现您可能使用了不良用语，该评论将在审核通过后展示~";
         }
-        else { 
+        else
+        {
             msg = "评论由小管家审核通过，感谢您参与讨论~";
             comment = await _commentservice.Add(comment);
         }
@@ -71,12 +74,12 @@ public class CommentController : ControllerBase
 
     [HttpPost]
     [Route("[action]")]
-    public async Task<ApiResponse> Send(CommentSendEmailDto emailDto)
+    public ApiResponse Send(CommentSendEmailDto emailDto)
     {
-        await _articelsService.SendEmailOnAdd(emailDto);
+        Task.Run(async () => { await _articelsService.SendEmailOnAdd(emailDto); });
         return new ApiResponse() { StatusCode = 200, Successful = true, Message = "邮件发送成功！" };
     }
-    
+
     [Authorize]
     [HttpDelete("{id}")]
     public async Task<ApiResponse> DelComment(string id)
@@ -86,7 +89,7 @@ public class CommentController : ControllerBase
 
     [Authorize]
     [HttpDelete("[action]")]
-    public async Task<ApiResponse> RangeDelComment([FromBody]List<string> id)
+    public async Task<ApiResponse> RangeDelComment([FromBody] List<string> id)
     {
         return await _commentservice.RangeDelAsync(id);
     }

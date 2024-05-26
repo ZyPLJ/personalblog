@@ -1,0 +1,49 @@
+﻿@using Personalblog.Migrate
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Personalblog.Model.ViewModels.Categories;
+@model (List<Personalblog.Model.Entitys.Post>,PaginationMetadata)
+
+@foreach (var post in @Model.Item1)
+{
+    @if (post.Status != 0)
+    {
+        <div class="col-md-6 box fade-in">
+            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static">
+                    <strong class="d-inline-block text-primary">
+                        @post.Categories.Name
+                    </strong>
+                    <div class="d-flex flex-wrap mb-1">
+                        @await Html.PartialAsync("Widgets/Tags", post.Tags)
+                    </div>
+                    <h5 class="mb-0">@post.Title</h5>
+                    <div class="mb-1 text-muted d-flex align-items-center">
+                        <span class="me-2">@post.LastUpdateTime.ToShortDateString()</span>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-eye bi-sm me-1"></i>
+                            <span style="font-size: 0.875rem;">@post.ViewCount</span>
+                        </div>
+                        <span style="width: 10px;"></span> <!-- 这里设置了一个 10px 的间距 -->
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-chat-square-dots bi-sm me-1"></i>
+                            <span style="font-size: 0.875rem;">@post.Comments.Count</span>
+                        </div>
+                    </div>
+                    <p class="card-text mb-auto">@post.Summary.Limit(50)</p>
+                    <div class="d-flex w-100 justify-content-between">
+                        <div>
+                            <a
+                                asp-controller="Blog" asp-action="Post" asp-route-id="@post.Id">
+                                Continue reading
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-auto d-none d-lg-block">
+                    <img class="bd-placeholder-img" alt="" style="width:200px;height: 250px"
+                         src="@Url.Action("GetRandomImage", "PicLib", new { seed = post.Id, Width = 800, Height = 1000 })">
+                </div>
+            </div>
+        </div>
+    }
+}

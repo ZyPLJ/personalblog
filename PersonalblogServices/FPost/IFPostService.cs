@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Personalblog.Model.ViewModels;
+using Personalblog.Model.ViewModels.Categories;
 using X.PagedList;
 
 namespace PersonalblogServices.FPost
@@ -17,5 +18,6 @@ namespace PersonalblogServices.FPost
         int Delete(FeaturedPost featured);
         //排序
         Task<bool> UpdateSortOrderAsync(int featuredPostId, int newSortOrder);
+        Task<(List<Post>, PaginationMetadata)> GetAllPostsAsync(QueryParameters param);
     }
 }

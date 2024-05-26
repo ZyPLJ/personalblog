@@ -4,10 +4,15 @@
 
 @foreach (var post in @Model)
 {
-    <div class="col-md-6 box">
+    <div class="col-md-6 box fade-in">
         <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
             <div class="col p-4 d-flex flex-column position-static">
-                <strong class="d-inline-block mb-2 text-primary">@post.Categories.Name</strong>
+                <strong class="d-inline-block mb-2 text-primary">
+                    @post.Categories.Name
+                </strong>
+                <div class="d-flex flex-wrap mb-1">
+                    @await Html.PartialAsync("Widgets/Tags",post.Tags)
+                </div>
                 <h5 class="mb-0">@post.Title</h5>
                 <div class="mb-1 text-muted d-flex align-items-center">
                     <span class="me-2">@post.LastUpdateTime.ToShortDateString()</span>
@@ -22,7 +27,8 @@
                     </div>
                 </div>
                 <p class="card-text mb-auto">@post.Summary.Limit(50)</p>
-                <a class="stretched-link"
+            @* <a class="stretched-link" *@
+                <a
                    asp-controller="Blog" asp-action="Post" asp-route-id="@post.Id">
                     Continue reading
                 </a>

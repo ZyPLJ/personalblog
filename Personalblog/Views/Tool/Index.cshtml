@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "ZY-知识库-小工具";
+}
+
+<div class="container px-4 py-3">
+    <h2 class="d-flex w-100 justify-content-between pb-2 mb-3 border-bottom">
+        <div>Tool</div>
+        <div>工具</div>
+    </h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col">
+            <a href="https://yudada.pljzy.top" style="text-decoration: none;color:black">
+                <div class="card h-100 box">
+                    <img src="@Url.Action("GetDesignImage", "PicLib", new { seed = "Snipaste_2023-12-31_15-22-21.png", Width = 800, Height = 800 })" class="card-img-top" alt="Pdf转换工具">
+                    <div class="card-body">
+                        <h5 class="card-title">Pdf转换工具</h5>
+                        <p class="card-text">这是一个纯前端编写的pdf转base64编码的小工具，他也可以将base64转为pdf文件！</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

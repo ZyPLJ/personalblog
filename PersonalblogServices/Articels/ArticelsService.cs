@@ -143,23 +143,21 @@ namespace PersonalblogServices.Articels
 
         public async Task<HomePost> HomePostAsync()
         {
-            var currentDate = DateTime.Now; // 获取当前日期
-            var targetDate = new DateTime(currentDate.Year, currentDate.Month, 1).AddMonths(-1); // 获取目标日期，即当前月份的上一个月份
-            
             var query = _myDbContext.posts.AsQueryable();
             
-            var posts = query.Include(p => p.Categories)
+            var posts = 
+                query.Include(p => p.Categories)
                 .Include(p => p.Comments);
             
-            var CountMax =await posts.OrderByDescending(p => p.ViewCount).FirstOrDefaultAsync();
-            var CommentMax =await posts.OrderByDescending(p => p.Comments.Count).FirstOrDefaultAsync();
-            
-            var Post = await posts.Where(p => p.CreationTime >= targetDate)
-            .OrderBy(p => p.CreationTime)
-            
-            .ToListAsync();
-            var firstPost = Post.FirstOrDefault();
-            var lastpost = Post.LastOrDefault();
+            var CountMax =await posts.OrderByDescending(p => p.ViewCount).FirstOrDefaultAsync(c => c.Status != 0);
+            var CommentMax =await posts.OrderByDescending(p => p.Comments.Count).FirstOrDefaultAsync(c => c.Status != 0);
+
+            var lastpost = await posts
+                .OrderByDescending(p => p.CreationTime)
+                .FirstOrDefaultAsync();
+            var firstPost = await posts
+                .OrderByDescending(p => p.CreationTime)
+                .FirstOrDefaultAsync(p => p.CreationTime < lastpost.CreationTime);
             return new HomePost()
             {
                 CommentMax = CommentMax,

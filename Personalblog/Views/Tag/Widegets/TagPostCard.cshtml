@@ -1,0 +1,41 @@
+﻿@using Personalblog.Migrate
+@model List<Personalblog.Model.Entitys.PostTag>
+
+@foreach (var p in Model)
+{
+    <div class="col-md-3 col-12 mb-2">
+        <div class="card shadow-sm" style="padding:0;">
+            <img class="bd-placeholder-img card-img-top" alt=""
+                 src="@Url.Action("GetRandomImage", "PicLib", new { seed = p.PostId, Width = 800, Height = 1000 })">
+            <div class="card-body">
+                <h5 class="card-title">@p.Post.Title</h5>
+                <p class="card-text">@p.Post.Summary.Limit(50)</p>
+                <div class="mb-1 text-muted d-flex align-items-center">
+                    <span class="me-2">@p.Post.LastUpdateTime.ToShortDateString()</span>
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-eye bi-sm me-1"></i>
+                        <span style="font-size: 0.875rem;">@p.Post.ViewCount</span>
+                    </div>
+                    <span style="width: 10px;"></span> <!-- 这里设置了一个 10px 的间距 -->
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-chat-square-dots bi-sm me-1"></i>
+                        <span style="font-size: 0.875rem;">@p.Post.Comments.Count</span>
+                    </div>
+                </div>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="d-flex flex-wrap">
+                        @await Html.PartialAsync("Widgets/Tags", p.Post.Tags)
+                    </div>
+                </li>
+            </ul>
+            <div class="card-body">
+                <a
+                   asp-controller="Blog" asp-action="Post" asp-route-id="@p.Post.Id">
+                    Continue reading
+                </a>
+            </div>
+        </div>
+    </div>
+}

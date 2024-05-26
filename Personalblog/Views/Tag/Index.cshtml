@@ -1,0 +1,39 @@
+﻿@model Personalblog.Model.ViewModels.Tag.TagIndex
+@{
+    ViewData["Title"] = "标签页";
+}
+@section head
+{
+    <link href="~/lib/Tag/Tag.css" rel="stylesheet">
+}
+<div class="container px-4 py-3">
+    <h2 class="d-flex w-100 justify-content-between pb-2 mb-3 border-bottom">
+        <div>Tag</div>
+        <div>文章标签</div>
+    </h2>
+    <div class="card mb-4" style="box-shadow: 0 1px 20px -6px rgba(0,0,0,0.5);border:0;">
+        <div class="d-flex flex-wrap card-body">
+            @if (Model.TagList.Any())
+            {
+                foreach (var t in Model.TagList)
+                {
+                    if (t.Id == Model.TagId)
+                    {
+                        <div class="Tag-active">
+                            @await Html.PartialAsync("Widegets/TagBtn",t)
+                        </div>
+                    }
+                    else
+                    {
+                        @await Html.PartialAsync("Widegets/TagBtn",t)
+                    }
+                }
+            }
+        </div>
+    </div>
+    <div class="row mb-4">
+        @await Html.PartialAsync("Widegets/TagPostCard",Model.TagAllPosts.Item1)
+    </div>
+    @await Html.PartialAsync("Widegets/TagPagination",(Model.TagAllPosts.Item2,Model.TagId))
+</div>
+

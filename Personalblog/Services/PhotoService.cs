@@ -9,7 +9,7 @@ using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Formats.Bmp;
 using Personalblog.Model;
 using Personalblog.Model.Photography;
-using ImageMagick;
+//using ImageMagick;
 using Microsoft.EntityFrameworkCore;
 using SixLabors.ImageSharp;
 using Microsoft.AspNetCore.Authorization;
@@ -313,16 +313,16 @@ namespace Personalblog.Services
         /// <summary>
         /// 生成Progressive JPEG缩略图 （使用 MagickImage）
         /// </summary>
-        public async Task<byte[]> GetThumb(string id, int width = 300)
-        {
-            var photo = await _myDbContext.photos.Where(a => a.Id == id).FirstAsync();
-            using (var image = new MagickImage(GetPaotoFilePath(photo)))
-            {
-                image.Format = MagickFormat.Pjpeg;
-                image.Resize(width, 0);
-                return image.ToByteArray();
-            }
-        }
+        //public async Task<byte[]> GetThumb(string id, int width = 300)
+        //{
+        //    var photo = await _myDbContext.photos.Where(a => a.Id == id).FirstAsync();
+        //    using (var image = new MagickImage(GetPaotoFilePath(photo)))
+        //    {
+        //        image.Format = MagickFormat.Pjpeg;
+        //        image.Resize(width, 0);
+        //        return image.ToByteArray();
+        //    }
+        //}
         /// <summary>
         /// 添加推荐图片
         /// </summary>

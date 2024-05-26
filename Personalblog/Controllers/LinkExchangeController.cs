@@ -59,7 +59,8 @@ public class LinkExchangeController : Controller
         var item = _mapper.Map<LinkExchange>(vm);
         item = await _linkExchangeService.AddOrUpdate(item);
 
-        await Task.WhenAll(_linkExchangeService.SendEmailOnAdd(item), Send(item.Name, item.Url));
+        await _linkExchangeService.SendEmailOnAdd(item);
+        //await Task.WhenAll(_linkExchangeService.SendEmailOnAdd(item), Send(item.Name, item.Url));
 
         _messages.Info("友链申请已提交，正在处理中，请及时关注邮件通知~");
         return RedirectToAction("Index", "Home");

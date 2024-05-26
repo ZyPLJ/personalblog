@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Hangfire;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Personalblog.Model.Entitys;
 using Personalblog.Model.ViewModels.Blog;
@@ -43,7 +44,9 @@ namespace Personalblog.Apis
         /// <returns></returns>
         [Authorize]
         [HttpPost("[action]")]
-        public async Task<ApiResponse<Post>> Upload([FromForm] String Categoryname,[FromForm]String Parent, IFormFile file,
+        public async Task<ApiResponse<Post>> Upload([FromForm] String Categoryname,[FromForm]String Parent,
+            [FromForm] List<string> tags,IFormFile file,
+            [FromForm]DateTime? publishTime,
             [FromServices] ICategoryService categoryService
         )
         {
@@ -78,7 +81,15 @@ namespace Personalblog.Apis
                 }
                 try
                 {
-                    return new ApiResponse<Post>(await _blogService.Upload(cid, file));
+                    if (publishTime.HasValue && publishTime.Value > DateTime.Now)
+                    {
+                        return new ApiResponse<Post>()
+                        {
+                            Data = await _blogService.Upload(cid, tags,file,publishTime),
+                            Message = "定时任务启动成功！"
+                        };   
+                    }
+                    return new ApiResponse<Post>(await _blogService.Upload(cid, tags,file,null)); 
                 }
                 catch (Exception ex)
                 {
@@ -87,7 +98,15 @@ namespace Personalblog.Apis
             }
             try
             {
-                return new ApiResponse<Post>(await _blogService.Upload(cid, file));
+                if (publishTime.HasValue && publishTime.Value > DateTime.Now)
+                {
+                    return new ApiResponse<Post>()
+                    {
+                        Data = await _blogService.Upload(cid, tags,file,publishTime),
+                        Message = "定时任务启动成功！"
+                    };   
+                }
+                return new ApiResponse<Post>(await _blogService.Upload(cid, tags,file,null)); 
             }
             catch (Exception ex)
             {

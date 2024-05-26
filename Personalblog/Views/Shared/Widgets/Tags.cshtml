@@ -1,0 +1,30 @@
+﻿@model List<Personalblog.Model.Entitys.Tag>
+
+@{
+    var rnd = Random.Shared;
+    var colorList = new[]
+    {
+        "text-bg-primary ",
+        "text-bg-secondary",
+        "text-bg-danger",
+        "text-bg-warning",
+        "text-bg-info",
+        "text-bg-light",
+        "text-bg-dark ",
+    };
+    var btnColor = colorList[rnd.Next(0, colorList.Length)];
+}
+@if (Model.Any())
+{
+    @foreach (var t in Model)
+    {
+        <div class="mr-3">
+            <a style="display: contents" href="/tag/index?tagId=@t.Id">
+                <div class="badge Tag  box @btnColor" style="cursor: pointer">
+                    <i class="bi bi-tags"></i>
+                    @t.Name
+                </div>
+            </a>
+        </div>
+    }
+}

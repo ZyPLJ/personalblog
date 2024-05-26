@@ -8,6 +8,7 @@ using PersonalblogServices.FtopPost;
 using PersonalblogServices.Links;
 using System.Diagnostics;
 using Personalblog.Model.Entitys;
+using Personalblog.Model.ViewModels.Categories;
 using PersonalblogServices.Articels;
 using PersonalblogServices.Notice;
 using X.PagedList;
@@ -50,17 +51,22 @@ namespace Personalblog.Controllers
                 FeaturedPosts = await _PostService.GetFeaturedPostsAsync(new QueryParameters
                 {
                     Page = 1,
-                    PageSize = 8,
+                    PageSize = 4,
                 }),
                 Links = await _linkService.GetAll(),
                 Notices = await _noticeService.GetAllAsync(),
                 HomePost = await _articelsService.HomePostAsync(),
+                AllPosts = await _PostService.GetAllPostsAsync(new QueryParameters
+                {
+                    Page = 1,
+                    PageSize = 6,
+                })
                 // MaxPost = await _articelsService.MaxPostAsync()
             };
             return View(homeView);
         }
 
-        public async Task<IActionResult> GetFeaturedPosts(int page = 2, int pageSize = 8)
+        public async Task<IActionResult> GetFeaturedPosts(int page = 2, int pageSize = 4)
         {
             IPagedList<Post> data = await _PostService.GetFeaturedPostsAsync(new QueryParameters
             {
@@ -74,7 +80,20 @@ namespace Personalblog.Controllers
         
             return PartialView("Widgets/FeaturedPostCard", data);
         }
-
+        public async Task<IActionResult> GetPostsAll(int page = 2, int pageSize = 6)
+        {
+            (List<Post>, PaginationMetadata) data = await _PostService.GetAllPostsAsync(new QueryParameters
+            {
+                Page = page,
+                PageSize = pageSize,
+            });
+            if (data.Item1.Count == 0) {
+                // 没有更多数据了，返回错误
+                return NoContent();
+            }
+        
+            return PartialView("Widegets/AllPostCard", data);
+        }
         public IActionResult Privacy()
         {
             return View();

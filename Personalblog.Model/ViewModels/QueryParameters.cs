@@ -36,5 +36,10 @@
         /// 排序字段
         /// </summary>
         public string? SortBy { get; set; }
+
+        /// <summary>
+        /// 标签ID
+        /// </summary>
+        public int TagId { get; set; } = 0;
     }
 }

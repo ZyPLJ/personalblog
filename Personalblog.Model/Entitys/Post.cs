@@ -55,5 +55,16 @@ namespace Personalblog.Model.Entitys
         /// 浏览量
         /// </summary>
         public int ViewCount { get; set; }
+        /// <summary>
+        /// 导航属性
+        /// </summary>
+        public List<Tag> Tags { get; set; }
+        public List<PostTag> PostTags { get; } = new();
+        /// <summary>
+        /// 状态
+        /// 0 未发布
+        /// 1 已发布
+        /// </summary>
+        public int? Status { get; set; }
     }
 }

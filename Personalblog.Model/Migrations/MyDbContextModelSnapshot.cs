@@ -385,6 +385,21 @@ namespace Personalblog.Model.Migrations
                     b.ToTable("posts");
                 });
 
+            modelBuilder.Entity("Personalblog.Model.Entitys.PostTag", b =>
+                {
+                    b.Property<string>("PostId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("PostId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("PostTags");
+                });
+
             modelBuilder.Entity("Personalblog.Model.Entitys.Replies", b =>
                 {
                     b.Property<int>("Id")
@@ -414,6 +429,21 @@ namespace Personalblog.Model.Migrations
                     b.HasIndex("MessageId");
 
                     b.ToTable("Replies");
+                });
+
+            modelBuilder.Entity("Personalblog.Model.Entitys.Tag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("Personalblog.Model.Entitys.TopPost", b =>
@@ -564,6 +594,25 @@ namespace Personalblog.Model.Migrations
                     b.Navigation("Categories");
                 });
 
+            modelBuilder.Entity("Personalblog.Model.Entitys.PostTag", b =>
+                {
+                    b.HasOne("Personalblog.Model.Entitys.Post", "Post")
+                        .WithMany("PostTags")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Personalblog.Model.Entitys.Tag", "Tag")
+                        .WithMany("PostTags")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("Tag");
+                });
+
             modelBuilder.Entity("Personalblog.Model.Entitys.Replies", b =>
                 {
                     b.HasOne("Personalblog.Model.Entitys.Messages", "Message")
@@ -604,6 +653,13 @@ namespace Personalblog.Model.Migrations
             modelBuilder.Entity("Personalblog.Model.Entitys.Post", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("PostTags");
+                });
+
+            modelBuilder.Entity("Personalblog.Model.Entitys.Tag", b =>
+                {
+                    b.Navigation("PostTags");
                 });
 #pragma warning restore 612, 618
         }

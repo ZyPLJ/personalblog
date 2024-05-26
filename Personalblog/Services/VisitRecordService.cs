@@ -1,8 +1,8 @@
-﻿using Personalblog.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using Personalblog.Model;
 using Personalblog.Model.Entitys;
 using Personalblog.Model.ViewModels.QueryFilters;
-using System.Linq;
-using X.PagedList;
+using Personalblog.Model.ViewModels.Categories;
 
 namespace Personalblog.Services
 {
@@ -51,31 +51,29 @@ namespace Personalblog.Services
         {
             return _myDbContext.visitRecords.OrderByDescending(a => a.Time).ToList();
         }
-        public IPagedList<VisitRecord> GetPagedList(VisitRecordQueryParameters param)
+        public async Task<(List<VisitRecord>, PaginationMetadata)>GetPagedList(VisitRecordQueryParameters param)
         {
-            var querySet = _myDbContext.visitRecords.ToArray();
+            var querySet = _myDbContext.visitRecords.AsQueryable();
             // 搜索
             if (!string.IsNullOrEmpty(param.Search))
             {
-                querySet = querySet.Where(a => a.RequestPath.Contains(param.Search)).ToArray();
+                querySet = querySet.Where(a => a.RequestPath.Contains(param.Search));
             }
-            // 排序
-            //if (!string.IsNullOrEmpty(param.SortBy))
-            //{
-            //    // 是否升序
-            //    var isAscending = !param.SortBy.StartsWith("-");
-            //    var orderByProperty = param.SortBy.Trim('-');
-            //    if (isAscending)
-            //    {
-            //        querySet = querySet.OrderBy(a => a.Time).ToArray();
-            //    }
-            //    else
-            //    {
-            //        querySet = querySet.OrderByDescending(a => a.Time).ToArray();
-            //    }
-            //}
-            querySet = querySet.OrderByDescending(a => a.Id).ToArray();
-            return querySet.ToList().ToPagedList(param.Page, param.PageSize);
+
+            var data = await querySet
+                .OrderByDescending(a => a.Id)
+                .Skip((param.Page - 1) * param.PageSize)
+                .Take(param.PageSize)
+                .ToListAsync();
+            
+            var pagination = new PaginationMetadata()
+            {
+                PageNumber = param.Page,
+                PageSize = param.PageSize,
+                TotalItemCount = await querySet.CountAsync()
+            };
+            
+            return (data, pagination);
         }
     }
 }

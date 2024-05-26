@@ -25,28 +25,36 @@ namespace Personalblog.Apis
         private static async Task<IActionResult> GenerateImageResponse(Image image, IImageFormat format)
         {
             var encoder = image.GetConfiguration().ImageFormatsManager.FindEncoder(format);
-            await using var stream = new MemoryStream();
-            
-            //windows字体 Arial
-            //liunx字体 DejaVu Sans
-            var font = SystemFonts.CreateFont("DejaVu Sans", 50);
-            
-            var location = new PointF(image.Width - 250, image.Height - 100);
-            image.Mutate(ctx => ctx.DrawText("ZY blog", font, new Rgba32(255, 255, 255, 128), location));
-            
-            # region 水印图像
-            // 创建水印图像
-            // var watermarkImage = new Image<Rgba32>(image.Width, image.Height);
-            // watermarkImage.Mutate(x => x.BackgroundColor(new Rgba32(0, 0, 0, 0)));
-            // var font = SystemFonts.CreateFont("Arial", 50, FontStyle.Bold);
-            // var location = new PointF(watermarkImage.Width - 250, watermarkImage.Height - 100);
-            // watermarkImage.Mutate(x => x.DrawText("ZY blog", font, new Rgba32(255, 255, 255, 128), location));
+            using (var stream = new MemoryStream())
+            {
+                //windows字体 Arial
+                //liunx字体 DejaVu Sans
+                var font = SystemFonts.CreateFont("Arial", 50);
 
-            // 将水印图像与原始图像叠加
-            // image.Mutate(x => x.DrawImage(watermarkImage, 1f));
-            #endregion
-            await image.SaveAsync(stream, encoder);
-            return new FileContentResult(stream.GetBuffer(), "image/jpeg");
+                var location = new PointF(image.Width - 250, image.Height - 100);
+                image.Mutate(ctx => ctx.DrawText("ZY blog", font, new Rgba32(255, 255, 255, 128), location));
+
+                #region 水印图像
+                // 创建水印图像
+                // var watermarkImage = new Image<Rgba32>(image.Width, image.Height);
+                // watermarkImage.Mutate(x => x.BackgroundColor(new Rgba32(0, 0, 0, 0)));
+                // var font = SystemFonts.CreateFont("Arial", 50, FontStyle.Bold);
+                // var location = new PointF(watermarkImage.Width - 250, watermarkImage.Height - 100);
+                // watermarkImage.Mutate(x => x.DrawText("ZY blog", font, new Rgba32(255, 255, 255, 128), location));
+
+                // 将水印图像与原始图像叠加
+                // image.Mutate(x => x.DrawImage(watermarkImage, 1f));
+                #endregion
+                await image.SaveAsync(stream, encoder);
+                try
+                {
+                    return new FileContentResult(stream.GetBuffer(), "image/jpeg");
+                }
+                finally
+                {
+                    image.Dispose();
+                }
+            }
         }
         /// <summary>
         /// 指定尺寸随机图片
@@ -57,22 +65,36 @@ namespace Personalblog.Apis
         [HttpGet("Random/{width:int}/{height:int}")]
         public async Task<IActionResult> GetRandomImage(int width,int height)
         {
-            var (image,format) = await _service.GetRandomImageAsync(width,height);
-            return await GenerateImageResponse(image,format);
+            var (image, format) = await _service.GetRandomImageAsync(width, height);
+            try
+            {
+                return await GenerateImageResponse(image, format);
+            }
+            finally
+            {
+                image.Dispose();
+            }
         }
         [HttpGet("RandomTop/{seed}/")]
         public async Task<IActionResult> GetRandomImageTop(string seed)
         {
             var (image,format) = await _service.GetRandomImageAsyncTop(seed);
-            return await GenerateImageResponse(image,format);
+            try
+            {
+                return await GenerateImageResponse(image, format);
+            }
+            finally
+            {
+                image.Dispose();
+            }
         }
 
         [HttpGet]
-        public async Task<string> GetRandomImageTopQiliu(string? seed)
+        public async Task<List<string>> GetRandomImageTopQiliu(string? seed)
         {
-            string path = await _service.GetQiliuImageAsyncTop();
+            // string path = await _service.GetQiliuImageAsyncTop();
             // string path = await _qiniuService.GetRandomImageAsync();
-            return path;
+            return await _service.GetQiliuImageAsyncTop();
         }
         /// <summary>
         /// 指定尺寸随机图片 (带初始种子)
@@ -85,7 +107,33 @@ namespace Personalblog.Apis
         public async Task<IActionResult> GetRandomImage(string seed, int width, int height)
         {
             var (image, format) = await _service.GetRandomImageAsync(width, height, seed);
-            return await GenerateImageResponse(image, format);
+            try
+            {
+                return await GenerateImageResponse(image, format);
+            }
+            finally
+            {
+                image.Dispose();
+            }
+        }
+        /// <summary>
+        /// 返回指定图片
+        /// </summary>
+        /// <param name="width">宽度</param>
+        /// <param name="height">高度</param>
+        /// <returns></returns>
+        [HttpGet("Design/{width:int}/{height:int}")]
+        public async Task<IActionResult> GetDesignImage(string seed,int width,int height)
+        {
+            var (image, format) = await _service.GetDesignImageAsync(width, height, seed);
+            try
+            {
+                return await GenerateImageResponse(image, format);
+            }
+            finally
+            {
+                image.Dispose();
+            }
         }
     }
 }

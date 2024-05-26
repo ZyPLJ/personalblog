@@ -361,3 +361,18 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+
+Personalblog/bin
+Personalblog/wwwroot - 副本
+Personalblog/wwwroot/b850764a70e9741890cb4324cf6af6cf-2023-07-21 23_29_49.mp4
+Personalblog/wwwroot/1.pdf
+Personalblog/wwwroot/1.jpg
+Personalblog/wwwroot/media/blog/2451f7b51ce18fe/微信截图_20230705185107.png
+Personalblog/wwwroot/www.yalijuda.com_wallpaper_hoy2Y9k4lp.mp4
+Personalblog/wwwroot/www.yalijuda.com_wallpaper1_Xc52_pGVj3.mp4
+*.db
+*.mp4
+Personalblog/wwwroot/media/*
+
+Personalblog/wwwroot/media/blog/2451f7b51ce18fe/微信截图_20230705185107.png

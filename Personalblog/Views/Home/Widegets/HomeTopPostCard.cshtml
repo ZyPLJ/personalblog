@@ -30,10 +30,10 @@
                        @if (Configuration.GetSection("Qiliu").GetValue<string>("StarandOff") == "Star")
                        {
                            // 调用GetRandomImageTopQiliu方法获取图片路径
-                           <div class="loading" v-if="isLoading">
+                           <div class="loading" v-if="isLoadingArray">
                                <div class="loading-spinner"></div>
                            </div>
-                           <img id="random-image" class="bd-placeholder-img img-fluid no-padding rounded" style="object-fit: cover; object-position: center;width:100%;height:500px" :src="imageSrc" alt="" v-if="!isLoading"/>
+                           <img id="random-image-@item.Index" class="bd-placeholder-img img-fluid no-padding rounded" style="object-fit: cover; object-position: center;width:100%;height:500px" :src="imageSrcArray.data[@item.Index]" alt="" v-if="!isLoadingArray"/>
                        }
                        else
                        {

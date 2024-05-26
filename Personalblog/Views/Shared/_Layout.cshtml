@@ -9,24 +9,22 @@
     <meta name="keywords" content="ZY知识库,.net,.NET,.NET Core,C#,python,Python,Java,java web,知识分享,个人博客">
     <title>ZY知识库 · ZY - @ViewData["Title"]</title>
     <link rel="icon" href="~/images/logo2.gif"/>
-    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.3/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-icons/1.10.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://blog.sblt.deali.cn:9000/lib/bootstrap/dist/css/bootstrap.css">
+    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="https://cdn.bootcdn.net/ajax/libs/aplayer/1.10.1/APlayer.min.css" rel="stylesheet">
+    <script src="https://blog.sblt.deali.cn:9000/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.4.27/dist/vue.global.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" integrity="sha512-u3fPA7V8qQmhBPNT5quvaXVa1mnnLSXUep5PS1qo5NRzHwG19aHmNJnj1Q8hpA/nBWZtZD4r4AX6YOt5ynLN2g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
     <link rel="stylesheet" href="~/css/features.css">
     <link rel="stylesheet" href="~/css/metro.css">
     <link rel="stylesheet" href="~/css/footer.css">
-    @* 主样式 *@
     <link rel="stylesheet" href="~/lib/Master.css"/>
     <link href="~/css/nprogress.css" rel="stylesheet"/>
-    @* 前音乐 废弃 *@
-    @* <script src="~/script/global-audio.js"></script> *@
-    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.47/vue.global.min.js"></script>
-    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
-    <script src="https://cdn.bootcdn.net/ajax/libs/aplayer/1.10.1/APlayer.min.js"></script>
-
+    <script src="~/js/jquery.min.js"></script>
+    <script src="/js/nprogress.js"></script>
+    <script src="/js/APlayer.min.js"></script>
     @await RenderSectionAsync("head", false)
 </head>
 <body>
@@ -76,7 +74,7 @@
                     <li>
                         <a class="nav-link text-white" asp-controller="LinkExchange" asp-action="Add">
                             <div class="bi d-block mx-auto mb-1 text-center">
-                                <i class="fa-sharp fa-solid fa-link fa-2xl"></i>
+                                <i class="fa-solid fas fa-link fa-2xl"></i>
                             </div>
                             Links
                         </a>
@@ -98,6 +96,14 @@
                         </a>
                     </li>
                     <li>
+                        <a class="nav-link text-white" asp-controller="Tag" asp-action="Index">
+                            <div class="bi d-block mx-auto mb-1 text-center">
+                                <i class="fa-solid fa-tags fa-2xl"></i>
+                            </div>
+                            Tags
+                        </a>
+                    </li>
+                    <li>
                         <a class="nav-link text-white" asp-controller="Rss" asp-action="Index">
                             <div class="bi d-block mx-auto mb-1 text-center">
                                 <i class="fa-solid fa-rss fa-2xl"></i>
@@ -105,11 +111,19 @@
                             RSS
                         </a>
                     </li>
+                    <li>
+                        <a class="nav-link text-white" asp-controller="Tool" asp-action="Index">
+                            <div class="bi d-block mx-auto mb-1 text-center">
+                                <i class="fa-solid fa-screwdriver-wrench fa-2xl"></i>
+                            </div>
+                            Tools
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
-    <div class="px-3 py-2 border-bottom">
+    <div class="px-3 py-2 border-bottom mb-2">
         <div class="container d-flex flex-wrap justify-content-center">
             <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto"
                   asp-controller="Search" asp-action="Blog">
@@ -146,6 +160,9 @@
             </div>
         </div>
     </div>
+    <div class="topbar">
+        <div class="line"></div>
+    </div>
 </header>
 <main id="vue-app">
     @while (!Messages.IsEmpty)
@@ -168,13 +185,13 @@
                 <div id="footer-content" class="col-md-10 col-md-offset-3 footer-list text-center">
                     <p class="social-icons">
                         <a target="_blank" rel="nofollow" href="https://www.cnblogs.com/ZYPLJ/" style="text-decoration: none;">
-                            <i class="fa-solid fa-blog"></i>
+                            <i class="fa-solid fa-blog fa-2xl"></i>
                         </a>
                         <a asp-controller="About" asp-action="Index" style="text-decoration: none;">
-                            <i class="fab fa-weixin"></i>
+                            <i class="fab fa-weixin fa-2xl"></i>
                         </a>
                         <a target="_blank" rel="nofollow" href="https://github.com/ZyPLJ" style="text-decoration: none;">
-                            <i class="fab fa-github"></i>
+                            <i class="fab fa-github fa-2xl"></i>
                         </a>
                         <a target="_blank" rel="nofollow" href="https://gitee.com/zyplj" style="text-decoration: none;">
                             <i class="bi bi-git"></i>
@@ -212,7 +229,7 @@
                             网站运行时间：计算中...
                         </span>
                         &nbsp;&nbsp;
-                        <a href="https://beian.miit.gov.cn">湘ICP备2023007264号-1</a>
+                        <a href="https://beian.miit.gov.cn" target="_blank">湘ICP备2024053728号</a>
                     </p>
                 </div>
             </div>

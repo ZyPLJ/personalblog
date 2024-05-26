@@ -30,9 +30,15 @@ namespace Personalblog.Model
         public DbSet<Messages> Messages { get; set; }
         public DbSet<Replies> Replies { get; set; }
         public DbSet<AnonymousUser> AnonymousUsers { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<PostTag> PostTags { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Post>()
+                .HasMany(e => e.Tags)
+                .WithMany(e => e.Posts)
+                .UsingEntity<PostTag>();
+
             // 禁用外键约束
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.Categories)
@@ -82,6 +88,8 @@ namespace Personalblog.Model
 
             modelBuilder.ApplyConfigurationsFromAssembly(
                 this.GetType().Assembly);
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

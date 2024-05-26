@@ -21,6 +21,10 @@
     <None Remove="wwwroot\assets\**" />
     <None Remove="wwwroot\editor.md-ext\**" />
     <None Remove="wwwroot\Lins\**" />
+    <Compile Remove="wwwroot - 副本\**" />
+    <EmbeddedResource Remove="wwwroot - 副本\**" />
+    <Content Remove="wwwroot - 副本\**" />
+    <None Remove="wwwroot - 副本\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,8 +42,9 @@
     <PackageReference Include="AutoMapper" Version="12.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="CodeLab.Share" Version="1.3.2" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.5" />
+    <PackageReference Include="Hangfire.MemoryStorage" Version="1.8.0" />
     <PackageReference Include="HtmlSanitizer" Version="8.0.645" />
-    <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="12.2.2" />
     <PackageReference Include="MailKit" Version="4.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.HttpOverrides" Version="2.2.0" />
